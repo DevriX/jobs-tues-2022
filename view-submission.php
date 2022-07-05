@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+<?php
 	
-</head>
+?>
+
 <body>
 	<?php include 'header.php';?>
 	<div class="site-wrapper">

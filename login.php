@@ -1,8 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	
-</head>
+
+<?php 
+	$erorrs = array(
+		"email"    => "",
+		"password" => ""
+	);
+
+	$inputs = array(
+		"email"    => "",
+		"password" => ""
+	);
+
+	if($_SERVER["REQUEST_METHOD"] == "POST") {
+		if(empty($_POST["email"])){
+			$erorrs["email"] = "Email is required!";
+		}
+		else{
+			$inputs["email"] = $_POST["email"];
+			if(filter_var($inputs["email"], FILTER_VALIDATE_EMAIL)){
+				echo var_dump($inputs["email"]);
+			}
+			else{
+				$erorrs["email"] = "Invalid email!";
+			}
+			
+		}
+
+		if(empty($_POST["password"])){
+			$erorrs["password"] = "Password is required!";
+		}
+		else{
+			$inputs["password"] = $_POST["password"];
+			echo var_dump($inputs["password"] );
+		}		
+	}
+?>
+
 <body>
 <?php include 'header.php';?>
 	<div class="site-wrapper">
@@ -15,12 +49,15 @@
 							<div class="section-heading">
 								<h2 class="heading-title">Login</h2>
 							</div>
-							<form>
+							<form method = "post">
 								<div class="form-field-wrapper">
-									<input type="text" placeholder="Email"/>
+									<input type="text" name = "email" placeholder="Email"/>
+									<span class="error">  <?php echo $erorrs["email"];?> </span>
+									
 								</div>
 								<div class="form-field-wrapper">
-									<input type="text" placeholder="Password"/>
+									<input type="text" name = "password" placeholder="Password"/>
+									<span class="error">  <?php echo $erorrs["password"];?> </span>
 								</div>
 								<button type="submit" class="button">
 									Login
