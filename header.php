@@ -1,3 +1,13 @@
+
+<?php 
+include 'classes/sqlRequests.php';
+
+$db = new Requests(NULL);
+$conn = $db->connectDB();
+
+
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
