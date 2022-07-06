@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<body>
 <?php include 'header.php';?>
+
+<body>
 	<div class="site-wrapper">
 
 		<main class="site-main">
@@ -35,9 +36,16 @@
 						</div>
 					</div>
 					<ul class="jobs-listing">
+
+					<?php 
+						$request_category = $conn->query("SELECT * FROM categories");
+
+						while($row = mysqli_fetch_array($request_category, MYSQLI_BOTH)){
+					?>
+
 						<li class="job-card">
 							<div class="job-primary">
-								<h2 class="job-title">Category Name</h2>
+								<h2 class="job-title"><?php echo $row["title"]?></h2>
 							</div>
 							<div class="job-secondary centered-content">
 								<div class="job-actions">
@@ -45,46 +53,9 @@
 								</div>
 							</div>
 						</li>
-						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title">Category Name</h2>
-							</div>
-							<div class="job-secondary centered-content">
-								<div class="job-actions">
-									<a href="#" class="button button-inline">Delete</a>
-								</div>
-							</div>
-						</li>
-						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title">Category Name</h2>
-							</div>
-							<div class="job-secondary centered-content">
-								<div class="job-actions">
-									<a href="#" class="button button-inline">Delete</a>
-								</div>
-							</div>
-						</li>
-						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title">Category Name</h2>
-							</div>
-							<div class="job-secondary centered-content">
-								<div class="job-actions">
-									<a href="#" class="button button-inline">Delete</a>
-								</div>
-							</div>
-						</li>
-						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title">Category Name</h2>
-							</div>
-							<div class="job-secondary centered-content">
-								<div class="job-actions">
-									<a href="#" class="button button-inline">Delete</a>
-								</div>
-							</div>
-						</li>
+
+					<?php } ?>
+						
 					</ul>					
 					<div class="jobs-pagination-wrapper">
 						<div class="nav-links"> 
