@@ -4,36 +4,26 @@
 <?php include 'header.php';?>
 
 <?php
-	$data = array(
-		"job_title" => ' ',
-		"location"  => ' ',
-		"salary"     => 0.0,
-		"description"     => ' '
-	);
+	$data = array();
+	$err = array();
 
-	$err = array(
-		"job_title_err"   => "",
-		"description_err" => "",
-		"salary_err"      => ""
-	);
+	function print_error($error){
+		echo $error;
+	}
 
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
 		if(empty($_POST["job_title"])){
 			$err["job_title_err"] = "Job title is required.";
-		}
-		else{
+		} else {
 			$data["job_title"] = $_POST["job_title"];
-			//echo $data["job_title"];
 		}
 
 		if(!empty($_POST["location"])){
 			$data["location"] = $_POST["location"];
-			//echo $data["location"];
 		}
 
 		if(!empty($_POST["salary"])){
 			$data["salary"] = intval($_POST["salary"]);
-			//echo $data["salary"];
 			if(!is_int($data["salary"])){
 				$err["salary_err"] = "Salary needs to be numeric.";
 			}
@@ -41,22 +31,16 @@
 
 		if(empty($_POST["description"])){
 			$err["description_err"] = "Job description is required.";
-		}
-		else{
+		} else {
 			$data["description"] = $_POST["description"];
-			//echo $data["description"];
 		}
 
 		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(1, '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
 		
-		$empty_check = 0;
-		foreach($err as &$e){
-			if(!empty($e)){
-				$empty_check++;
-			}
-		}
 
-		if(!$empty_check){
+		if(empty($err)){
+			$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(1, '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
+
 			if ($conn->query($sql_request) === TRUE) {
 				echo "Your job was added successfully.";
 			} else {
@@ -82,18 +66,23 @@
 								<div class="flex-container flex-wrap">
 									<div class="form-field-wrapper width-large">
 										<input type="text" name="job_title" placeholder="Job title*"/>
-										<span class="error">  <?php echo $err["job_title_err"];?> </span>
+										<span class="error">  <?php 
+										if(!empty($err["job_title_err"]))
+											(print_error($err["job_title_err"]))
+											?> </span>
 									</div>
 									<div class="form-field-wrapper width-large">
 										<input type="text" name="location" placeholder="Location"/>
 									</div>
 									<div class="form-field-wrapper width-large">
 										<input type="number" name="salary" placeholder="Salary"/>
-										<span class="error">  <?php echo $err["salary_err"];?> </span>
+										<span class="error">  <?php if(!empty($err["salary_err"]))
+											(print_error($err["salary_err"]))?> </span>
 									</div>
 									<div class="form-field-wrapper width-large">
 										<textarea name="description" placeholder="Description*"></textarea>
-										<span class="error">  <?php echo $err["description_err"];?> </span>
+										<span class="error">  <?php if(!empty($err["description_err"]))
+											(print_error($err["description_err"]))?> </span>
 									</div>	
 								</div>
 								<button type="submit" class="button">
