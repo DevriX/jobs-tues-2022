@@ -1,5 +1,7 @@
 
 <?php 
+session_start();
+
 include 'classes/sqlRequests.php';
 
 $db = new Requests(NULL);

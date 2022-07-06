@@ -69,17 +69,20 @@
 			echo $data["message"];
 		}
 
-		if(isset($_FILES["file"])){
+		if(isset($_FILES["file_input"])){
 			$err["file_err"] = "File is required.";
 		}
 		else{
-			$data["file"] = $_FILES["file"];
+			$data["file"] = $_FILES["file_input"]["name"]; //fix this, it gives an error
 			$current_extension = pathinfo($data["file"], PATHINFO_EXTENSION);
 			if(!in_array($current_extension, $allowed_extensions)){
 				$err["file_err"] = "Forbidden file extension.";
 			}
 		}
 	}
+
+	// get job_id from $_SESSION when add job is done 
+	$sql_request = "INSERT INTO applications(user_id, job_id, custom_message, cv) VALUES()"
 ?>
 
 <body>
@@ -120,7 +123,7 @@
 										<textarea placeholder="Custom Message*" name="message"></textarea>
 									</div>
 									<div class="form-field-wrapper width-large">
-										<input type="file" name="file"/>
+										<input type="file" name="file_input"/>
 										<span class="error" >  <?php echo $err["file_err"];?> </span> 
 									</div>
 								</div>	
