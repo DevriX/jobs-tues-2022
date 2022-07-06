@@ -20,6 +20,8 @@
 		"file_err"       => ""
 	);
 
+	$allowed_extensions = array("pdf", "docx");
+
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
 		if(empty($_POST["firstname"])){
 			$err["first_name_err"] = "First name is required.";
@@ -67,12 +69,15 @@
 			echo $data["message"];
 		}
 
-		if(empty($_POST["file"])){
-
+		if(isset($_FILES["file"])){
+			$err["file_err"] = "File is required.";
 		}
 		else{
-			$data["file"] = $_POST["file"];
-			echo $data["file"];
+			$data["file"] = $_FILES["file"];
+			$current_extension = pathinfo($data["file"], PATHINFO_EXTENSION);
+			if(!in_array($current_extension, $allowed_extensions)){
+				$err["file_err"] = "Forbidden file extension.";
+			}
 		}
 	}
 ?>
@@ -116,6 +121,7 @@
 									</div>
 									<div class="form-field-wrapper width-large">
 										<input type="file" name="file"/>
+										<span class="error" >  <?php echo $err["file_err"];?> </span> 
 									</div>
 								</div>	
 								<button class="button">
