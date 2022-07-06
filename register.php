@@ -14,7 +14,7 @@ $err = array(
 	'repeat_err' => "",
 	'phone_err' => "",
 	'site_err' => ""
-);
+)
 
 if(empty($_POST["first_name"])){
 	$err["first_name_err"] = "First name is reqired!";
