@@ -3,14 +3,6 @@
 
 <?php include 'header.php';?>
 
-<?php 
-	$request_category = $conn->query("SELECT * FROM categories");
-
-	while($row = mysqli_fetch_array($request_category, MYSQLI_BOTH)){
-
-	}
-?>
-
 <body>
 	<div class="site-wrapper">
 
