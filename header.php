@@ -3,6 +3,7 @@
 require_once 'classes/Db-connection.php';
 
 $db = new Requests;
+
 $conn = $db->connectDB();
 
 

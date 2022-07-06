@@ -61,6 +61,7 @@ $user = new User($user_data);
 $user->insert($conn);
 
 
+
 ?>
 	<div class="site-wrapper">
 
@@ -77,6 +78,7 @@ $user->insert($conn);
 									<div class="primary-container">
 										<h4 class="form-title">About me</h4>
 										<div class="form-field-wrapper">
+<<<<<<< HEAD
 											<input type="text" name="first_name" id="first_name" placeholder="First Name*"/>
 											<span class="error">  <?php echo $err["first_name_err"];?> </span>
 										</div>
@@ -98,6 +100,24 @@ $user->insert($conn);
 										</div>
 										<div class="form-field-wrapper">
 											<input type="text" name="phone" id="phone" placeholder="Phone Number"/>
+=======
+											<input type="text" name="name" id="name" placeholder="First Name*"/>
+										</div>
+										<div class="form-field-wrapper">
+											<input type="text" name="lastName" id="LastName" placeholder="Last Name*"/>
+										</div>
+										<div class="form-field-wrapper">
+											<input type="text" name="email" id="email" placeholder="Email*"/>
+										</div>
+										<div class="form-field-wrapper">
+											<input type="text" name="password" id="password" placeholder="Password*"/>
+										</div>
+										<div class="form-field-wrapper">
+											<input type="text" name="repeatPassword" id="repeatPassword" placeholder="Repeat Password*"/>
+										</div>
+										<div class="form-field-wrapper">
+											<input type="text" name="phoneNumber" id="phoneNumber" placeholder="Phone Number"/>
+>>>>>>> 0d77037d36493ce4fb49fb47cc845333d4a53266
 										</div>
 									</div>
 									<div class="secondary-container">
