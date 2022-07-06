@@ -8,8 +8,9 @@ class Jobs {
     private $description;
     private $salary;
     private $date_posted;
+    private $location;
 
-    function __construct($id, $user_id, $title, $status, $description, $salary, $date_posted)
+    function __construct($id, $user_id, $title, $status, $description, $salary, $date_posted, $location)
     {
         $this->id = $id;
         $this->user_id = $user_id;
@@ -18,7 +19,9 @@ class Jobs {
         $this->description = $description;
         $this->salary = $salary;
         $this->date_posted = $date_posted;
+        $this->location = $location;
     }
+
     function get_id(){
         return $this->id;
     }
@@ -39,6 +42,10 @@ class Jobs {
     }
     function get_date_posted(){
         return $this->date_posted;
+    }
+
+    function get_location(){
+        return $this->location;
     }
     
     function set_id($id){
@@ -61,6 +68,10 @@ class Jobs {
     }
     function set_date_posted($date_posted){
         $this->date_posted = $date_posted;
+    }
+
+    function set_location($location){
+        $this->location = $location;
     }
     
 }

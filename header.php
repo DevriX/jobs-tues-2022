@@ -5,7 +5,6 @@ include 'classes/sqlRequests.php';
 $db = new Requests(NULL);
 $conn = $db->connectDB();
 
-
 ?>
 
 <head>
