@@ -1,21 +1,20 @@
 <?php
-include "users.php";
-
+require "config.php";
 
 class Requests{
     private $object;
 
     function connectDB(){
-        $conn = mysqli_connect("localhost", "fustuk", "123456", "jobs_devrix");
+        $conn = mysqli_connect(HOST, USER, PASSWORD, DB_NAME);
         if(!$conn){
             echo("Error connecting");
         }
         
-        mysqli_select_db($conn, "jobs_devrix") or die(mysqli_error($conn));
+        mysqli_select_db($conn, DB_NAME) or die(mysqli_error($conn));
         return $conn;
     }
 
 
-    }
+    
 
 }
