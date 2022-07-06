@@ -4,33 +4,42 @@
 <body>
 <?php include 'header.php'; include "classes/Users.php";
 
+$clear = true;
+
 $err = array(
 	'first_name_err' => "",
 	'last_name_err' => "",
 	'password_err' => "",
 	'email_err' => "",
-	'repeat_err' => ""
+	'repeat_err' => "",
+	'phone_err' => "",
+	'site_err' => ""
 );
 
 if(empty($_POST["first_name"])){
 	$err["first_name_err"] = "First name is reqired!";
+	$clear = false;
 };
 
 if(empty($_POST["last_name"])){
 	$err["last_name_err"] = "Last name is reqired!";
+	$clear = false;
 };
 
 if(empty($_POST["email"])){
 	$err["email_err"] = "Email is reqired!";
+	$clear = false;
 };
 
 
 if(empty($_POST["password"])){
 	$err["password_err"] = "Password is reqired!";
+	$clear = false;
 };
 
 if(empty($_POST["repeat"])){
 	$err["repeat_err"] = "You have to repeat the password!";
+	$clear = false;
 };
 
 
@@ -49,16 +58,40 @@ $user_data = array(
 
 );
 
+$uppercase = preg_match('@[A-Z]@', $_POST["password"]);
+$lowercase = preg_match('@[a-z]@', $_POST["password"]);
+$specialChars = preg_match('@[^\w]@', $_POST["password"]);
+
+if(!$uppercase || !$lowercase ||  !$specialChars || strlen($_POST["password"]) < 8) {
+    $err["password_err"] = 'Password should be at least 8 characters in length and should include at least one upper case letter, one lower case letter, and one special character.';
+	$clear = false;
+}
+
 if($_POST["password"] != $_POST["repeat"] && !empty($_POST["password"]) && !empty($_POST["repeat"])){
 	$err["password_err"] = "passwords do not match!";
+	$clear = false;
 }
 
 if(filter_var($user_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($_POST["email"])){
 	$err["email_err"] = "email is not valid!";
+	$clear = false;
 }
-$user = new User($user_data);
 
-$user->insert($conn);
+if(!filter_var($user_data["company_site"], FILTER_VALIDATE_URL) && !empty($user_data["company_site"])){
+	$err["site_err"] = "site url is not valid!";
+	$clear = false;
+}
+
+if(!preg_match('/^[0-9]{10}+$/', $user_data["phone"])){
+	$err['phone_err'] = "phone number is not valid!";
+	$clear = false;
+}
+
+if($clear = true){
+	$user = new User($user_data);
+	$user->insert($conn);
+}
+
 
 
 
@@ -99,6 +132,7 @@ $user->insert($conn);
 										</div>
 										<div class="form-field-wrapper">
 											<input type="text" name="phone" id="phone" placeholder="Phone Number"/>
+											<span class="error">  <?php echo $err["phone_err"];?> </span>
 										</div>
 									</div>
 									<div class="secondary-container">
@@ -108,6 +142,7 @@ $user->insert($conn);
 										</div>
 										<div class="form-field-wrapper">
 											<input type="text" name="companySite" id="companySite" placeholder="Company Site"/>
+											<span class="error">  <?php echo $err["site_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
 											<textarea name="description" id="description" placeholder="Description"></textarea>
