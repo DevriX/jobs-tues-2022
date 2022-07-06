@@ -1,8 +1,9 @@
 <?php
 require "config.php";
 
+
 class Requests{
-    private $object;
+    function __construct(){ }
 
     function connectDB(){
         $conn = mysqli_connect(HOST, USER, PASSWORD, DB_NAME);
@@ -13,8 +14,4 @@ class Requests{
         mysqli_select_db($conn, DB_NAME) or die(mysqli_error($conn));
         return $conn;
     }
-
-
-    
-
 }

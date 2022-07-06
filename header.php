@@ -1,8 +1,8 @@
 
 <?php 
-include 'classes/sqlRequests.php';
+require_once 'classes/Db-connection.php';
 
-$db = new Requests(NULL);
+$db = new Requests;
 $conn = $db->connectDB();
 
 
