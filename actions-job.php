@@ -12,8 +12,9 @@
 	);
 
 	$err = array(
-		"job_title_err" => "",
-		"description_err" => ""
+		"job_title_err"   => "",
+		"description_err" => "",
+		"salary_err"      => ""
 	);
 
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -31,8 +32,11 @@
 		}
 
 		if(!empty($_POST["salary"])){
-			$data["salary"] = $_POST["salary"];
+			$data["salary"] = intval($_POST["salary"]);
 			//echo $data["salary"];
+			if(!is_int($data["salary"])){
+				$err["salary_err"] = "Salary needs to be numeric.";
+			}
 		}
 
 		if(empty($_POST["description"])){
@@ -42,14 +46,23 @@
 			$data["description"] = $_POST["description"];
 			//echo $data["description"];
 		}
-	}
 
-	$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(1, '" . $data['job_title'] . "' , 'acc', '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
+		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(1, '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
+		
+		$empty_check = 0;
+		foreach($err as &$e){
+			if(!empty($e)){
+				$empty_check++;
+			}
+		}
 
-	if ($conn->query($sql_request) === TRUE) {
-		echo "Your job was added successfully.";
-	} else {
-		echo "Error: " . $sql_request . "<br>" . $conn->error;
+		if(!$empty_check){
+			if ($conn->query($sql_request) === TRUE) {
+				echo "Your job was added successfully.";
+			} else {
+				echo "Error: " . $sql_request . "<br>" . $conn->error;
+			}
+		}
 	}
 
 ?>
@@ -75,7 +88,8 @@
 										<input type="text" name="location" placeholder="Location"/>
 									</div>
 									<div class="form-field-wrapper width-large">
-										<input type="text" name="salary" placeholder="Salary"/>
+										<input type="number" name="salary" placeholder="Salary"/>
+										<span class="error">  <?php echo $err["salary_err"];?> </span>
 									</div>
 									<div class="form-field-wrapper width-large">
 										<textarea name="description" placeholder="Description*"></textarea>
