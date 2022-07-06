@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include 'header.php'; 
-	function calculate_timestamps_difference($timestamp){
-		$d1 = new DateTime();
-		$d1->getTimestamp();
-		$difference = $d1->diff($timestamp);
-
-		return $difference;
-	}
-?>
+<?php include 'header.php';?>
 
 <body>
 
@@ -54,6 +46,14 @@
 					</div>
 					<ul class="jobs-listing">
 						<?php 
+							function calculate_timestamps_difference($timestamp){
+		$d1 = new DateTime();
+		$d1->getTimestamp();
+		$difference = $d1->diff($timestamp);
+
+		return $difference;
+	}
+
 
 							$request_job_info = $conn->query("SELECT * FROM jobs");
 							$request_company_info = $conn->query("SELECT * FROM users as u JOIN jobs as j on j.user_id = u.id");
