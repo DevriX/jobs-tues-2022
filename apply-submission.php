@@ -20,27 +20,27 @@
 								<div class="flex-container justified-horizontally flex-wrap">									
 									<div class="form-field-wrapper width-medium">
 										<input type="text" name="firstname" placeholder="First Name*"/>
-										//<span class="error">  <?php echo $err["first_name_err"];?> </span>  
+										<span class="error">  <?php //echo $err["first_name_err"];?> </span>  
 									</div>
 									<div class="form-field-wrapper width-medium">
 										<input type="text" name="lastname" placeholder="Last Name*"/>
-										//<span class="error">  <?php echo $err["last_name_err"];?> </span>  
+										<span class="error">  <?php //echo $err["last_name_err"];?> </span>  
 									</div>
 									<div class="form-field-wrapper width-medium">
 										<input type="text" name="email" placeholder="Email*"/>
-										//<span class="error">  <?php echo $err["email_err"];?> </span>  
+										<span class="error">  <?php //echo $err["email_err"];?> </span>  
 									</div>
 									<div class="form-field-wrapper width-medium">
 										<input type="text" name="phone" placeholder="Phone Number"/>
-										//<span class="error">  <?php echo $err["phone_err"];?> </span> 
+										<span class="error">  <?php //echo $err["phone_err"];?> </span> 
 									</div>			
 									<div class="form-field-wrapper width-large">
-									<span class="error" >  <?php echo $err["message_err"];?> </span>  
+									<span class="error" >  <?php //echo $err["message_err"];?> </span>  
 										<textarea placeholder="Custom Message*" name="message"></textarea>
 									</div>
 									<div class="form-field-wrapper width-large">
 										<input type="file" name="file_input"/>
-										//<span class="error" >  <?php echo $err["file_err"];?> </span> 
+										<span class="error" >  <?php //echo $err["file_err"];?> </span> 
 									</div>
 								</div>	
 								<button class="button">

@@ -35,9 +35,6 @@
 			$data["description"] = $_POST["description"];
 		}
 
-		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(1, '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
-		
-
 		if(empty($err)){
 			$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(1, '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
 
