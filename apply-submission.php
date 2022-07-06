@@ -73,11 +73,11 @@
 			$err["file_err"] = "File is required.";
 		}
 		else{
-			$data["file"] = $_FILES["file_input"]["name"]; //fix this, it gives an error
-			$current_extension = pathinfo($data["file"], PATHINFO_EXTENSION);
-			if(!in_array($current_extension, $allowed_extensions)){
-				$err["file_err"] = "Forbidden file extension.";
-			}
+			//$data["file"] = $_FILES["file_input"]["name"]; //fix this, it gives an error
+			//$current_extension = pathinfo($data["file"], PATHINFO_EXTENSION);
+			// if(!in_array($current_extension, $allowed_extensions)){
+			// 	$err["file_err"] = "Forbidden file extension.";
+			// }
 		}
 	}
 
