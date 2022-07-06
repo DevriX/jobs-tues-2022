@@ -1,21 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	
-</head>
-<body>
-<?php include 'header.php'; include 'classes/sqlRequests.php';
-	
-	$data;
-	foreach($_POST as $data){
-		
-	}
-	$conn = new Requests(NULL);
-	
-	$asd = $conn -> connectDB();
 
-	mysqli_query($asd, 'INSERT INTO users(email ,first_name, last_name, password, phone_number, company_name, company_site) 
-	values("asd", "gosho", "petrov", 123, 1234, "qkoime", "abv.bg")');
+<body>
+<?php include 'header.php';
+	
 
 
 ?>
