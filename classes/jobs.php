@@ -1,6 +1,6 @@
 <?php
 
-class jobs {
+class Jobs {
     private $id;
     private $user_id;
     private $title;

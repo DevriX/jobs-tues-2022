@@ -1,6 +1,6 @@
 <?php
 
-class jobs_categories {
+class Jobs_categories {
     private $id;
     private $job_id;
     private $category_id;
