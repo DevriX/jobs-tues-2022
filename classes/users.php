@@ -25,6 +25,7 @@ class User {
     }
 
     function clear_data($work_data){
+        //var_dump($work_data);
         $err = array(
             'first_name_err' => "",
             'last_name_err' => "",
@@ -52,9 +53,13 @@ class User {
         
         
         if(empty($work_data["password"])){
+            var_dump(password_verify($work_data["password"], $this->password));
             $err["password_err"] = "Password is reqired!";
             $clear = false;
-        };
+        }
+        if(strcmp($work_data["password"], $this->password) === 0){
+            $clear = true;
+        }
         
         if(empty($work_data["repeat"])){
             $err["repeat_err"] = "You have to repeat the password!";
@@ -64,6 +69,7 @@ class User {
         
         
         $user_data = array(
+            'id'            => "",
             'first_name' 	=> "",
             'last_name'  	=> "",
             'email'		 	=> "",
@@ -76,6 +82,10 @@ class User {
             'is_admin'		=> false
         );
         
+        if(isset($work_data["id"])){
+            $user_data["id"] = $work_data["id"];
+        }
+
         if(isset($work_data["first_name"])){
             $user_data["first_name"] = $work_data["first_name"];
         }
@@ -100,6 +110,13 @@ class User {
         if(isset($work_data["description"])){
             $user_data["description"] = $work_data["description"];
         }
+        if(isset($work_data["repeat"])){
+            $user_data["repeat"] = $work_data["repeat"];
+            if($work_data["password"] != $work_data["repeat"] && !empty($work_data["password"]) && !empty($work_data["repeat"])){
+                $err["password_err"] = "passwords do not match!";
+                $clear = false;
+            }
+        }
         
         if(isset($work_data["password"])){
             $uppercase = preg_match('@[A-Z]@', $work_data["password"]);
@@ -111,10 +128,7 @@ class User {
                 $clear = false;
             }
             
-            if($work_data["password"] != $work_data["repeat"] && !empty($work_data["password"]) && !empty($work_data["repeat"])){
-                $err["password_err"] = "passwords do not match!";
-                $clear = false;
-            }
+            
         }
         
         
@@ -149,6 +163,7 @@ class User {
         $work_data = $this->clear_data($input);
         $data = $work_data["data"];
         $data = $this->sanitize($data);
+        $this->id           = $data["id"];
         $this->email        = $data["email"];
         $this->first_name   = $data["first_name"];
         $this->last_name    = $data["last_name"];
@@ -191,6 +206,16 @@ class User {
             '".$this->company_image."', 
             '".$this->is_admin."')
         ");
+    }
+
+    function update($conn){
+
+        $stmt = $conn->prepare("UPDATE users set email = ?, first_name = ?, last_name = ?, password = ?, phone_number = ?, company_name = ?, company_site = ?, company_description = ?, company_image = ? where id = ?");
+        var_dump($this->id);
+
+        $stmt->bind_param("ssssssssss", $this->email, $this->first_name, $this->last_name, $this->password, $this->phone_number, $this->company_name, $this->company_site, $this->company_description, $this->company_image, $this->id);
+        $stmt->execute();
+
     }
 
     function getid(){
