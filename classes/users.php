@@ -24,11 +24,132 @@ class User {
        return $data;
     }
 
-    function __construct($data)
-    {
-        $data = $this->sanitize($data);
+    function clear_data($work_data){
+        $err = array(
+            'first_name_err' => "",
+            'last_name_err' => "",
+            'password_err' => "",
+            'email_err' => "",
+            'repeat_err' => "",
+            'phone_err' => "",
+            'site_err' => ""
+        );
+        $clear = true;
+        if(empty($work_data["first_name"])){
+            $err["first_name_err"] = "First name is reqired!";
+            $clear = false;
+        };
         
-        $this->email = $data["email"];
+        if(empty($work_data["last_name"])){
+            $err["last_name_err"] = "Last name is reqired!";
+            $clear = false;
+        };
+        
+        if(empty($work_data["email"])){
+            $err["email_err"] = "Email is reqired!";
+            $clear = false;
+        };
+        
+        
+        if(empty($work_data["password"])){
+            $err["password_err"] = "Password is reqired!";
+            $clear = false;
+        };
+        
+        if(empty($work_data["repeat"])){
+            $err["repeat_err"] = "You have to repeat the password!";
+            $clear = false;
+        };
+        
+        
+        
+        $user_data = array(
+            'first_name' 	=> "",
+            'last_name'  	=> "",
+            'email'		 	=> "",
+            'password'	 	=> "",
+            'phone'	     	=> "",
+            'company_name'  => "",
+            'company_site'  => "",
+            'description'   => "",
+            'company_image' => "",
+            'is_admin'		=> false
+        );
+        
+        if(isset($work_data["first_name"])){
+            $user_data["first_name"] = $work_data["first_name"];
+        }
+        if(isset($work_data["last_name"])){
+            $user_data["last_name"] = $work_data["last_name"];
+        }
+        if(isset($work_data["email"])){
+            $user_data["email"] = $work_data["email"];
+        }
+        if(isset($work_data["password"])){
+            $user_data["password"] = password_hash($work_data["password"], PASSWORD_DEFAULT);
+        }
+        if(isset($work_data["phone"])){
+            $user_data["phone"] = $work_data["phone"];
+        }
+        if(isset($work_data["companyName"])){
+            $user_data["company_name"] = $work_data["companyName"];
+        }
+        if(isset($work_data["companySite"])){
+            $user_data["company_site"] = $work_data["companySite"];
+        }
+        if(isset($work_data["description"])){
+            $user_data["description"] = $work_data["description"];
+        }
+        
+        if(isset($work_data["password"])){
+            $uppercase = preg_match('@[A-Z]@', $work_data["password"]);
+            $lowercase = preg_match('@[a-z]@', $work_data["password"]);
+            $specialChars = preg_match('@[^\w]@', $work_data["password"]);
+
+            if(!$uppercase || !$lowercase ||  !$specialChars || strlen($work_data["password"]) < 8) {
+                $err["password_err"] = 'Password should be at least 8 characters in length and should include at least one upper case letter, one lower case letter, and one special character.';
+                $clear = false;
+            }
+            
+            if($work_data["password"] != $work_data["repeat"] && !empty($work_data["password"]) && !empty($work_data["repeat"])){
+                $err["password_err"] = "passwords do not match!";
+                $clear = false;
+            }
+        }
+        
+        
+        
+        if(filter_var($user_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($work_data["email"])){
+            $err["email_err"] = "email is not valid!";
+            $clear = false;
+        }
+        
+        if(!filter_var($user_data["company_site"], FILTER_VALIDATE_URL) && !empty($user_data["company_site"])){
+            $err["site_err"] = "site url is not valid!";
+            $clear = false;
+        }
+        
+        if(!preg_match('/^[0-9]{10}+$/', $user_data["phone"])){
+            $err['phone_err'] = "phone number is not valid!";
+            $clear = false;
+        }
+
+        $output = array(
+            'errors' => $err,
+            'data'   => $user_data,
+            'is_clear' => $clear
+        );
+
+        return $output;
+    }
+
+
+    function __construct($input)
+    {
+        $work_data = $this->clear_data($input);
+        $data = $work_data["data"];
+        $data = $this->sanitize($data);
+        $this->email        = $data["email"];
         $this->first_name   = $data["first_name"];
         $this->last_name    = $data["last_name"];
         $this->password     = $data["password"];
