@@ -41,10 +41,10 @@
 						<div class="primary-container">							
 							<ul class="tabs-menu">
 								<li class="menu-item">
-									<a href="#">Jobs</a>					
+									<a href="dashboard.php">Jobs</a>					
 								</li>
 								<li class="menu-item current-menu-item">
-									<a href="#">Categories</a>
+									<a href="category-dashboard.php">Categories</a>
 								</li>
 							</ul>
 						</div>
