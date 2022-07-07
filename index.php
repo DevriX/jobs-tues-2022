@@ -46,27 +46,31 @@
 					</div>
 					<ul class="jobs-listing">
 						<?php 
-							function calculate_timestamps_difference($timestamp){
-		$d1 = new DateTime();
-		$d1->getTimestamp();
-		$difference = $d1->diff($timestamp);
+							function time_diff_mesage($diff){
+								switch($diff){
+									case 0:
+										echo " today."; break;
+									case 1:
+										echo " yesterday."; break;
+									default:
+										echo $diff." days ago.";
+								}
+							}
 
-		return $difference;
-	}
 
-
-							$request_job_info = $conn->query("SELECT * FROM jobs");
+							$request_job_info = $conn->query("SELECT title, location, DATEDIFF(CURDATE(), date_posted) AS 'date' FROM jobs");
 							$request_company_info = $conn->query("SELECT * FROM users as u JOIN jobs as j on j.user_id = u.id");
 							
 							while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) { 
 								$company_info = mysqli_fetch_array($request_company_info, MYSQLI_BOTH);
-								$time_diff = calculate_timestamps_difference($row["date_posted"])?>
+								
+								$company_image_path = "/uploads/company_images/".$company_info["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
 										<h2 class="job-title"><a href="#"><?php echo $row["title"]?></a></h2>
 										<div class="job-meta">
 											<a class="meta-company" href="#"><?php echo $company_info["company_name"] ?></a>
-											<span class="meta-date"><?php echo $row["date_posted"]?></span>
+											<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"])?></span>
 										</div>
 										<div class="job-details">
 											<span class="job-location"><?php echo $row["location"]?></span>
@@ -75,7 +79,7 @@
 									</div>
 									<div class="job-logo">
 										<div class="job-logo-box">
-											<img src="https://i.imgur.com/ZbILm3F.png" alt="">
+											<img src=<?php echo $company_image_path ?> alt="">
 										</div>
 									</div>
 								</li>
