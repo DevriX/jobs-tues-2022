@@ -8,7 +8,6 @@ $db = new Requests;
 
 $conn = $db->connectDB();
 
-
 ?>
 
 <head>
