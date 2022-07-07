@@ -67,19 +67,19 @@
 								$company_image_path = "/uploads/company_images/".$company_info["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
-										<h2 class="job-title"><a href="#"><?php echo $row["title"]?></a></h2>
+										<h2 class="job-title"><a href="#"><?php echo $row["title"];?></a></h2>
 										<div class="job-meta">
-											<a class="meta-company" href="#"><?php echo $company_info["company_name"] ?></a>
-											<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"])?></span>
+											<a class="meta-company" href="#"><?php echo $company_info["company_name"];?></a>
+											<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>
 										</div>
 										<div class="job-details">
-											<span class="job-location"><?php echo $row["location"]?></span>
+											<span class="job-location"><?php echo $row["location"];?></span>
 											<span class="job-type">Contract staff</span>
 										</div>
 									</div>
 									<div class="job-logo">
 										<div class="job-logo-box">
-											<img src=<?php echo $company_image_path ?> alt="">
+											<img src=<?php echo $company_image_path;?> alt="">
 										</div>
 									</div>
 								</li>
