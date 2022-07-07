@@ -56,20 +56,31 @@
 										echo $diff." days ago.";
 								}
 							}
-
-
-							$request_job_info = $conn->query("SELECT title, location, DATEDIFF(CURDATE(), date_posted) AS 'date' FROM jobs");
-							$request_company_info = $conn->query("SELECT * FROM users as u JOIN jobs as j on j.user_id = u.id");
+  
+							$limit = 5;
 							
-							while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) { 
-								$company_info = mysqli_fetch_array($request_company_info, MYSQLI_BOTH);
-								
-								$company_image_path = "/uploads/company_images/".$company_info["company_image"];?>
+							
+							if (!isset ($_GET['page']) ) {  
+								$page = 1;  
+							} else {  
+								$page = $_GET['page'];  
+							}
+							 
+							$page_first_result = ($page-1) * $limit;
+
+							$request_job_info = $conn->query("SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
+																  FROM jobs as j JOIN users as u on u.id = j.user_id ORDER BY date_posted DESC LIMIT $page_first_result, $limit");
+							
+							$num_rows = mysqli_num_rows ($conn->query("SELECT * FROM jobs"));
+							$page_total = ceil($num_rows / $limit);
+
+							while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) {
+								$company_image_path = "/uploads/company_images/".$row["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
 										<h2 class="job-title"><a href="#"><?php echo $row["title"];?></a></h2>
 										<div class="job-meta">
-											<a class="meta-company" href="#"><?php echo $company_info["company_name"];?></a>
+											<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
 											<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>
 										</div>
 										<div class="job-details">
@@ -87,12 +98,20 @@
 							
 					</ul>
 					<div class="jobs-pagination-wrapper">
-						<div class="nav-links"> 
-							<a class="page-numbers current">1</a> 
-							<a class="page-numbers">2</a> 
-							<a class="page-numbers">3</a> 
-							<a class="page-numbers">4</a> 
-							<a class="page-numbers">5</a> 
+						<div class="nav-links">
+							<?php 
+								   for ($i = 1; $i <= $page_total; $i++) {
+
+										if($i == $page){
+											printf("<a class='page-numbers current' %shref='index.php?page=%u'>%u</a>", 
+												$i==$page ? : "", $i, $i );
+										}
+										else{
+											printf("<a class='page-numbers' %shref='index.php?page=%u'>%u</a>", 
+												$i==$page ? : "", $i, $i );
+										}
+									}
+							?>
 						</div>
 					</div>
 				</div>
