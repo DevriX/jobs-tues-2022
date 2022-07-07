@@ -3,10 +3,6 @@
 
 <body>
 <?php include 'header.php'; include "classes/Users.php";
-
-
-
-
 	$user = new User($_POST);
 	$work_data = $user->clear_data($_POST);
 	$err = $work_data['errors'];
@@ -14,11 +10,6 @@
 	if($is_clear){
 		$user->insert($conn);
 	}
-	
-
-
-
-
 ?>
 	<div class="site-wrapper">
 
