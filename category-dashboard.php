@@ -64,7 +64,7 @@
 					<ul class="jobs-listing">
 
 					<?php 
-						$request_category = $conn->query("SELECT * FROM categories");
+						$request_category = $conn->query("SELECT * FROM categories ORDER BY title ASC");
 
 						while($row = mysqli_fetch_array($request_category, MYSQLI_BOTH)){
 					?>
