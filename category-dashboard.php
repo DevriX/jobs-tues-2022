@@ -74,7 +74,7 @@
 							</div>
 							<div class="job-secondary centered-content">
 								<div class="job-actions">
-									<a href="?cat_id=<?php echo $row['id']; ?> " name="delete_button" class="button button-inline">Delete</a>
+									<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
 								</div>
 							</div>
 						</li>
