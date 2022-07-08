@@ -13,7 +13,9 @@ class User {
     private $company_description;
     private $company_image;
     private $is_admin;
-
+    private $work_data;
+    public $err;
+    public $is_clear;
 
     function sanitize($data){
         foreach($data as $d){
@@ -24,7 +26,7 @@ class User {
        return $data;
     }
 
-    function clear_data($work_data){
+    function clear_data($work_data, $conn){
         $err = array(
             'first_name_err' => "",
             'last_name_err' => "",
@@ -82,9 +84,18 @@ class User {
         if(isset($work_data["last_name"])){
             $user_data["last_name"] = $work_data["last_name"];
         }
-        if(isset($work_data["email"])){
-            $user_data["email"] = $work_data["email"];
-        }
+        /*if(isset($work_data["email"])){
+            $stmt = $conn->prepare("SELECT COUNT(*) as count FROM users Where ? = email");
+            $stmt->bind_param("s", $work_data['email']);
+            $stmt->execute();
+            $select = $stmt->get_result();
+            $result = $select->fetch_assoc();
+            if($result['count'] == 0){
+                $user_data['email'] = $work_data['email'];
+            }else{
+                $err['email_err'] = "email already exists!";
+            }
+        }*/
         if(isset($work_data["password"])){
             $user_data["password"] = password_hash($work_data["password"], PASSWORD_DEFAULT);
         }
@@ -101,6 +112,8 @@ class User {
             $user_data["description"] = $work_data["description"];
         }
         if(isset($work_data["company_image"])){
+            var_dump($work_data["company_image"]);
+            echo "HELLO ";
             $user_data["company_image"] = $work_data["company_image"];
         }
         
@@ -121,8 +134,9 @@ class User {
         }
         
         
-        
-        if(filter_var($user_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($work_data["email"])){
+        //var_dump($user_data);
+        if(filter_var($work_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($work_data["email"])){
+            echo("email validation");
             $err["email_err"] = "email is not valid!";
             $clear = false;
         }
@@ -142,15 +156,23 @@ class User {
             'data'   => $user_data,
             'is_clear' => $clear
         );
-
-        return $output;
+        if(isset($output['err'])){
+            $this->err = $output['err'];
+        }
+        if(isset($output['clear'])){
+            $this->is_clear = $output['clear'];
+        }
+        if(isset($output['data'])){
+            $this->work_data = $output['data'];
+        };
     }
 
 
-    function __construct($input)
+    function __construct($input, $conn)
     {
-        $work_data = $this->clear_data($input);
-        $data = $work_data["data"];
+        //var_dump($input);
+        $this->clear_data($input, $conn);
+        $data = $this->work_data;
         $data = $this->sanitize($data);
         $this->email        = $data["email"];
         $this->first_name   = $data["first_name"];
