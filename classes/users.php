@@ -100,6 +100,9 @@ class User {
         if(isset($work_data["description"])){
             $user_data["description"] = $work_data["description"];
         }
+        if(isset($work_data["company_image"])){
+            $user_data["company_image"] = $work_data["company_image"];
+        }
         
         if(isset($work_data["password"])){
             $uppercase = preg_match('@[A-Z]@', $work_data["password"]);
@@ -166,7 +169,7 @@ class User {
     }
 
 
-    function insert($conn){
+    function insert($conn, $image_name){
         mysqli_query($conn,"
         INSERT INTO 
         users(email, 

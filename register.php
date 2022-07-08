@@ -7,8 +7,9 @@
 	$work_data = $user->clear_data($_POST);
 	$err = $work_data['errors'];
 	$is_clear = $work_data["is_clear"];
+	$image = $_FILES["company_image"];
 	if($is_clear){
-		$user->insert($conn);
+		$user->insert($conn, $image['name']);
 	}
 ?>
 	<div class="site-wrapper">
@@ -21,7 +22,7 @@
 							<div class="section-heading">
 								<h2 class="heading-title">Register</h2>
 							</div>
-							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" enctype="multipart/form-data">
 								<div class="flex-container justified-horizontally">
 									<div class="primary-container">
 										<h4 class="form-title">About me</h4>
@@ -62,8 +63,12 @@
 										<div class="form-field-wrapper">
 											<textarea name="description" id="description" placeholder="Description"></textarea>
 										</div>
+										<div class="form-field-wrapper width-large">
+											<input type="file" name="company_image" id="company_image" placeholder="Image"/>
+										<span class="error" >  <?php //echo $err["file_err"];?> </span> 
+									</div>
 									</div>		
-								</div>		
+								</div>
 								<button class="button">
 									Register
 								</button>
