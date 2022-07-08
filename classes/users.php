@@ -25,12 +25,27 @@ class User {
     }
 
     function update_password($conn, $password){
-        $stmt = $conn->prepare("UPDATE users set password = ? where id = ?");
-        $stmt->bind_param("ss", $password, $this->id);
+
+        $error = "";
+        $clear = true;
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $specialChars = preg_match('@[^\w]@', $password);
+
+        if(!$uppercase || !$lowercase ||  !$specialChars || strlen($password) < 8) {
+            $error = 'Password should be at least 8 characters in length and should include at least one upper case letter, one lower case letter, and one special character.';
+            $clear = false;
+        }
+        if($clear == true){
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("UPDATE users set password = ? where id = ?");
+            $stmt->bind_param("ss", $password, $this->id);
+            $stmt->execute();
+        }
+        return $error;
     }
 
     function clear_data($work_data){
-        //var_dump($work_data);
         $err = array(
             'first_name_err' => "",
             'last_name_err' => "",
@@ -58,13 +73,12 @@ class User {
         
         
         if(empty($work_data["password"])){
-            var_dump(password_verify($work_data["password"], $this->password));
             $err["password_err"] = "Password is reqired!";
             $clear = false;
-        }
+        };
         if(strcmp($work_data["password"], $this->password) === 0){
             $clear = true;
-        }
+        };
         
         if(empty($work_data["repeat"])){
             $err["repeat_err"] = "You have to repeat the password!";
@@ -121,6 +135,7 @@ class User {
                 $err["password_err"] = "passwords do not match!";
                 $clear = false;
             }
+        }
         if(isset($work_data["company_image"])){
             $user_data["company_image"] = $work_data["company_image"];
         }
@@ -188,7 +203,7 @@ class User {
     }
 
 
-    function insert($conn){
+    function insert($conn, $img_name){
         $stmt = $conn->prepare("INSERT INTO 
         users(email,
         first_name, 
@@ -210,7 +225,7 @@ class User {
         $this->company_name, 
         $this->company_site, 
         $this->company_description, 
-        $this->company_image,
+        $img_name,
         $this->is_admin);
 
         $stmt->execute();
