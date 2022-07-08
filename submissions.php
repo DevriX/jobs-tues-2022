@@ -18,34 +18,38 @@
 						</li>
 					</ul>
 					<?php 
-						$request_application = $conn->query("SELECT * FROM applications LEFT JOIN jobs ON applications.job_id=jobs.id LEFT JOIN users ON applications.user_id=users.id");
+						$request_application = $conn->query(
+							"SELECT jobs.id, jobs.title, users.first_name, users.last_name, applications.user_id 
+							 FROM applications 
+							 LEFT JOIN jobs ON applications.job_id=jobs.id 
+							 LEFT JOIN users ON applications.user_id=users.id
+							 WHERE jobs.id=" . $_GET['job_id'] ."");
 
-						$count_appliciants = $conn->query("SELECT COUNT(applications.user_id) as apps FROM applications LEFT JOIN users ON applications.user_id=users.id GROUP BY applications.job_id");
-
-						$request_appliciant = $conn->query("SELECT users.first_name, users.last_name FROM applications LEFT JOIN users ON applications.user_id=users.id GROUP BY applications.job_id");
-
-						$appliciants_row = mysqli_fetch_array($count_appliciants, MYSQLI_BOTH);
-
-						$application_row = mysqli_fetch_array($request_application, MYSQLI_BOTH);
+						$title_check = 0;
+						if(mysqli_num_rows($request_application) > 0){
+							while($application_row = mysqli_fetch_array($request_application, MYSQLI_BOTH)){
 					?>
 					<div class="section-heading">
-						<h2 class="heading-title"><?php echo $application_row["title"];?> - Submissions - <?php echo $appliciants_row["apps"]; ?> Appliciants</h2>
+						<?php if(!$title_check){?>
+							<h2 class="heading-title"><?php echo $application_row["title"];?> - Submissions - <?php echo mysqli_num_rows( $request_application); ?> Appliciants</h2>
+						<?php $title_check=1; }?>	
 					</div>
 					<ul class="jobs-listing">
-						<?php 
-							while($request_appliciant = mysqli_fetch_array($request_application, MYSQLI_BOTH)){
-						?>
 							<li class="job-card">
 								<div class="job-primary">
-									<h2 class="job-title"><?php echo "" . $request_appliciant["first_name"] . " " . $request_appliciant["last_name"] . "";?></h2>
+									<h2 class="job-title"><?php echo "" . $application_row["first_name"] . " " . $application_row["last_name"] . "";?></h2>
 								</div>
 								<div class="job-secondary centered-content">
 									<div class="job-actions">
-										<a href="view-submission.php?user_id=<?php echo $request_appliciant['id']; ?>" class="button button-inline">View</a>
+										<a href="view-submission.php?user_id=<?php echo $application_row['user_id']; ?>" class="button button-inline">View</a>
 									</div>
 								</div>
 							</li>
-						<?php } ?>
+						<?php }
+								} else { 
+									$application_row = mysqli_fetch_array($request_application, MYSQLI_BOTH) ?>
+									<h2 class="heading-title"><?php echo "title";?> - Submissions - 0 Appliciants</h2>
+								<?php } ?>
 						
 					</ul>					
 					<div class="jobs-pagination-wrapper">
