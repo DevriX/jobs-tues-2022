@@ -238,6 +238,7 @@ class User {
         $stmt->bind_param("ssssssssss", $this->email, $this->first_name, $this->last_name, $this->password, $this->phone_number, $this->company_name, $this->company_site, $this->company_description, $this->company_image, $this->id);
         $stmt->execute();
 
+        header("Location: profile.php");
     }
 
     function getid(){

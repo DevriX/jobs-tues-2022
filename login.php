@@ -49,7 +49,7 @@ $err = array(
 					$_SESSION['email'] = $row['email'];
 	
 					$_SESSION['id'] = $row['id'];
-					//header("Location: index.php");
+					header("Location: index.php");
 	
 					exit();
 	
