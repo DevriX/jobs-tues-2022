@@ -4,13 +4,9 @@
 <?php
 include 'header.php';
 
-$current_id = $_GET['user_id'];
+$request_application = $conn->query("SELECT * FROM applications LEFT JOIN jobs ON applications.job_id=jobs.id LEFT JOIN users ON applications.user_id=users.id WHERE users.id=" . $_GET['user_id'] ."");
 
-$request_application = $conn->query("SELECT * FROM applications LEFT JOIN jobs ON applications.job_id=jobs.id LEFT JOIN users ON applications.user_id=users.id /*WHERE GET ID'S YOU NEED*/");
-
-while($row = mysqli_fetch_array($request_application, MYSQLI_BOTH)){
-	if($row["id"] == $current_id) break;
-}
+$row = mysqli_fetch_array($request_application, MYSQLI_BOTH);
 
 ?>
 
