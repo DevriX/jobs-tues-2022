@@ -19,10 +19,11 @@
 					</ul>
 					<?php 
 						$request_application = $conn->query(
-							"SELECT jobs.title, users.first_name, users.last_name, applications.user_id 
+							"SELECT jobs.id, jobs.title, users.first_name, users.last_name, applications.user_id 
 							 FROM applications 
 							 LEFT JOIN jobs ON applications.job_id=jobs.id 
-							 LEFT JOIN users ON applications.user_id=users.id");
+							 LEFT JOIN users ON applications.user_id=users.id
+							 WHERE jobs.id=" . $_GET['job_id'] ."");
 
 						$title_check = 0;
 						if(mysqli_num_rows($request_application) > 0){
