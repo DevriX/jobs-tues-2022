@@ -11,7 +11,7 @@ $row = mysqli_fetch_array($request_application, MYSQLI_BOTH);
 ?>
 
 <body>
-	<a href="view-submission.php?user_id=<?php echo $current_id; ?>">
+	<a href="view-submission.php?user_id=<?php echo $row['id']; ?>">
 		<div class="site-wrapper">
 			<main class="site-main">
 				<section class="section-fullwidth">
