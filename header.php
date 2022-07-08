@@ -57,7 +57,7 @@ if(!empty($_SESSION['id'])){
                 }
                 else{
                     ?>
-                    <a href="/register.php">Logout</a>
+                    <a href="/logout.php">Logout</a>
                 <?php
                 }
                 ?>				

@@ -203,42 +203,32 @@ class User {
     }
 
 
-    function insert($conn, $img_name){
-        $stmt = $conn->prepare("INSERT INTO 
-        users(email,
-        first_name, 
-        last_name, 
-        password, 
-        phone_number, 
-        company_name, 
-        company_site, 
-        company_description, 
-        company_image, 
-        is_admin)
-        values(?,?,?,?,?,?,?,?,?,?)");
-        $stmt->bind_param("ssssssssss",
-        $this->email,
-        $this->first_name,
-        $this->last_name, 
-        $this->password, 
-        $this->phone_number, 
-        $this->company_name, 
-        $this->company_site, 
-        $this->company_description, 
-        $img_name,
-        $this->is_admin);
-
-        $stmt->execute();
-    }
-
-    function update($conn){
-
-        $stmt = $conn->prepare("UPDATE users set email = ?, first_name = ?, last_name = ?, password = ?, phone_number = ?, company_name = ?, company_site = ?, company_description = ?, company_image = ? where id = ?");
-
-        $stmt->bind_param("ssssssssss", $this->email, $this->first_name, $this->last_name, $this->password, $this->phone_number, $this->company_name, $this->company_site, $this->company_description, $this->company_image, $this->id);
-        $stmt->execute();
-
-        header("Location: profile.php");
+    function insert($conn){
+        mysqli_query($conn,"
+        INSERT INTO 
+        users(email, 
+            first_name, 
+            last_name, 
+            password, 
+            phone_number, 
+            company_name, 
+            company_site, 
+            company_description, 
+            company_image, 
+            is_admin)
+        values(
+            '".$this->email."', 
+            '".$this->first_name."', 
+            '".$this->last_name."', 
+            '".$this->password."', 
+            '".$this->phone_number."', 
+            '".$this->company_name."', 
+            '".$this->company_site."', 
+            '".$this->company_description."', 
+            '".$this->company_image."', 
+            '".$this->is_admin."')
+        ");
+        header("Location: index.php");
     }
 
     function getid(){
