@@ -43,13 +43,10 @@ $err = array(
 	
 				$row = mysqli_fetch_assoc($result);
 				if ($row['email'] === $email && password_verify($pass, $row['password'])) {
-	
-					echo "Logged in!";
-	
 					$_SESSION['email'] = $row['email'];
 	
 					$_SESSION['id'] = $row['id'];
-					//header("Location: index.php");
+					header("Location: index.php");
 	
 					exit();
 	
