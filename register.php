@@ -3,7 +3,6 @@
 
 <body>
 <?php include 'header.php'; include "classes/Users.php";
-<<<<<<< HEAD
 
 	if(!empty($_POST)){
 		$user = new User($_POST);
@@ -23,15 +22,6 @@
             'phone_err' => "",
             'site_err' => ""
         );
-=======
-	$user = new User($_POST);
-	$work_data = $user->clear_data($_POST);
-	$err = $work_data['errors'];
-	$is_clear = $work_data["is_clear"];
-	$image = $_FILES["company_image"];
-	if($is_clear){
-		$user->insert($conn, $image['name']);
->>>>>>> 71450cd22f0b7244d0a7955e8248f401c91136e5
 	}
 		
 ?>
