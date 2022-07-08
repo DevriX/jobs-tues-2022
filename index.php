@@ -3,6 +3,19 @@
 
 <?php include 'header.php';?>
 
+<?php 
+	function time_diff_mesage($diff){
+		switch($diff){
+			case 0:
+				echo " today."; break;
+			case 1:
+				echo " yesterday."; break;
+			default:
+				echo $diff." days ago.";
+		}
+	}
+?>
+
 <body>
 
 	<div class="site-wrapper">
@@ -81,16 +94,6 @@
 							<?php } 
 							} 
 
-							function time_diff_mesage($diff){
-								switch($diff){
-									case 0:
-										echo " today."; break;
-									case 1:
-										echo " yesterday."; break;
-									default:
-										echo $diff." days ago.";
-								}
-							}
   
 							$limit = 5;
 
