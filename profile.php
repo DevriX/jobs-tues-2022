@@ -4,7 +4,7 @@
 <body>
 <?php include 'header.php'; include 'classes/users.php';
 
-	$sql = "SELECT * FROM users WHERE 41 = users.id";
+	$sql = "SELECT * FROM users WHERE 44 = users.id";
 	$result = mysqli_query($conn, $sql);
 
 	if ($result->num_rows > 0) {
@@ -15,6 +15,16 @@
 		}
 	}
 	$change = false;
+
+	$err = array(
+		'first_name_err' => "",
+		'last_name_err' => "",
+		'password_err' => "",
+		'email_err' => "",
+		'repeat_err' => "",
+		'phone_err' => "",
+		'site_err' => ""
+	);
 
 	$user_data = array(
 		'id'			=> $row["id"],
@@ -32,14 +42,14 @@
 	);
 	//echo "post ";
 	//var_dump($_POST);
-	if(isset($row["phone_number"])){
+	if(isset($row["phone_number"]) && isset($_POST["phone"])){
 		$user_data["phone"] = $row["phone_number"];
 		if($user_data["phone"] != $_POST["phone"]){
 			$user_data["phone"] != $_POST["phone"];
 			$change = true;
 		}
 	}
-	if(isset($row["company_name"])){
+	if(isset($row["company_name"]) && isset($_POST["company_name"])){
 		echo($row["company_name"]);
 		$user_data["company_name"] = $row["company_name"];
 		if($user_data["company_name"] != $_POST["company_name"]){
@@ -47,14 +57,14 @@
 			$change = true;
 		}
 	}
-	if(isset($row["company_site"])){
+	if(isset($row["company_site"]) && isset($_POST["company_site"])){
 		$user_data["company_site"] = $row["company_site"];
 		if($user_data["company_site"] != $_POST["company_site"]){
 			$user_data["company_site"] != $_POST["company_site"];
 			$change = true;
 		}
 	}
-	if(isset($row["description"])){
+	if(isset($row["description"]) && isset($_POST["description"])){
 		$user_data["description"] = $row["description"];
 		if($user_data["description"] != $_POST["description"]){
 			$user_data["description"] != $_POST["description"];
@@ -75,22 +85,43 @@
 			$change = true;
 		}
 	}*/
-	if(strcmp($user_data["first_name"], $_POST["first_name"]) !== 0){
-		$user_data["first_name"] = $_POST["first_name"];
-		$change = true;
+	if(isset($user_data["first_name"]) && isset($_POST["first_name"])){
+		if(strcmp($user_data["first_name"], $_POST["first_name"]) !== 0){
+			$user_data["first_name"] = $_POST["first_name"];
+			$change = true;
+		}
 	}
-	if($user_data["last_name"] != $_POST["last_name"]){
-		$user_data["last_name"] != $_POST["last_name"];
-		$change = true;
+	if(isset($user_data["last_name"]) && isset($_POST["last_name"])){
+		if($user_data["last_name"] != $_POST["last_name"]){
+			$user_data["last_name"] != $_POST["last_name"];
+			$change = true;
+		}
 	}
-	if($user_data["email"] != $_POST["email"]){
-		$user_data["email"] != $_POST["email"];
-		$change = true;
+	if(isset($user_data["email"]) && isset($_POST["email"])){
+		if($user_data["email"] != $_POST["email"]){
+			$user_data["email"] != $_POST["email"];
+			$change = true;
+		}
+	}
+	
+	if(isset($_POST["password"]) && isset($row["password"])){
+		if(isset($_POST["repeat"])){
+			if(password_verify($_POST["password"], $row["password"])){
+				$user = new User($user_data);
+				$user->update_password($conn, password_hash($_POST["repeat"], PASSWORD_DEFAULT), $row["id"]);
+			}else{
+				$err["password_err"] = "passwords do not match!";
+			}
+		}else{
+			$err["repeat_err"] = "enter new password!";
+		}
 	}
 	
 	//echo "user data ";
 	//var_dump($user_data);
 	
+	
+
 	if($change == true){
 		
 		$user = new User($user_data);
@@ -132,11 +163,11 @@
 											<span class="error">  <?php echo $err["email_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
-											<input type="text" name='password' id='password'  placeholder="Password"/>
+											<input type="text" name='password' id='password'  placeholder="Current Password"/>
 											<span class="error">  <?php echo $err["password_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
-											<input type="text" name='repeat' id='repeat' placeholder="Repeat Password"/>
+											<input type="text" name='repeat' id='repeat' placeholder="New Password"/>
 											<span class="error">  <?php echo $err["repeat_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">

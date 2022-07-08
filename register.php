@@ -3,13 +3,27 @@
 
 <body>
 <?php include 'header.php'; include "classes/Users.php";
-	$user = new User($_POST);
-	$work_data = $user->clear_data($_POST);
-	$err = $work_data['errors'];
-	$is_clear = $work_data["is_clear"];
-	if($is_clear){
-		$user->insert($conn);
+
+	if(!empty($_POST)){
+		$user = new User($_POST);
+		$work_data = $user->clear_data($_POST);
+		$err = $work_data['errors'];
+		$is_clear = $work_data["is_clear"];
+		if($is_clear){
+			$user->insert($conn);
+		}
+	}else{
+		$err = array(
+            'first_name_err' => "",
+            'last_name_err' => "",
+            'password_err' => "",
+            'email_err' => "",
+            'repeat_err' => "",
+            'phone_err' => "",
+            'site_err' => ""
+        );
 	}
+		
 ?>
 	<div class="site-wrapper">
 
