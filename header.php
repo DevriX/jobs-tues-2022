@@ -5,8 +5,12 @@ session_start();
 require_once 'classes/Db-connection.php';
 
 $db = new Requests;
-
+$logged = false;
 $conn = $db->connectDB();
+if(!empty($_SESSION['id'])){
+    $user_id = $_SESSION['id'];
+    $logged = true;
+}
 
 ?>
 
@@ -32,10 +36,31 @@ $conn = $db->connectDB();
                     <a href="/index.php">Home</a>					
                 </li>
                 <li class="menu-item">
+                <?php
+                if(!$logged){?>
                     <a href="/register.php">Register</a>
-                </li>
+                
+                <?php
+                }
+                else{
+                    ?>
+                    <a href="/profile.php">My Profile</a>
+                <?php
+                }
+                ?></li>
                 <li class="menu-item">
-                    <a href="/login.php">Login</a>					
+                <?php
+                if(!$logged){?>
+                    <a href="/login.php">Login</a>
+                
+                <?php
+                }
+                else{
+                    ?>
+                    <a href="/register.php">Logout</a>
+                <?php
+                }
+                ?>				
                 </li>
             </ul>
         </nav>
