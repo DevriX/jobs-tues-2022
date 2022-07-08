@@ -5,7 +5,19 @@
 <?php include 'header.php'; include "classes/Users.php";
 	$user = new User($_POST);
 	$work_data = $user->clear_data($_POST);
-	$err = $work_data['errors'];
+	if(isset($user->err)){
+		$err = $user->err;
+	}else{
+		$err = array(
+            'first_name_err' => "",
+            'last_name_err' => "",
+            'password_err' => "",
+            'email_err' => "",
+            'repeat_err' => "",
+            'phone_err' => "",
+            'site_err' => ""
+        );
+	}
 	$is_clear = $work_data["is_clear"];
 	if($is_clear){
 		$user->insert($conn);

@@ -191,6 +191,7 @@ class User {
             '".$this->company_image."', 
             '".$this->is_admin."')
         ");
+        header("Location: index.php");
     }
 
     function getid(){
