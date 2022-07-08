@@ -3,98 +3,13 @@
 
 <body>
 <?php include 'header.php'; include "classes/Users.php";
-
-$clear = true;
-
-$err = array(
-	'first_name_err' => "",
-	'last_name_err' => "",
-	'password_err' => "",
-	'email_err' => "",
-	'repeat_err' => "",
-	'phone_err' => "",
-	'site_err' => ""
-)
-
-if(empty($_POST["first_name"])){
-	$err["first_name_err"] = "First name is reqired!";
-	$clear = false;
-};
-
-if(empty($_POST["last_name"])){
-	$err["last_name_err"] = "Last name is reqired!";
-	$clear = false;
-};
-
-if(empty($_POST["email"])){
-	$err["email_err"] = "Email is reqired!";
-	$clear = false;
-};
-
-
-if(empty($_POST["password"])){
-	$err["password_err"] = "Password is reqired!";
-	$clear = false;
-};
-
-if(empty($_POST["repeat"])){
-	$err["repeat_err"] = "You have to repeat the password!";
-	$clear = false;
-};
-
-
-
-$user_data = array(
-	'first_name' 	=> $_POST["first_name"],
-	'last_name'  	=> $_POST["last_name"],
-	'email'		 	=> $_POST["email"],
-	'password'	 	=> password_hash($_POST["password"], PASSWORD_DEFAULT),
-	'phone'	     	=> $_POST["phone"],
-	'company_name'  => $_POST["companyName"],
-	'company_site'  => $_POST["companySite"],
-	'description'   => $_POST["description"],
-	'company_image' => "",
-	'is_admin'		=> false
-
-);
-
-$uppercase = preg_match('@[A-Z]@', $_POST["password"]);
-$lowercase = preg_match('@[a-z]@', $_POST["password"]);
-$specialChars = preg_match('@[^\w]@', $_POST["password"]);
-
-if(!$uppercase || !$lowercase ||  !$specialChars || strlen($_POST["password"]) < 8) {
-    $err["password_err"] = 'Password should be at least 8 characters in length and should include at least one upper case letter, one lower case letter, and one special character.';
-	$clear = false;
-}
-
-if($_POST["password"] != $_POST["repeat"] && !empty($_POST["password"]) && !empty($_POST["repeat"])){
-	$err["password_err"] = "passwords do not match!";
-	$clear = false;
-}
-
-if(filter_var($user_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($_POST["email"])){
-	$err["email_err"] = "email is not valid!";
-	$clear = false;
-}
-
-if(!filter_var($user_data["company_site"], FILTER_VALIDATE_URL) && !empty($user_data["company_site"])){
-	$err["site_err"] = "site url is not valid!";
-	$clear = false;
-}
-
-if(!preg_match('/^[0-9]{10}+$/', $user_data["phone"])){
-	$err['phone_err'] = "phone number is not valid!";
-	$clear = false;
-}
-
-if($clear = true){
-	$user = new User($user_data);
-	$user->insert($conn);
-}
-
-
-
-
+	$user = new User($_POST);
+	$work_data = $user->clear_data($_POST);
+	$err = $work_data['errors'];
+	$is_clear = $work_data["is_clear"];
+	if($is_clear){
+		$user->insert($conn);
+	}
 ?>
 	<div class="site-wrapper">
 
