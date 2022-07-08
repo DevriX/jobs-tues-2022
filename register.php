@@ -14,6 +14,10 @@
 			$img = $_FILES["company_image"];
 			$img_name = $img['name'];
 		}
+		$is_clear = $work_data["is_clear"];
+		if($is_clear){
+		$user->insert($conn);
+	}
 	}else{
 		$err = array(
             'first_name_err' => "",
@@ -25,10 +29,7 @@
             'site_err' => ""
         );
 	}
-	$is_clear = $work_data["is_clear"];
-	if($is_clear){
-		$user->insert($conn);
-	}
+	
 		
 ?>
 	<div class="site-wrapper">
