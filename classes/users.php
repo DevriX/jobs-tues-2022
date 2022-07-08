@@ -135,7 +135,7 @@ class User {
         
         
         //var_dump($user_data);
-        if(filter_var($work_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($work_data["email"])){
+        if(!empty($work_data["email"]) && filter_var($work_data["email"], FILTER_VALIDATE_EMAIL) != true ){
             echo("email validation");
             $err["email_err"] = "email is not valid!";
             $clear = false;
