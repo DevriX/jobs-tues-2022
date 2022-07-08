@@ -29,8 +29,19 @@
 					</ul>
 					<div class="flex-container centered-vertically">
 						<div class="search-form-wrapper">
-							<div class="search-form-field"> 
-								<input class="search-form-input" type="text" value="" placeholder="Search…" name="search" > 
+							<div class="search-form-field" method = "get">
+								<form method = "get">	 
+									<input class="search-form-input" type="text" value="" placeholder="Search…" name="search">
+								</form>
+
+								<?php
+									$is_searched = false;
+									
+									if(isset($_GET["search"])){
+										$is_searched = true;
+										$key_word = $_GET["search"];
+									}
+								?>
 							</div> 
 						</div>
 						<div class="filter-wrapper">
@@ -58,8 +69,7 @@
 							}
   
 							$limit = 5;
-							
-							
+
 							if (!isset ($_GET['page']) ) {  
 								$page = 1;  
 							} else {  
@@ -68,10 +78,28 @@
 							 
 							$page_first_result = ($page-1) * $limit;
 
-							$request_job_info = $conn->query("SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
-																  FROM jobs as j JOIN users as u on u.id = j.user_id ORDER BY date_posted DESC LIMIT $page_first_result, $limit");
 							
-							$num_rows = mysqli_num_rows ($conn->query("SELECT * FROM jobs"));
+							if($is_searched == true){	
+								$request_job_info = $conn->query("SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
+																FROM jobs as j JOIN users as u on u.id = j.user_id
+																HAVING (j.title LIKE '%".$key_word."%')  
+																ORDER BY date_posted DESC 
+																LIMIT $page_first_result, $limit");
+								$num_rows = mysqli_num_rows ($conn->query("SELECT * FROM jobs WHERE (title LIKE '%".$key_word."%')"));
+								/*$is_searched = false;
+								$key_word = "";*/
+							}
+							else{
+								$request_job_info = $conn->query("SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
+																FROM jobs as j JOIN users as u on u.id = j.user_id 
+																ORDER BY date_posted DESC 
+																LIMIT $page_first_result, $limit");
+								
+								$num_rows = mysqli_num_rows ($conn->query("SELECT * FROM jobs"));
+							}
+							
+							
+							
 							$page_total = ceil($num_rows / $limit);
 
 							while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) {
