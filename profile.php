@@ -3,8 +3,9 @@
 
 <body>
 <?php include 'header.php'; include 'classes/users.php';
-
-	$sql = "SELECT * FROM users WHERE 44 = users.id";
+	//this will be changed when we have a login session
+	$user_id = 47;
+	$sql = "SELECT * FROM users WHERE $user_id = users.id";
 	$result = mysqli_query($conn, $sql);
 
 	if ($result->num_rows > 0) {
@@ -40,8 +41,6 @@
 		'company_image' => "",
 		'is_admin'		=> false
 	);
-	//echo "post ";
-	//var_dump($_POST);
 	if(isset($row["phone_number"]) && isset($_POST["phone"])){
 		$user_data["phone"] = $row["phone_number"];
 		if($user_data["phone"] != $_POST["phone"]){
@@ -50,7 +49,6 @@
 		}
 	}
 	if(isset($row["company_name"]) && isset($_POST["company_name"])){
-		echo($row["company_name"]);
 		$user_data["company_name"] = $row["company_name"];
 		if($user_data["company_name"] != $_POST["company_name"]){
 			$user_data["company_name"] != $_POST["company_name"];
@@ -104,24 +102,6 @@
 		}
 	}
 	
-	if(isset($_POST["password"]) && isset($row["password"])){
-		if(isset($_POST["repeat"])){
-			if(password_verify($_POST["password"], $row["password"])){
-				$user = new User($user_data);
-				$user->update_password($conn, password_hash($_POST["repeat"], PASSWORD_DEFAULT), $row["id"]);
-			}else{
-				$err["password_err"] = "passwords do not match!";
-			}
-		}else{
-			$err["repeat_err"] = "enter new password!";
-		}
-	}
-	
-	//echo "user data ";
-	//var_dump($user_data);
-	
-	
-
 	if($change == true){
 		
 		$user = new User($user_data);
@@ -133,6 +113,18 @@
 		}
 	}
 	
+	if(isset($_POST["password"]) && isset($row["password"])){
+		if(isset($_POST["repeat"])){
+			if(password_verify($_POST["password"], $row["password"])){
+				$user = new User($user_data);
+				$err["repeat_err"] = $user->update_password($conn, $_POST["repeat"]);
+			}else{
+				$err["password_err"] = "passwords do not match!";
+			}
+		}else{
+			$err["repeat_err"] = "enter new password!";
+		}
+	}
 
 
 ?>

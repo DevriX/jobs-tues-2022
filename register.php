@@ -9,8 +9,13 @@
 		$work_data = $user->clear_data($_POST);
 		$err = $work_data['errors'];
 		$is_clear = $work_data["is_clear"];
+		$img_name = "";
+		if(!empty($_FILES["company_image"])){
+			$img = $_FILES["company_image"];
+			$img_name = $img['name'];
+		}
 		if($is_clear){
-			$user->insert($conn);
+			$user->insert($conn, $img_name);
 		}
 	}else{
 		$err = array(
