@@ -41,10 +41,10 @@
 						<div class="primary-container">							
 							<ul class="tabs-menu">
 								<li class="menu-item">
-									<a href="#">Jobs</a>					
+									<a href="dashboard.php">Jobs</a>					
 								</li>
 								<li class="menu-item current-menu-item">
-									<a href="#">Categories</a>
+									<a href="category-dashboard.php">Categories</a>
 								</li>
 							</ul>
 						</div>
@@ -64,7 +64,7 @@
 					<ul class="jobs-listing">
 
 					<?php 
-						$request_category = $conn->query("SELECT * FROM categories");
+						$request_category = $conn->query("SELECT * FROM categories ORDER BY title ASC");
 
 						while($row = mysqli_fetch_array($request_category, MYSQLI_BOTH)){
 					?>
