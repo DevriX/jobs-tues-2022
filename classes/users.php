@@ -115,12 +115,17 @@ class User {
         if(isset($work_data["description"])){
             $user_data["description"] = $work_data["description"];
         }
+<<<<<<< HEAD
         if(isset($work_data["repeat"])){
             $user_data["repeat"] = $work_data["repeat"];
             if($work_data["password"] != $work_data["repeat"] && !empty($work_data["password"]) && !empty($work_data["repeat"])){
                 $err["password_err"] = "passwords do not match!";
                 $clear = false;
             }
+=======
+        if(isset($work_data["company_image"])){
+            $user_data["company_image"] = $work_data["company_image"];
+>>>>>>> 71450cd22f0b7244d0a7955e8248f401c91136e5
         }
         
         if(isset($work_data["password"])){
@@ -186,6 +191,7 @@ class User {
     }
 
 
+<<<<<<< HEAD
     function insert($conn){
         $stmt = $conn->prepare("INSERT INTO 
         users(email,
@@ -221,6 +227,33 @@ class User {
         $stmt->bind_param("ssssssssss", $this->email, $this->first_name, $this->last_name, $this->password, $this->phone_number, $this->company_name, $this->company_site, $this->company_description, $this->company_image, $this->id);
         $stmt->execute();
 
+=======
+    function insert($conn, $image_name){
+        mysqli_query($conn,"
+        INSERT INTO 
+        users(email, 
+            first_name, 
+            last_name, 
+            password, 
+            phone_number, 
+            company_name, 
+            company_site, 
+            company_description, 
+            company_image, 
+            is_admin)
+        values(
+            '".$this->email."', 
+            '".$this->first_name."', 
+            '".$this->last_name."', 
+            '".$this->password."', 
+            '".$this->phone_number."', 
+            '".$this->company_name."', 
+            '".$this->company_site."', 
+            '".$this->company_description."', 
+            '".$this->company_image."', 
+            '".$this->is_admin."')
+        ");
+>>>>>>> 71450cd22f0b7244d0a7955e8248f401c91136e5
     }
 
     function getid(){
