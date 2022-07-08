@@ -29,7 +29,7 @@
 						$application_row = mysqli_fetch_array($request_application, MYSQLI_BOTH);
 					?>
 					<div class="section-heading">
-						<h2 class="heading-title"><?php echo $application_row["title"]?> - Submissions - <?php echo $appliciants_row["apps"] ?></h2>
+						<h2 class="heading-title"><?php echo $application_row["title"];?> - Submissions - <?php echo $appliciants_row["apps"]; ?> Appliciants</h2>
 					</div>
 					<ul class="jobs-listing">
 						<?php 
@@ -37,7 +37,7 @@
 						?>
 							<li class="job-card">
 								<div class="job-primary">
-									<h2 class="job-title"><?php echo "" . $request_appliciant["first_name"] . " " . $request_appliciant["last_name"] . ""?></h2>
+									<h2 class="job-title"><?php echo "" . $request_appliciant["first_name"] . " " . $request_appliciant["last_name"] . "";?></h2>
 								</div>
 								<div class="job-secondary centered-content">
 									<div class="job-actions">
