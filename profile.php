@@ -3,8 +3,6 @@
 
 <body>
 <?php include 'header.php'; include 'classes/users.php';
-	//this will be changed when we have a login session
-	$user_id = 47;
 	$sql = "SELECT * FROM users WHERE $user_id = users.id";
 	$result = mysqli_query($conn, $sql);
 
