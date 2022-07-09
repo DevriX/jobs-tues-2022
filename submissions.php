@@ -47,8 +47,10 @@
 							</li>
 						<?php }
 								} else { 
-									$application_row = mysqli_fetch_array($request_application, MYSQLI_BOTH) ?>
-									<h2 class="heading-title"><?php echo "title";?> - Submissions - 0 Appliciants</h2>
+									$request_job_title = $conn->query(
+										"SELECT jobs.title FROM jobs WHERE jobs.id=" . $_GET['job_id'] ."");
+									$job_row = mysqli_fetch_array($request_job_title, MYSQLI_BOTH) ?>
+									<h2 class="heading-title"><?php echo $job_row['title'];?> - Submissions - 0 Appliciants</h2>
 								<?php } ?>
 						
 					</ul>					
