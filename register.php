@@ -4,9 +4,9 @@
 <body>
 <?php include 'header.php'; include "classes/Users.php";
 
-	if(!empty($_POST)){
+	/*if(!empty($_POST)){
 		$user = new User($_POST);
-		$work_data = $user->clear_data($_POST);
+		$work_data = $user->clear_data($_POST, $conn);
 		$err = $work_data['errors'];
 		$is_clear = $work_data["is_clear"];
 		$img_name = "";
@@ -29,7 +29,29 @@
             'site_err' => ""
         );
 	}
-	
+	*/
+	$user = new User($_POST, $conn);
+	$err = array(
+		'first_name_err' => "",
+		'last_name_err' => "",
+		'password_err' => "",
+		'email_err' => "",
+		'repeat_err' => "",
+		'phone_err' => "",
+		'site_err' => ""
+	);
+	if(isset($user->err)){
+		$err = $user->err;
+	}
+	$is_clear = $user->is_clear;
+	$image = '';
+	if(isset($_FILES["company_image"])){
+		$image = $_FILES["company_image"];
+	}
+	if($is_clear){
+		echo 'inserting';
+		$user->insert($conn, $image['name']);
+	}
 		
 ?>
 	<div class="site-wrapper">
