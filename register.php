@@ -30,28 +30,41 @@
         );
 	}
 	*/
-	$user = new User($_POST, $conn);
-	$err = array(
-		'first_name_err' => "",
-		'last_name_err' => "",
-		'password_err' => "",
-		'email_err' => "",
-		'repeat_err' => "",
-		'phone_err' => "",
-		'site_err' => ""
-	);
-	if(isset($user->err)){
-		$err = $user->err;
+	if(!empty($_POST)){
+		var_dump($_POST);
+		$user = new User($_POST, $conn);
+		$err = array(
+			'first_name_err' => "",
+			'last_name_err' => "",
+			'password_err' => "",
+			'email_err' => "",
+			'repeat_err' => "",
+			'phone_err' => "",
+			'site_err' => ""
+		);
+		if(isset($user->err)){
+			$err = $user->err;
+		}
+		$is_clear = $user->is_clear;
+		$image = '';
+		if(isset($_FILES["company_image"])){
+			$image = $_FILES["company_image"];
+		}
+		if($is_clear){
+			$user->insert($conn, $image['name']);
+		}
+	}else{
+		$err = array(
+			'first_name_err' => "",
+			'last_name_err' => "",
+			'password_err' => "",
+			'email_err' => "",
+			'repeat_err' => "",
+			'phone_err' => "",
+			'site_err' => ""
+		);
 	}
-	$is_clear = $user->is_clear;
-	$image = '';
-	if(isset($_FILES["company_image"])){
-		$image = $_FILES["company_image"];
-	}
-	if($is_clear){
-		echo 'inserting';
-		$user->insert($conn, $image['name']);
-	}
+	
 		
 ?>
 	<div class="site-wrapper">

@@ -78,9 +78,12 @@ class User {
             $err["password_err"] = "Password is reqired!";
             $clear = false;
         };
-        if(strcmp($work_data["password"], $this->password) === 0){
-            $clear = true;
-        };
+        if(isset($work_data["password"])){
+            if(strcmp($work_data["password"], $this->password) === 0){
+                $clear = true;
+            }
+        }
+        
         
         if(empty($work_data["repeat"])){
             $err["repeat_err"] = "You have to repeat the password!";
