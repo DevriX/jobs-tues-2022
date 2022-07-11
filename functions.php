@@ -11,12 +11,6 @@ function time_diff_mesage($diff){
     }
 }
 
-/*$request_job_info = $conn->query("SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
-														FROM jobs as j JOIN users as u on u.id = j.user_id
-														HAVING (j.title LIKE '%".$key_word."%')  
-														ORDER BY date_posted DESC");
-									
-									$num_rows = mysqli_num_rows ($conn->query("SELECT * FROM jobs"));*/
 
 function pagination($sql_request, $num_rows_request){
     $db = new Requests;

@@ -51,9 +51,7 @@
 					<?php
 						
 						$url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-						if(strpos($url, "search")){
-							$is_searched = true;				
-							var_dump($_GET['search']);
+						if(strpos($url, "search")){				
 							if(isset($_GET['search'])){
 								$request_search = "SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
 														FROM jobs as j JOIN users as u on u.id = j.user_id

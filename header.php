@@ -12,6 +12,7 @@ if(!empty($_SESSION['id'])){
     $logged = true;
 }
 
+include 'functions.php';
 ?>
 
 <head>
