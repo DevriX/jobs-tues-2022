@@ -11,7 +11,6 @@ function time_diff_mesage($diff){
     }
 }
 
-
 function pagination($sql_request, $num_rows_request){
     $db = new Requests;
     $conn = $db->connectDB(); 
@@ -63,23 +62,41 @@ function pagination($sql_request, $num_rows_request){
                     if($i == $page){
                         if(strpos($url, "search")){
                             if(isset($_GET['search'])){
-                                printf("<a class='page-numbers current' %shref='index.php?search=%s&page=%u'>%u</a>", 
-                                $i==$page ? : "",$_GET['search'], $i, $i);
+                                if(isset($_GET['drop_down_menu'])){
+                                    printf("<a class='page-numbers current' %shref='index.php?drop_down_menu=%u&search=%s&page=%u'>%u</a>", 
+                                    $i==$page ? : "", $_GET['drop_down_menu'], $_GET['search'], $i, $i);
+                                }else{
+                                    printf("<a class='page-numbers current' %shref='index.php?search=%s&page=%u'>%u</a>", 
+                                    $i==$page ? : "", $_GET['drop_down_menu'], $i, $i);
+                                }
                             }
                         } else{
-                            printf("<a class='page-numbers current' %shref='index.php?page=%u'>%u</a>", 
-                                $i==$page ? : "", $i, $i );
+                            if(isset($_GET['drop_down_menu'])){
+                                printf("<a class='page-numbers current' %shref='index.php?drop_down_menu=%u&page=%u'>%u</a>", 
+                                    $i==$page ? : "", $_GET['drop_down_menu'], $i, $i );
+                            } else{
+                                printf("<a class='page-numbers current' %shref='index.php?page=%u'>%u</a>", 
+                                    $i==$page ? : "", $i, $i );
+                            }
                         }
                     }
                     else{
                         if(strpos($url, "search")){
-                            if(isset($_GET['search'])){
+                            if(isset($_GET['drop_down_menu'])){
+                                printf("<a class='page-numbers' %shref='index.php?drop_down_menu=%u&search=%s&page=%u'>%u</a>", 
+                                $i==$page ? : "", $_GET['drop_down_menu'], $_GET['search'], $i, $i);
+                            } else{
                                 printf("<a class='page-numbers' %shref='index.php?search=%s&page=%u'>%u</a>", 
-                                $i==$page ? : "",$_GET['search'], $i, $i );
+                                $i==$page ? : "", $_GET['search'], $i, $i);
                             }
                         } else{
-                            printf("<a class='page-numbers' %shref='index.php?page=%u'>%u</a>", 
-                                $i==$page ? : "", $i, $i );
+                            if(isset($_GET['drop_down_menu'])){
+                                printf("<a class='page-numbers' %shref='index.php?drop_down_menu=%u&page=%u'>%u</a>", 
+                                    $i==$page ? : "", $_GET['drop_down_menu'], $i, $i );
+                            } else{
+                                printf("<a class='page-numbers' %shref='index.php?page=%u'>%u</a>", 
+                                    $i==$page ? : "", $i, $i );
+                            }
                         }
                     }
             }?>
