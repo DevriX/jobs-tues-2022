@@ -1,42 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php 
-	$erorrs = array(
-		"email"    => "",
-		"password" => ""
-	);
-
-	$inputs = array(
-		"email"    => "",
-		"password" => ""
-	);
-
-	if($_SERVER["REQUEST_METHOD"] == "POST") {
-		if(empty($_POST["email"])){
-			$erorrs["email"] = "Email is required!";
-		}
-		else{
-			$inputs["email"] = $_POST["email"];
-			if(filter_var($inputs["email"], FILTER_VALIDATE_EMAIL)){
-				echo var_dump($inputs["email"]);
-			}
-			else{
-				$erorrs["email"] = "Invalid email!";
-			}
-			
-		}
-
-		if(empty($_POST["password"])){
-			$erorrs["password"] = "Password is required!";
-		}
-		else{
-			$inputs["password"] = $_POST["password"];
-			echo var_dump($inputs["password"] );
-		}		
-	}
-?>
-
 <body>
 <?php include 'header.php';?>
 	<div class="site-wrapper">

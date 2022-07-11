@@ -1,3 +1,15 @@
+
+<?php 
+session_start();
+
+require_once 'classes/Db-connection.php';
+
+$db = new Requests;
+
+$conn = $db->connectDB();
+
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
