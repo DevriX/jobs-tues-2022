@@ -11,8 +11,7 @@ function print_error($error){
 	echo $error;
 }
 
-if(isset($_POST["create_done"])){
-	var_dump("ho");
+if(!empty($_POST["create_done"])){
 	if(empty($_POST["job_title"])){
 		$err["job_title_err"] = "Job title is required.";
 	} else {
@@ -46,7 +45,7 @@ if(isset($_POST["create_done"])){
 		}
 	}
 } 
-if(isset($_POST["edit_done"])) {
+if(!empty($_POST["edit_done"])) {
 
 		$edit_data = array();
 
@@ -117,10 +116,10 @@ if(!empty($_GET['edit_job'])){
 									</div>	
 								</div>
 								<?php if(empty($_GET['edit_job'])){ ?>
-								<button name="create_done" type="submit" class="button">
+								<button name="create_done" type="submit" class="button" value="create_done">
 										Create
 									<?php } else { ?>
-								<button name="edit_done" type="submit" class="button">
+								<button name="edit_done" type="submit" class="button" value="edit_done">
 										Submit
 									<?php } ?>
 								</button>
