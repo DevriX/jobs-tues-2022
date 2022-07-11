@@ -53,7 +53,8 @@
 									<h2 class="heading-title"><?php echo $job_row['title'];?> - Submissions - 0 Appliciants</h2>
 								<?php } ?>
 						
-					</ul>					
+					</ul>
+					<?php if(mysqli_num_rows($request_application) > 0){ ?>					
 					<div class="jobs-pagination-wrapper">
 						<div class="nav-links"> 
 							<a class="page-numbers current">1</a> 
@@ -63,6 +64,7 @@
 							<a class="page-numbers">5</a> 
 						</div>
 					</div>
+					<?php } ?>
 				</div>
 			</section>
 		</main>
