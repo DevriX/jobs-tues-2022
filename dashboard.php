@@ -6,20 +6,20 @@
 include 'header.php';
 
 if($_SERVER["REQUEST_METHOD"] == "GET"){
-	if(!empty($_GET["approved"])){
-		$approve_request = "UPDATE jobs SET status = 1 WHERE jobs.id = " . $_GET['job_id'] . "";
+	if(!empty($_GET["status"])){
+		if($_GET['status'] == "a"){
+			$approve_request = "UPDATE jobs SET status = 1 WHERE jobs.id = " . $_GET['job_id'] . "";
 
-		if ($conn->query($approve_request) === FALSE) {
-			echo "Error: " . $approve_request . "<br>" . $conn->error;
-		}
-	}
-
-	if(!empty($_GET['rejected'])){
-		$reject_request = "UPDATE jobs SET status = 0 WHERE jobs.id = " . $_GET['job_id'] . "";
-	
-			
-		if ($conn->query($reject_request) === FALSE) {
-			echo "Error: " . $delete_request . "<br>" . $conn->error;
+			if ($conn->query($approve_request) === FALSE) {
+				echo "Error: " . $approve_request . "<br>" . $conn->error;
+			}
+		} else {
+			$reject_request = "UPDATE jobs SET status = 0 WHERE jobs.id = " . $_GET['job_id'] . "";
+		
+				
+			if ($conn->query($reject_request) === FALSE) {
+				echo "Error: " . $delete_request . "<br>" . $conn->error;
+			}
 		}
 	}
 }
@@ -34,7 +34,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 						<div class="primary-container">							
 							<ul class="tabs-menu">
 								<li class="menu-item current-menu-item">
-									<a href="#">Jobs</a>					
+									<a href="dashboard.php">Jobs</a>					
 								</li>
 								<li class="menu-item">
 									<a href="category-dashboard.php">Categories</a>
@@ -50,13 +50,16 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								</div>
 								<div class="filter-wrapper">
 									<div class="filter-field-wrapper">
-										<select>
+										<select name="menu">
 											<option value="1">Date</option>
-											<option value="2">Date</option>
-											<option value="3">Date</option>
-											<option value="4">Type</option>
+											<option value="2">Alphabetically</option>
 										</select>
 									</div>
+								</div>
+								<div class="button-wrapper">
+									<form method="post" style="margin-left: 10px; margin-top: -15px;">
+										<button name="filter" class="button" type="submit">Submit</button>
+									</form>
 								</div>
 							</div>
 						</div>
@@ -86,8 +89,11 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 							<div class="job-secondary">
 								<div class="job-actions">
 									<form method="post">
-										<a href="<?php echo $_SERVER["PHP_SELF"]?>?job_id=<?php echo $row['main_id']; ?>&approved=true" name="approved"> Approve </a>
-										<a href="<?php echo $_SERVER["PHP_SELF"]?>?job_id=<?php echo $row['main_id']; ?>&rejected=true" name="rejected">Reject</a>
+										<?php if($row['status'] == 0){ ?>
+											<a href="<?php echo $_SERVER["PHP_SELF"]?>?job_id=<?php echo $row['main_id']; ?>&status=a"> Approve </a>
+										<?php } else { ?>
+											<a href="<?php echo $_SERVER["PHP_SELF"]?>?job_id=<?php echo $row['main_id']; ?>&status=r">Reject</a>
+										<?php } ?>
 									</form>
 								</div>
 								<div class="job-edit">
