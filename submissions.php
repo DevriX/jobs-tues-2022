@@ -47,11 +47,14 @@
 							</li>
 						<?php }
 								} else { 
-									$application_row = mysqli_fetch_array($request_application, MYSQLI_BOTH) ?>
-									<h2 class="heading-title"><?php echo "title";?> - Submissions - 0 Appliciants</h2>
+									$request_job_title = $conn->query(
+										"SELECT jobs.title FROM jobs WHERE jobs.id=" . $_GET['job_id'] ."");
+									$job_row = mysqli_fetch_array($request_job_title, MYSQLI_BOTH) ?>
+									<h2 class="heading-title"><?php echo $job_row['title'];?> - Submissions - 0 Appliciants</h2>
 								<?php } ?>
 						
-					</ul>					
+					</ul>
+					<?php if(mysqli_num_rows($request_application) > 0){ ?>					
 					<div class="jobs-pagination-wrapper">
 						<div class="nav-links"> 
 							<a class="page-numbers current">1</a> 
@@ -61,6 +64,7 @@
 							<a class="page-numbers">5</a> 
 						</div>
 					</div>
+					<?php } ?>
 				</div>
 			</section>
 		</main>
