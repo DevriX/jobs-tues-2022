@@ -1,6 +1,6 @@
 <?php
 require "config.php";
-
+session_start();
 
 class Requests{
     function __construct(){ }

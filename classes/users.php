@@ -13,7 +13,9 @@ class User {
     private $company_description;
     private $company_image;
     private $is_admin;
-
+    public $err;
+    public $work_data;
+    public $is_clear;
 
     function sanitize($data){
         foreach($data as $d){
@@ -24,7 +26,28 @@ class User {
        return $data;
     }
 
-    function clear_data($work_data){
+    function update_password($conn, $password){
+
+        $error = "";
+        $clear = true;
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $specialChars = preg_match('@[^\w]@', $password);
+
+        if(!$uppercase || !$lowercase ||  !$specialChars || strlen($password) < 8) {
+            $error = 'Password should be at least 8 characters in length and should include at least one upper case letter, one lower case letter, and one special character.';
+            $clear = false;
+        }
+        if($clear == true){
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("UPDATE users set password = ? where id = ?");
+            $stmt->bind_param("ss", $password, $this->id);
+            $stmt->execute();
+        }
+        return $error;
+    }
+
+    function clear_data($work_data, $conn){
         $err = array(
             'first_name_err' => "",
             'last_name_err' => "",
@@ -55,6 +78,12 @@ class User {
             $err["password_err"] = "Password is reqired!";
             $clear = false;
         };
+        if(isset($work_data["password"])){
+            if(strcmp($work_data["password"], $this->password) === 0){
+                $clear = true;
+            }
+        }
+        
         
         if(empty($work_data["repeat"])){
             $err["repeat_err"] = "You have to repeat the password!";
@@ -64,6 +93,7 @@ class User {
         
         
         $user_data = array(
+            'id'            => "",
             'first_name' 	=> "",
             'last_name'  	=> "",
             'email'		 	=> "",
@@ -76,6 +106,10 @@ class User {
             'is_admin'		=> false
         );
         
+        if(isset($work_data["id"])){
+            $user_data["id"] = $work_data["id"];
+        }
+
         if(isset($work_data["first_name"])){
             $user_data["first_name"] = $work_data["first_name"];
         }
@@ -100,6 +134,16 @@ class User {
         if(isset($work_data["description"])){
             $user_data["description"] = $work_data["description"];
         }
+        if(isset($work_data["repeat"])){
+            $user_data["repeat"] = $work_data["repeat"];
+            if($work_data["password"] != $work_data["repeat"] && !empty($work_data["password"]) && !empty($work_data["repeat"])){
+                $err["password_err"] = "passwords do not match!";
+                $clear = false;
+            }
+        }
+        if(isset($work_data["company_image"])){
+            $user_data["company_image"] = $work_data["company_image"];
+        }
         
         if(isset($work_data["password"])){
             $uppercase = preg_match('@[A-Z]@', $work_data["password"]);
@@ -111,10 +155,7 @@ class User {
                 $clear = false;
             }
             
-            if($work_data["password"] != $work_data["repeat"] && !empty($work_data["password"]) && !empty($work_data["repeat"])){
-                $err["password_err"] = "passwords do not match!";
-                $clear = false;
-            }
+            
         }
         
         
@@ -122,6 +163,18 @@ class User {
         if(filter_var($user_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($work_data["email"])){
             $err["email_err"] = "email is not valid!";
             $clear = false;
+        }else{
+            $stmt = $conn->prepare("SELECT COUNT(*) as count FROM users Where ? = email");
+            $stmt->bind_param("s", $work_data['email']);
+            $stmt->execute();
+            $select = $stmt->get_result();
+            $result = $select->fetch_assoc();
+            if($result['count'] == 0){
+                $user_data['email'] = $work_data['email'];
+            }else{
+                $err['email_err'] = "email already exists!";
+                $clear = false;
+            }
         }
         
         if(!filter_var($user_data["company_site"], FILTER_VALIDATE_URL) && !empty($user_data["company_site"])){
@@ -134,21 +187,19 @@ class User {
             $clear = false;
         }
 
-        $output = array(
-            'errors' => $err,
-            'data'   => $user_data,
-            'is_clear' => $clear
-        );
-
-        return $output;
+        $this->err      = $err;
+        $this->work_data   = $user_data;
+        $this->is_clear    = $clear;
+        
     }
 
 
-    function __construct($input)
+    function __construct($input, $conn)
     {
-        $work_data = $this->clear_data($input);
-        $data = $work_data["data"];
+        $this->clear_data($input, $conn);
+        $data = $this->work_data;
         $data = $this->sanitize($data);
+        $this->id           = $data["id"];
         $this->email        = $data["email"];
         $this->first_name   = $data["first_name"];
         $this->last_name    = $data["last_name"];
@@ -191,6 +242,7 @@ class User {
             '".$this->company_image."', 
             '".$this->is_admin."')
         ");
+        header("Location: index.php");
     }
 
     function getid(){
