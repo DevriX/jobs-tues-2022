@@ -11,21 +11,12 @@
 			<section class="section-fullwidth section-jobs-preview">
 				<div class="row">	
 					<ul class="tags-list">
+					<?php $request_category_homepage = $conn->query("SELECT title FROM categories ORDER BY title ASC");
+					while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){ ?>
 						<li class="list-item">
-							<a href="#" class="list-item-link">IT</a>
+							<a href="#" class="list-item-link"><?php echo $row['title']; ?></a>
 						</li>
-						<li class="list-item">
-							<a href="#" class="list-item-link">Manufactoring</a>
-						</li>
-						<li class="list-item">
-							<a href="#" class="list-item-link">Commerce</a>
-						</li>
-						<li class="list-item">
-							<a href="#" class="list-item-link">Architecture</a>
-						</li>
-						<li class="list-item">
-							<a href="#" class="list-item-link">Marketing</a>
-						</li>
+				<?php } ?>
 					</ul>
 					<form method = "get">
 						<div class="flex-container centered-vertically">
