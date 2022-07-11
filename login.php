@@ -42,13 +42,11 @@ $err = array(
 			if (mysqli_num_rows($result) === 1) {
 	
 				$row = mysqli_fetch_assoc($result);
-				var_dump($row);
 				if ($row['email'] === $email && password_verify($pass, $row['password'])) {
 					$_SESSION['email'] = $row['email'];
 	
 					$_SESSION['id'] = $row['id'];
 					header("Location: index.php");
-	
 					exit();
 	
 				}else{

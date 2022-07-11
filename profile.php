@@ -7,7 +7,6 @@
 	$result = mysqli_query($conn, $sql);
 
 	if ($result->num_rows > 0) {
-		// output data of each row
 		$row = $result->fetch_assoc();
 		if(empty($row)){
 			echo "0 results";
@@ -39,82 +38,146 @@
 		'company_image' => "",
 		'is_admin'		=> false
 	);
-	if(isset($row["phone_number"]) && isset($_POST["phone"])){
+
+	$changes = array(
+		'first_name_change'   =>	array('first_name', false),
+		'last_name_change'    =>	array('last_name', false),
+		'email_change'	      =>	array('email', false),
+		'phone_number_change' =>	array('phone_number', false),
+		'company_name_change' =>	array('company_name', false),
+		'company_site_change' =>	array('company_site', false),
+		'company_description_change' =>	array('company_description', false),
+		'company_image_change' =>	array('company_image', false)
+	);
+
+
+
+	if(isset($row["phone_number"]) && isset($_POST["phone_number"])){
 		$user_data["phone"] = $row["phone_number"];
-		if($user_data["phone"] != $_POST["phone"]){
-			$user_data["phone"] != $_POST["phone"];
+		if($user_data["phone"] != $_POST["phone_number"]){
 			$change = true;
+			$changes['phone_number_change'][1] = true;
 		}
 	}
 	if(isset($row["company_name"]) && isset($_POST["company_name"])){
 		$user_data["company_name"] = $row["company_name"];
 		if($user_data["company_name"] != $_POST["company_name"]){
-			$user_data["company_name"] != $_POST["company_name"];
 			$change = true;
+			$changes['company_name_change'][1] = true;
 		}
 	}
 	if(isset($row["company_site"]) && isset($_POST["company_site"])){
 		$user_data["company_site"] = $row["company_site"];
 		if($user_data["company_site"] != $_POST["company_site"]){
-			$user_data["company_site"] != $_POST["company_site"];
 			$change = true;
+			$changes['company_site_change'][1] = true;
 		}
 	}
-	if(isset($row["description"]) && isset($_POST["description"])){
-		$user_data["description"] = $row["description"];
-		if($user_data["description"] != $_POST["description"]){
-			$user_data["description"] != $_POST["description"];
+	if(isset($row["company_description"]) && isset($_POST["company_description"])){
+		$user_data["description"] = $row["company_description"];
+		if($user_data["description"] != $_POST["company_description"]){
 			$change = true;
+			$changes['company_description_change'][1] = true;
 		}
 	}
-	if(isset($row["repeat"])){
-		$user_data["repeat"] = $row["repeat"];
-		if(!empty($work_data["password"]) && !empty($work_data["repeat"] && $work_data["password"] != $work_data["repeat"])){
-			$err["password_err"] = "passwords do not match!";
-			$clear = false;
+
+	if(isset($_POST['password'])){
+		if(isset($_POST["repeat"])){
+			$change = true;
+			$changes['password_change'][1] = true;
+		}else{
+			$err['repeat_err'] = 'enter new password!';
 		}
 	}
-	/*if(isset($row["company_image"])){
-		$user_data["company_image"] = $row["company_image"];
-		if($user_data["company_image"] != $_POST["company_image"]){
-			$user_data["company_image"] != $_POST["company_image"];
-			$change = true;
-		}
-	}*/
+
 	if(isset($user_data["first_name"]) && isset($_POST["first_name"])){
 		if(strcmp($user_data["first_name"], $_POST["first_name"]) !== 0){
 			$user_data["first_name"] = $_POST["first_name"];
 			$change = true;
+			$changes['first_name_change'][1] = true;
 		}
 	}
 	if(isset($user_data["last_name"]) && isset($_POST["last_name"])){
 		if($user_data["last_name"] != $_POST["last_name"]){
-			$user_data["last_name"] != $_POST["last_name"];
 			$change = true;
+			$changes['last_name_change'][1] = true;
 		}
 	}
 	if(isset($user_data["email"]) && isset($_POST["email"])){
 		if($user_data["email"] != $_POST["email"]){
-			$user_data["email"] != $_POST["email"];
 			$change = true;
+			$changes['email_change'][1] = true;
 		}
 	}
 	
 	if($change == true){
-		
-		$user = new User($user_data);
-		$work_data = $user->clear_data($user_data);
-		$err = $work_data['errors'];
-		$is_clear = $work_data["is_clear"];
-		if($is_clear){
-			$user->update($conn);
+		$changed = true;
+		foreach($changes as $c){
+			if($c[1]){
+				if(isset($c[0])){
+					if($c[0] == 'email'){
+						if(filter_var($_POST[$c[0]], FILTER_VALIDATE_EMAIL) != true && !empty($_POST[$c[0]])){
+							$err["email_err"] = "email is not valid!";
+							$changed = false;
+							continue;
+						}else{
+							$stmt = $conn->prepare("SELECT COUNT(*) as count FROM users Where ? = email");
+							$stmt->bind_param("s", $_POST[$c[0]]);
+							$stmt->execute();
+							$select = $stmt->get_result();
+							$result = $select->fetch_assoc();
+							if($result['count'] == 0){
+								mysqli_query($conn, "Update users set $c[0] = '{$_POST[$c[0]]}' where id = $user_id");
+								continue;
+							}else{
+								$err['email_err'] = "email already exists!";
+								$changed = false;
+								continue;
+							}
+						}
+					}
+					if($c[0] == 'phone_number'){
+						if(!preg_match('/^[0-9]{10}+$/', $_POST[$c[0]])){
+							$err['phone_err'] = "phone number is not valid!";
+							$changed = false;
+							continue;
+						}else{
+							mysqli_query($conn, "Update users set $c[0] = {$_POST[$c[0]]} where id = $user_id");
+							continue;
+						}
+					}
+					if($c[0] == 'company_site'){
+						if(!filter_var($_POST[$c[0]], FILTER_VALIDATE_URL) && !empty($_POST[$c[0]])){
+							$err["site_err"] = "site url is not valid!";
+							$changed = false;
+							continue;
+						}
+						else{
+							mysqli_query($conn, "Update users set $c[0] = '{$_POST[$c[0]]}' where id = $user_id");
+							continue;
+						}
+					}
+					if($c[0] == 'password'){
+						continue;
+					}
+				}
+				if(isset($c[0]) && isset($_POST[$c[0]])){
+					mysqli_query($conn, "Update users set $c[0] = '{$_POST[$c[0]]}' where id = $user_id");
+				}
+				
+				
+			}
 		}
+		if($changed){
+			header("Location: profile.php");
+		}
+		
 	}
 	
-	if(isset($_POST["password"]) && isset($row["password"])){
-		if(isset($_POST["repeat"])){
-			if(password_verify($_POST["password"], $row["password"])){
-				$user = new User($user_data);
+	if(!empty($_POST["password"]) && isset($row["password"])){
+		if(!empty($_POST["repeat"])){
+			if(password_verify($_POST["password"], $row["password"])){	
+				$user = new User($user_data, $conn);
 				$err["repeat_err"] = $user->update_password($conn, $_POST["repeat"]);
 			}else{
 				$err["password_err"] = "passwords do not match!";
@@ -161,7 +224,7 @@
 											<span class="error">  <?php echo $err["repeat_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
-											<input type="text" name='phone' id='phone' value="<?php echo htmlspecialchars($row["phone_number"]);?>" placeholder="Phone Number"/>
+											<input type="text" name='phone_number' id='phone_number' value="<?php echo htmlspecialchars($row["phone_number"]);?>" placeholder="Phone Number"/>
 											<span class="error">  <?php echo $err["phone_err"];?> </span>
 										</div>
 									</div>
@@ -175,7 +238,7 @@
 											<span class="error">  <?php echo $err["site_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
-											<textarea id="description" name="description" placeholder="Description"><?php echo htmlspecialchars($row["company_description"]);?></textarea>
+											<textarea id="company_description" name="company_description" placeholder="Description"><?php echo htmlspecialchars($row["company_description"]);?></textarea>
 										</div>
 									</div>		
 								</div>					

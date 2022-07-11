@@ -31,7 +31,6 @@
 	}
 	*/
 	if(!empty($_POST)){
-		var_dump($_POST);
 		$user = new User($_POST, $conn);
 		$err = array(
 			'first_name_err' => "",
