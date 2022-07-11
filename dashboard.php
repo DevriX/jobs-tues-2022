@@ -92,7 +92,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								</div>
 								<div class="job-edit">
 									<a href="submissions.php?job_id=<?php echo $row['main_id']; ?>">View Submissions</a>
-									<a href="#">Edit</a>
+									<a href="actions-job.php?edit_job=<?php echo $row['main_id']?>">Edit</a>
 								</div>
 							</div>
 						</li>
