@@ -47,31 +47,29 @@ if(!empty($_SESSION['id'])){
                     <a href="/index.php">Home</a>					
                 </li>
                 <li class="menu-item">
+<<<<<<< HEAD
                 <?php
                 if(!$_SESSION['logged_in']){?>
+=======
+                <?php if(!$logged){ ?>
+>>>>>>> 23e065cb6bfaa2d438bd67f206e7ce75016ad341
                     <a href="/register.php">Register</a>
-                
-                <?php
-                }
-                else{
-                    ?>
+                <?php } else { ?>
+                    <a href="/dashboard.php">Dashboard</a>
+                    <a href="/actions-job.php">Create Job</a>
                     <a href="/profile.php">My Profile</a>
-                <?php
-                }
-                ?></li>
+                <?php } ?></li>
                 <li class="menu-item">
+<<<<<<< HEAD
                 <?php
                 if(!$_SESSION['logged_in']){?>
+=======
+                <?php if(!$logged){ ?>
+>>>>>>> 23e065cb6bfaa2d438bd67f206e7ce75016ad341
                     <a href="/login.php">Login</a>
-                
-                <?php
-                }
-                else{
-                    ?>
+                <?php } else { ?>
                     <a href="/logout.php">Logout</a>
-                <?php
-                }
-                ?>				
+                <?php } ?>				
                 </li>
             </ul>
         </nav>
