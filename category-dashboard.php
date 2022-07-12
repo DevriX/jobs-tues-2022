@@ -62,9 +62,38 @@
 						</div>
 					</div>
 
-					<?php 
-						$request_category = "SELECT * FROM categories ORDER BY title ASC";
-						pagination($request_category); ?>
+					<?php
+					$limit = 5;
+
+					if (!isset ($_GET['page']) ) {  
+						$page = 1;  
+					} else {  
+						$page = $_GET['page'];  
+					}
+
+					$atributes = ['search', 'drop_down_menu'];
+					$request_category = "SELECT * FROM categories ORDER BY title ASC";
+					$page_first_result = ($page-1) * $limit;
+					$num_rows = mysqli_num_rows ($conn->query($request_category));
+					$page_total = ceil($num_rows / $limit);
+					$request_info = $conn->query($request_category." LIMIT $page_first_result, $limit");
+
+					?> <ul class="jobs-listing"> <?php
+					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
+						<li class="job-card">
+							<div class="job-primary">
+								<h2 class="job-title"><?php echo $row["title"]?></h2>
+							</div>
+							<div class="job-secondary centered-content">
+								<div class="job-actions">
+									<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
+								</div>
+							</div>
+						</li>
+				<?php  }
+				pagination($page, $page_total, $atributes);
+					?>
+					</ul>
 				</div>
 			</section>
 		</main>
