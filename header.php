@@ -1,15 +1,26 @@
-
 <?php 
 
 
 require_once 'classes/Db-connection.php';
 
 $db = new Requests;
-$logged = false;
+$_SESSION['logged_in'] = false;
 $conn = $db->connectDB();
+if(!empty($_COOKIE['cookie_hash']) && $_SESSION['logged_in'] == false){
+   $cookie_hash = $_COOKIE['cookie_hash'];
+    $result = mysqli_query($conn, "select id from users where cookie_hash = '$cookie_hash'");
+    if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+        if(empty($row)){
+            echo "0 results";
+        }
+    }
+    $_SESSION['id'] = $row['id'];
+    $_SESSION['logged_in'] = true;
+}
 if(!empty($_SESSION['id'])){
     $user_id = $_SESSION['id'];
-    $logged = true;
+    $_SESSION['logged_in'] = true;
 }
 
 include 'functions.php';
@@ -37,7 +48,8 @@ include 'functions.php';
                     <a href="/index.php">Home</a>					
                 </li>
                 <li class="menu-item">
-                <?php if(!$logged){ ?>
+                <?php
+                if(!$_SESSION['logged_in']){?>
                     <a href="/register.php">Register</a>
                 <?php } else { ?>
                     <a href="/dashboard.php">Dashboard</a>
@@ -45,7 +57,8 @@ include 'functions.php';
                     <a href="/profile.php">My Profile</a>
                 <?php } ?></li>
                 <li class="menu-item">
-                <?php if(!$logged){ ?>
+                <?php
+                if(!$_SESSION['logged_in']){?>
                     <a href="/login.php">Login</a>
                 <?php } else { ?>
                     <a href="/logout.php">Logout</a>
