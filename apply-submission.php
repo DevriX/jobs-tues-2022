@@ -14,10 +14,22 @@
 				echo "0 results";
 			}
 		}
+
+		function validate($data){
+		
+			$data = trim($data);
+	 
+			$data = stripslashes($data);
+	 
+			$data = htmlspecialchars($data);
+	 
+			return $data;
+	 
+		 }
 		
 		if(!empty($_POST)){
-			$job_id = $_POST['job_id'];
-			$custom_message = $_POST['custom_message'];
+			$job_id = validate($_POST['job_id']);
+			$custom_message = validate($_POST['custom_message']);
 			$sql = "INSERT into applications(user_id, job_id, custom_message) values ('$user_id', '$job_id', '$custom_message')";
 			mysqli_query($conn, $sql);
 		}
