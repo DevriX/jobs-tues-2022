@@ -24,13 +24,19 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 	}
 
 	$order = 'date_posted DESC';
-	if(isset($_GET['drom_down_menu']) && $_GET["drop_down_menu"] == 2){
+	if(isset($_GET['drop_down_menu']) && $_GET["drop_down_menu"] == 2){
 		$order = 'title ASC';
 	}
 
 	$search = '';
 	if(!empty($_GET['search'])){
 		$search = $_GET['search'];
+	}
+
+	if (!empty($_GET['drop_down_menu'])) {
+		$menu_value = $_GET['drop_down_menu'];
+	} else {
+		$menu_value = 1;
 	}
 
 	$request = $conn->query(
@@ -63,14 +69,14 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								<form>
 									<div style="display:inline-flex;" class="search-form-wrapper">
 										<div class="search-form-field"> 
-											<input class="search-form-input" type="text" value="" placeholder="Search…" name="search" > 
+											<input class="search-form-input" type="text" value="<?php if (isset($_GET['search'])) echo $_GET['search'];?>" placeholder="Search…" name="search" > 
 										</div> 
 									</div>
 									<div style="display:inline-flex;" class="filter-wrapper">
 										<div class="filter-field-wrapper">
 											<select name="drop_down_menu">
-												<option value="1">Date</option>
-												<option value="2">Alphabetically</option>
+												<option value="1" <?php if ($menu_value == 1) echo 'selected="selected"'; ?>>Date</option>
+												<option value="2" <?php if ($menu_value == 2) echo 'selected="selected"'; ?>>Alphabetically</option>
 											</select>
 										</div>
 									</div>
