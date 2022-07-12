@@ -36,35 +36,35 @@ function homepage_job_listing($request_job_info){
 }
 
 function job_dashboard_listing($request_job_info){ 
-    while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) { ?>
+    while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) {?>
         <li class="job-card">
-                            <div class="job-primary">
-                                <h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['main_id']; ?>"><?php echo $row["title"]; ?></a></h2>
-                                <div class="job-meta">
-                                    <a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
-                                    <span class="meta-date">Posted <?php echo $row["date"]; ?> days ago</span>
-                                </div>
-                                <div class="job-details">
-                                    <span class="job-location"><?php echo $row["location"]; ?></span>
-                                    <span class="job-type">Contract staff</span>
-                                </div>
-                            </div>
-                            <div class="job-secondary">
-                                <div class="job-actions">
-                                    <form method="post">
-                                        <?php if($row['status'] == 0){ ?>
-											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $order; ?>&job_id=<?php echo $row['main_id']; ?>&status=a"> Approve </a>
-										<?php } else { ?>
-											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $order; ?>&job_id=<?php echo $row['main_id']; ?>&status=r">Reject</a>
-										<?php } ?>
-                                    </form>
-                                </div>
-                                <div class="job-edit">
-                                    <a href="submissions.php?job_id=<?php echo $row['main_id']; ?>">View Submissions</a>
-                                    <a href="actions-job.php?edit_job=<?php echo $row['main_id']?>">Edit</a>
-                                </div>
-                            </div>
-                        </li>
+            <div class="job-primary">
+                <h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['main_id']; ?>"><?php echo $row["title"]; ?></a></h2>
+                <div class="job-meta">
+                    <a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
+                    <span class="meta-date">Posted <?php echo $row["date"]; ?> days ago</span>
+                </div>
+                <div class="job-details">
+                    <span class="job-location"><?php echo $row["location"]; ?></span>
+                    <span class="job-type">Contract staff</span>
+                </div>
+            </div>
+            <div class="job-secondary">
+                <div class="job-actions">
+                    <form method="post">
+                        <?php if($row['status'] == 0){ ?>
+                            <a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $order; ?>&job_id=<?php echo $row['main_id']; ?>&status=a"> Approve </a>
+                        <?php } else { ?>
+                            <a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $order; ?>&job_id=<?php echo $row['main_id']; ?>&status=r">Reject</a>
+                        <?php } ?>
+                    </form>
+                </div>
+                <div class="job-edit">
+                    <a href="submissions.php?job_id=<?php echo $row['main_id']; ?>">View Submissions</a>
+                    <a href="actions-job.php?edit_job=<?php echo $row['main_id']?>">Edit</a>
+                </div>
+            </div>
+        </li>
     <?php  } 
 }
 
