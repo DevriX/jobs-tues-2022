@@ -110,9 +110,9 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								<div class="job-actions">
 									<form method="post">
 										<?php if($row['status'] == 0){ ?>
-											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $order; ?>&job_id=<?php echo $row['main_id']; ?>&status=a"> Approve </a>
+											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['main_id']; ?>&status=a"> Approve </a>
 										<?php } else { ?>
-											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $order; ?>&job_id=<?php echo $row['main_id']; ?>&status=r">Reject</a>
+											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['main_id']; ?>&status=r">Reject</a>
 										<?php } ?>
 									</form>
 								</div>
