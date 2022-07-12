@@ -20,8 +20,7 @@ function pagination($page, $page_total, $atributes){
     
     <div class="jobs-pagination-wrapper">
         <div class="nav-links">
-        <?php
-        //var_dump($page_total); 
+        <?php 
              for ($i = 1; $i <= $page_total; $i++) {
                 $url = $beggining = $_SERVER["PHP_SELF"]."?";
                 if($i == $page){
