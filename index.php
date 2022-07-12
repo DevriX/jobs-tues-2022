@@ -69,14 +69,14 @@
 														HAVING (j.title LIKE '%".$_GET['search']."%')  
 														ORDER BY $order_list";
 
-								pagination($request_search, $request_search); 
+								pagination($request_search); 
 							}
 						} else{
 								$sql_request = "SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
 												FROM jobs as j JOIN users as u on u.id = j.user_id 
 												ORDER BY $order_list";
-								$num_rows_sql_request = "SELECT * FROM jobs";
-								pagination($sql_request, $num_rows_sql_request);
+								
+								pagination($sql_request);
 							} ?>
 				</div>
 			</section>	
