@@ -11,151 +11,109 @@
 			<section class="section-fullwidth section-jobs-preview">
 				<div class="row">	
 					<ul class="tags-list">
+					<?php $request_category_homepage = $conn->query("SELECT title FROM categories ORDER BY title ASC");
+					while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){ ?>
 						<li class="list-item">
-							<a href="#" class="list-item-link">IT</a>
+							<a href="#" class="list-item-link"><?php echo $row['title']; ?></a>
 						</li>
-						<li class="list-item">
-							<a href="#" class="list-item-link">Manufactoring</a>
-						</li>
-						<li class="list-item">
-							<a href="#" class="list-item-link">Commerce</a>
-						</li>
-						<li class="list-item">
-							<a href="#" class="list-item-link">Architecture</a>
-						</li>
-						<li class="list-item">
-							<a href="#" class="list-item-link">Marketing</a>
-						</li>
+				<?php } ?>
 					</ul>
-					<div class="flex-container centered-vertically">
-						<div class="search-form-wrapper">
-							<div class="search-form-field" method = "get">
-								<form method = "get">	 
-									<input class="search-form-input" type="text" value="" placeholder="Search…" name="search">
-								</form>
-								
-							</div> 
-						</div>
-						<div class="filter-wrapper">
-							<div class="filter-field-wrapper">
-								<select>
-									<option value="1">Date</option>
-									<option value="2">Date</option>
-									<option value="3">Date</option>
-									<option value="4">Type</option>
-								</select>
+					<form method = "get">
+						<div class="flex-container centered-vertically">
+							<div class="search-form-wrapper">
+								<div class="search-form-field" method = "get">
+									<input class="search-form-input" type="text" placeholder="Search..." value='<?php if (isset($_GET['search'])) echo $_GET['search'];?>' name="search">
+								</div> 
 							</div>
+							<?php
+							if (!empty($_GET['drop_down_menu'])) {
+								$drop_down_val = $_GET['drop_down_menu'];
+							} else {
+								$drop_down_val = 1;
+							}
+							?>
+							<form>
+								<div style="display: flex">
+									<div class="filter-wrapper">
+										<div class="filter-field-wrapper">
+											<select name='drop_down_menu'>
+												<option value="1" <?php if ($drop_down_val == 1) echo 'selected="selected"'; ?>>By Date</option>;
+												<option value="2" <?php if ($drop_down_val == 2) echo 'selected="selected"'; ?>>Alphabetically</option>;
+											</select>
+										</div>
+									</div>
+									<div>
+											<button class="button" style="margin-top: 3px; margin-left: 10px;" type="submit" name="submit" >
+														Submit
+											</button>
+									</div>
+								</div>
+							</form>
+							
 						</div>
-					</div>
+					</form>
 					<ul class="jobs-listing">
 					<?php
-						$is_searched = false;
-							if(isset($_GET["search"])){
-								$is_searched = true;				
-								$key_word = $_GET["search"];
-								$request_job_info = $conn->query("SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
+						
+						if(isset($_GET['drop_down_menu']) && $_GET['drop_down_menu'] == 2){
+							$order_list = "title ASC";
+						} else{
+							$order_list = "date_posted DESC";
+						}
+						
+						$url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+						$limit = 5;
+
+						if (!isset ($_GET['page']) ) {  
+							$page = 1;  
+						} else {  
+							$page = $_GET['page'];  
+						}
+
+						$atributes = ['search', 'drop_down_menu'];
+						if(strpos($url, "search")){				
+							if(isset($_GET['search'])){
+								$sql_request = "SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
 														FROM jobs as j JOIN users as u on u.id = j.user_id
-														HAVING (j.title LIKE '%".$key_word."%')  
-														ORDER BY date_posted DESC");
-								
-								while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) {
-									$company_image_path = "/uploads/company_images/".$row["company_image"];?>
-									<li class="job-card">
-										<div class="job-primary">
-											<h2 class="job-title"><a href="#"><?php echo $row["title"];?></a></h2>
-											<div class="job-meta">
-												<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
-												<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>
-											</div>
-											<div class="job-details">
-												<span class="job-location"><?php echo $row["location"];?></span>
-												<span class="job-type">Contract staff</span>
-											</div>
-										</div>
-										<div class="job-logo">
-											<div class="job-logo-box">
-												<img src=<?php echo $company_image_path;?> alt="">
-											</div>
-										</div>
-									</li>
-							<?php } 
+														HAVING (j.title LIKE '%".$_GET['search']."%')  
+														ORDER BY $order_list";
+							}
+						} else{
+								$sql_request = "SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
+												FROM jobs as j JOIN users as u on u.id = j.user_id 
+												ORDER BY $order_list";
 							} 
-
-							function time_diff_mesage($diff){
-								switch($diff){
-									case 0:
-										echo " today."; break;
-									case 1:
-										echo " yesterday."; break;
-									default:
-										echo $diff." days ago.";
-								}
-							}
-  
-							$limit = 5;
-
-							if (!isset ($_GET['page']) ) {  
-								$page = 1;  
-							} else {  
-								$page = $_GET['page'];  
-							}
-							 
+							
 							$page_first_result = ($page-1) * $limit;
+							$num_rows = mysqli_num_rows ($conn->query($sql_request));
+							$page_total = ceil($num_rows / $limit);
+							$request_info = $conn->query($sql_request." LIMIT $page_first_result, $limit");
 
-							
-							if($is_searched == false){	
-									$request_job_info = $conn->query("SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image
-																	FROM jobs as j JOIN users as u on u.id = j.user_id 
-																	ORDER BY date_posted DESC 
-																	LIMIT $page_first_result, $limit");
-									
-									$num_rows = mysqli_num_rows ($conn->query("SELECT * FROM jobs"));
-								
-
-								
-									$page_total = ceil($num_rows / $limit);
-
-									while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) {
-										$company_image_path = "/uploads/company_images/".$row["company_image"];?>
-										<li class="job-card">
-											<div class="job-primary">
-												<h2 class="job-title"><a href="#"><?php echo $row["title"];?></a></h2>
-												<div class="job-meta">
-													<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
-													<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>
-												</div>
-												<div class="job-details">
-													<span class="job-location"><?php echo $row["location"];?></span>
-													<span class="job-type">Contract staff</span>
-												</div>
-											</div>
-											<div class="job-logo">
-												<div class="job-logo-box">
-													<img src=<?php echo $company_image_path;?> alt="">
-												</div>
-											</div>
-										</li>
-								<?php  } ?>		
-									
-								</ul>
-								<div class="jobs-pagination-wrapper">
-									<div class="nav-links">
-										<?php 
-											for ($i = 1; $i <= $page_total; $i++) {
-
-													if($i == $page){
-														printf("<a class='page-numbers current' %shref='index.php?page=%u'>%u</a>", 
-															$i==$page ? : "", $i, $i );
-													}
-													else{
-														printf("<a class='page-numbers' %shref='index.php?page=%u'>%u</a>", 
-															$i==$page ? : "", $i, $i );
-													}
-												}
-							
-							}?>
-						</div>
-					</div>
+					?> <ul class="jobs-listing"> <?php
+					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
+						$company_image_path = "/uploads/company_images/".$row["company_image"];?>
+						<li class="job-card">
+							<div class="job-primary">
+								<h2 class="job-title"><a href="#"><?php echo $row["title"];?></a></h2>
+								<div class="job-meta">
+									<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
+									<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>
+								</div>
+								<div class="job-details">
+									<span class="job-location"><?php echo $row["location"];?></span>
+									<span class="job-type">Contract staff</span>
+								</div>
+							</div>
+							<div class="job-logo">
+								<div class="job-logo-box">
+									<img src=<?php echo $company_image_path;?> alt="">
+								</div>
+							</div>
+						</li>
+				<?php  }
+						pagination($page, $page_total, $atributes); ?>
+					</ul>
 				</div>
 			</section>	
 		</main>

@@ -23,6 +23,7 @@ if(!empty($_SESSION['id'])){
     $_SESSION['logged_in'] = true;
 }
 
+include 'functions.php';
 ?>
 
 <head>
