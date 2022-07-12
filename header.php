@@ -37,31 +37,19 @@ include 'functions.php';
                     <a href="/index.php">Home</a>					
                 </li>
                 <li class="menu-item">
-                <?php
-                if(!$logged){?>
+                <?php if(!$logged){ ?>
                     <a href="/register.php">Register</a>
-                
-                <?php
-                }
-                else{
-                    ?>
+                <?php } else { ?>
+                    <a href="/dashboard.php">Dashboard</a>
+                    <a href="/actions-job.php">Create Job</a>
                     <a href="/profile.php">My Profile</a>
-                <?php
-                }
-                ?></li>
+                <?php } ?></li>
                 <li class="menu-item">
-                <?php
-                if(!$logged){?>
+                <?php if(!$logged){ ?>
                     <a href="/login.php">Login</a>
-                
-                <?php
-                }
-                else{
-                    ?>
+                <?php } else { ?>
                     <a href="/logout.php">Logout</a>
-                <?php
-                }
-                ?>				
+                <?php } ?>				
                 </li>
             </ul>
         </nav>
