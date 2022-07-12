@@ -132,7 +132,7 @@ if(!empty($_GET['edit_job'])){
 									<div class="filter-wrapper">
 										<div class="select select--multiple" placeholder="Categories">
 											<select id="multi-select" name="categories[]" multiple>
-												<option value="no_category">--Please choose a category--</option>
+												<option disabled>--Please choose a category--</option>
 												<?php 
 												$edit_request = $conn->query("SELECT * FROM categories");
 												while($row = mysqli_fetch_array($edit_request, MYSQLI_BOTH)){
