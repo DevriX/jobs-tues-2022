@@ -39,7 +39,7 @@ function job_dashboard_listing($request_job_info){
     while($row = mysqli_fetch_array($request_job_info, MYSQLI_BOTH)) {?>
         <li class="job-card">
             <div class="job-primary">
-                <h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['main_id']; ?>"><?php echo $row["title"]; ?></a></h2>
+                <h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['job_id']; ?>"><?php echo $row["title"]; ?></a></h2>
                 <div class="job-meta">
                     <a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
                     <span class="meta-date">Posted <?php echo $row["date"]; ?> days ago</span>
@@ -53,15 +53,15 @@ function job_dashboard_listing($request_job_info){
                 <div class="job-actions">
                     <form method="post">
                         <?php if($row['status'] == 0){ ?>
-                            <a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $order; ?>&job_id=<?php echo $row['main_id']; ?>&status=a"> Approve </a>
+                            <a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>&status=a"> Approve </a>
                         <?php } else { ?>
-                            <a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $order; ?>&job_id=<?php echo $row['main_id']; ?>&status=r">Reject</a>
+                            <a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>&status=r">Reject</a>
                         <?php } ?>
                     </form>
                 </div>
                 <div class="job-edit">
-                    <a href="submissions.php?job_id=<?php echo $row['main_id']; ?>">View Submissions</a>
-                    <a href="actions-job.php?edit_job=<?php echo $row['main_id']?>">Edit</a>
+                    <a href="submissions.php?job_id=<?php echo $row['job_id']; ?>">View Submissions</a>
+                    <a href="actions-job.php?edit_job=<?php echo $row['job_id']?>">Edit</a>
                 </div>
             </div>
         </li>
@@ -128,6 +128,7 @@ function pagination($sql_request){
     if (strpos($url, "category-dashboard")){
         display_category_dashboard($request_info);
     }else if(strpos($url, "dashboard")){
+        $status="";
         if(mysqli_num_rows($request_info) > 0){
             job_dashboard_listing($request_info);
         }
@@ -156,21 +157,36 @@ function pagination($sql_request){
                         if(strpos($url, "search")){
                             if(isset($_GET['search'])){
                                 if(isset($_GET['drop_down_menu'])){
-                                    printf("<a class='page-numbers current' %shref='%s?drop_down_menu=%u&search=%s&page=%u'>%u</a>", 
-                                    $i==$page ? : "",$curr_file, $_GET['drop_down_menu'], $_GET['search'], $i, $i);
+                                    if(isset($_GET['job_id'])){
+                                        printf("<a class='page-numbers current' %shref='%s?drop_down_menu=%u&search=%s&job_id=%u&page=%u'>%u</a>", 
+                                            $i==$page ? : "", $curr_file, $_GET['drop_down_menu'], $_GET['search'], $_GET['job_id'] ,$i, $i );
+                                    } else{
+                                        printf("<a class='page-numbers current' %shref='%s?drop_down_menu=%u&search=%s&page=%u'>%u</a>", 
+                                        $i==$page ? : "",$curr_file, $_GET['drop_down_menu'], $_GET['search'], $i, $i);
+                                    }
                                 }else{
-                                    printf("<a class='page-numbers current' %shref='%s?search=%s&page=%u'>%u</a>", 
-                                    $i==$page ? : "", $curr_file, $_GET['drop_down_menu'], $i, $i);
+                                    if(isset($_GET['job_id'])){
+                                        printf("<a class='page-numbers current' %shref='%s?search=%s&job_id=%u&page=%u'>%u</a>", 
+                                            $i==$page ? : "", $curr_file, $_GET['search'], $_GET['job_id'], $i, $i );
+                                    } else{
+                                        printf("<a class='page-numbers current' %shref='%s?search=%s&page=%u'>%u</a>", 
+                                        $i==$page ? : "", $curr_file, $_GET['search'], $i, $i);
+                                    }
                                 }
                             }
                         } else{
                             if(isset($_GET['drop_down_menu'])){
-                                printf("<a class='page-numbers current' %shref='%s?drop_down_menu=%u&page=%u'>%u</a>", 
-                                    $i==$page ? : "", $curr_file, $_GET['drop_down_menu'], $i, $i );
+                                if(isset($_GET['job_id'])){
+                                    printf("<a class='page-numbers current' %shref='%s?drop_down_menu=%u&job_id=%u&page=%u'>%u</a>", 
+                                        $i==$page ? : "", $curr_file,$_GET['job_id'],$i, $i );
+                                } else{
+                                    printf("<a class='page-numbers current' %shref='%s?drop_down_menu=%u&page=%u'>%u</a>", 
+                                        $i==$page ? : "", $curr_file, $_GET['drop_down_menu'], $i, $i );
+                                }
                             } else{
                                 if(isset($_GET['job_id'])){
                                     printf("<a class='page-numbers current' %shref='%s?job_id=%u&page=%u'>%u</a>", 
-                                        $i==$page ? : "", $curr_file,$_GET['job_id'] ,$i, $i );
+                                        $i==$page ? : "", $curr_file,$_GET['job_id'],$i, $i );
                                 } else{
                                     printf("<a class='page-numbers current' %shref='%s?page=%u'>%u</a>", 
                                         $i==$page ? : "", $curr_file, $i, $i );
@@ -181,16 +197,26 @@ function pagination($sql_request){
                     else{
                         if(strpos($url, "search")){
                             if(isset($_GET['drop_down_menu'])){
-                                printf("<a class='page-numbers' %shref='%s?drop_down_menu=%u&search=%s&page=%u'>%u</a>", 
-                                $i==$page ? : "", $curr_file, $_GET['drop_down_menu'], $_GET['search'], $i, $i);
+                                if(isset($_GET['job_id'])){
+                                    printf("<a class='page-numbers' %shref='%s?job_id=%u&drop_down_menu=%u&search=%s&page=%u'>%u</a>", 
+                                        $i==$page ? : "", $curr_file,$_GET['job_id'], $_GET['drop_down_menu'], $_GET['search'], $i, $i );
+                                } else{
+                                    printf("<a class='page-numbers' %shref='%s?drop_down_menu=%u&search=%s&page=%u'>%u</a>", 
+                                    $i==$page ? : "", $curr_file, $_GET['drop_down_menu'], $_GET['search'], $i, $i);
+                                }
                             } else{
-                                printf("<a class='page-numbers' %shref='%s?search=%s&page=%u'>%u</a>", 
-                                $i==$page ? : "", $curr_file, $_GET['search'], $i, $i);
+                                if(isset($_GET['job_id'])){
+                                    printf("<a class='page-numbers' %shref='%s?job_id=%u&search=%s&page=%u'>%u</a>", 
+                                    $i==$page ? : "", $curr_file,$_GET['job_id'], $_GET['search'],$i, $i );
+                                } else{
+                                    printf("<a class='page-numbers' %shref='%s?search=%s&page=%u'>%u</a>", 
+                                    $i==$page ? : "", $curr_file, $_GET['search'],$i, $i);
+                                }
                             }
                         } else{
                             if(isset($_GET['job_id'])){
                                 printf("<a class='page-numbers' %shref='%s?job_id=%u&page=%u'>%u</a>", 
-                                    $i==$page ? : "", $curr_file,$_GET['job_id'] ,$i, $i );
+                                    $i==$page ? : "", $curr_file,$_GET['job_id'],$i, $i );
                             } else{
                                 printf("<a class='page-numbers' %shref='%s?page=%u'>%u</a>", 
                                     $i==$page ? : "", $curr_file, $i, $i );
