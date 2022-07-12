@@ -40,7 +40,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 	}
 
 	$request = $conn->query(
-		"SELECT *, jobs.id AS 'main_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
+		"SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
 		FROM jobs 
 		LEFT JOIN users ON jobs.user_id = users.id
 		HAVING title LIKE '%" . $search . "%'
@@ -96,7 +96,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 						?>
 						<li class="job-card">
 							<div class="job-primary">
-								<h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['main_id']; ?>"><?php echo $row["title"]; ?></a></h2>
+								<h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['job_id']; ?>"><?php echo $row["title"]; ?></a></h2>
 								<div class="job-meta">
 									<a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
 									<span class="meta-date">Posted <?php echo $row["date"]; ?> days ago</span>
@@ -110,15 +110,15 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								<div class="job-actions">
 									<form method="post">
 										<?php if($row['status'] == 0){ ?>
-											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['main_id']; ?>&status=a"> Approve </a>
+											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id']; ?>&status=a"> Approve </a>
 										<?php } else { ?>
-											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['main_id']; ?>&status=r">Reject</a>
+											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id']; ?>&status=r">Reject</a>
 										<?php } ?>
 									</form>
 								</div>
 								<div class="job-edit">
-									<a href="submissions.php?job_id=<?php echo $row['main_id']; ?>">View Submissions</a>
-									<a href="actions-job.php?edit_job=<?php echo $row['main_id']?>">Edit</a>
+									<a href="submissions.php?job_id=<?php echo $row['job_id']; ?>">View Submissions</a>
+									<a href="actions-job.php?edit_job=<?php echo $row['job_id']?>">Edit</a>
 								</div>
 							</div>
 						</li>
