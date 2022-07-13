@@ -45,7 +45,7 @@
 								<h2 class="heading-title">Submit application to
 									Company Name</h2>
 							</div>
-							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" enctype="multipart/form-data">
 								<div class="flex-container justified-horizontally flex-wrap">									
 									<div class="form-field-wrapper width-medium">
 										<input type="text" name="first_name" value="<?php echo($row['first_name']) ?>" placeholder="First Name*"/>
