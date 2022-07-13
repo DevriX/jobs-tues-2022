@@ -18,20 +18,15 @@ function time_diff_mesage($diff){
 
 
 function pagination($page, $page_total){
-    $atributes = ['search', 'drop_down_menu', 'job_id']; 
     for ($i = 1; $i <= $page_total; $i++) {
         $current = "";
-        $url = $_SERVER["PHP_SELF"]."?";
         if($i == $page){
             $current = "current";
         }
-        foreach($atributes as $atribute){
-            if(isset($_GET[$atribute])){ 
-                $url = $url.$atribute."=".$_GET[$atribute]."&";
-            }
-        }
 ?>
-        <a class='page-numbers <?php echo $current ?>' href="<?php echo $url;?>page=<?php echo $i;?>"><?php echo $i ?></a>
-<?php 
+        <a class='page-numbers <?php echo $current ?>'
+        href="<?php echo $_SERVER["PHP_SELF"]."?".http_build_query($_GET); if(empty($_GET['page']))?>&page=<?php echo $i;?>">
+        <?php echo $i; ?></a>
+<?php
     }
 }
