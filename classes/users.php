@@ -154,8 +154,6 @@ class User {
                 $err["password_err"] = 'Password should be at least 8 characters in length and should include at least one upper case letter, one lower case letter, and one special character.';
                 $clear = false;
             }
-            
-            
         }
         
         
@@ -192,6 +190,8 @@ class User {
         $this->is_clear    = $clear;
         
     }
+
+
 
 
     function __construct($input, $conn)

@@ -127,7 +127,7 @@
 							$select = $stmt->get_result();
 							$result = $select->fetch_assoc();
 							if($result['count'] == 0){
-								mysqli_query($conn, "Update users set $c[0] = '{$_POST[$c[0]]}' where id = $user_id");
+								mysqli_query($conn, "Update users set $c[0] = '{$_POST[$c[0]]}' where id = ''$user_id");
 								continue;
 							}else{
 								$err['email_err'] = "email already exists!";
