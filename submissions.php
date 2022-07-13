@@ -17,36 +17,51 @@
 							<a href="category-dashboard.php">Categories</a>
 						</li>
 					</ul>
-					<?php 
-						$request_application = $conn->query(
-							"SELECT jobs.id, jobs.title, users.first_name, users.last_name, applications.user_id 
-							 FROM applications 
-							 LEFT JOIN jobs ON applications.job_id=jobs.id 
-							 LEFT JOIN users ON applications.user_id=users.id
-							 WHERE jobs.id=" . $_GET['job_id'] ."");
+					<?php
+					$limit = 5;
 
-						$title_check = 0;
-						if(mysqli_num_rows($request_application) > 0){
-							while($application_row = mysqli_fetch_array($request_application, MYSQLI_BOTH)){
-					?>
-					<div class="section-heading">
-						<?php if(!$title_check){?>
-							<h2 class="heading-title"><?php echo $application_row["title"];?> - Submissions - <?php echo mysqli_num_rows( $request_application); ?> Appliciants</h2>
-						<?php $title_check=1; }?>	
-					</div>
-					<ul class="jobs-listing">
-							<li class="job-card">
-								<div class="job-primary">
-									<h2 class="job-title"><?php echo "" . $application_row["first_name"] . " " . $application_row["last_name"] . "";?></h2>
-								</div>
-								<div class="job-secondary centered-content">
-									<div class="job-actions">
-										<a href="view-submission.php?user_id=<?php echo $application_row['user_id']; ?>" class="button button-inline">View</a>
-									</div>
-								</div>
-							</li>
-						<?php }
-								} else { 
+					if (!isset ($_GET['page']) ) {  
+						$page = 1;  
+					} else {  
+						$page = $_GET['page'];  
+					}
+
+					$atributes = ['search', 'drop_down_menu', 'job_id'];
+					
+					$request_application = "SELECT jobs.id, jobs.title, users.first_name, users.last_name, applications.user_id 
+							FROM applications 
+							LEFT JOIN jobs ON applications.job_id=jobs.id 
+							LEFT JOIN users ON applications.user_id=users.id
+							WHERE jobs.id=" . $_GET['job_id'] ."";
+
+					$page_first_result = ($page-1) * $limit;
+					$num_rows = mysqli_num_rows ($conn->query($request_application));
+					$page_total = ceil($num_rows / $limit);
+					$request_info = $conn->query($request_application." LIMIT $page_first_result, $limit");
+
+					?> <ul class="jobs-listing"> <?php
+					$title_check = 0;
+					if(mysqli_num_rows($request_info) > 0){
+						while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
+							<div class="section-heading">
+								<?php if(!$title_check){?>
+									<h2 class="heading-title"><?php echo $row["title"];?> - Submissions - <?php echo mysqli_num_rows( $request_info); ?> Appliciants</h2>
+								<?php $title_check=1; }?>	
+							</div>
+							<ul class="jobs-listing">
+									<li class="job-card">
+										<div class="job-primary">
+											<h2 class="job-title"><?php echo "" . $row["first_name"] . " " . $row["last_name"] . "";?></h2>
+										</div>
+										<div class="job-secondary centered-content">
+											<div class="job-actions">
+												<a href="view-submission.php?user_id=<?php echo $row['user_id']; ?>" class="button button-inline">View</a>
+											</div>
+										</div>
+									</li>
+						<?php  } 
+								pagination($page, $page_total, $atributes);
+									}else { 
 									$request_job_title = $conn->query(
 										"SELECT jobs.title FROM jobs WHERE jobs.id=" . $_GET['job_id'] ."");
 									$job_row = mysqli_fetch_array($request_job_title, MYSQLI_BOTH) ?>
@@ -54,17 +69,6 @@
 								<?php } ?>
 						
 					</ul>
-					<?php if(mysqli_num_rows($request_application) > 0){ ?>					
-					<div class="jobs-pagination-wrapper">
-						<div class="nav-links"> 
-							<a class="page-numbers current">1</a> 
-							<a class="page-numbers">2</a> 
-							<a class="page-numbers">3</a> 
-							<a class="page-numbers">4</a> 
-							<a class="page-numbers">5</a> 
-						</div>
-					</div>
-					<?php } ?>
 				</div>
 			</section>
 		</main>

@@ -9,57 +9,87 @@ $err = array(
 	'password_err' => "",
 	'other_err' => ""
 );
-//if(empty($_SESSION["id"])){
-	if (isset($_POST['email']) && isset($_POST['password'])) {
+if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
+	$stmt = $conn->prepare("select * from users where email = ?");
+	$stmt->bind_param("s", $email);
+	$stmt->execute();
+	$result = $stmt->get_result();
 
-		function validate($data){
-	
-		   $data = trim($data);
-	
-		   $data = stripslashes($data);
-	
-		   $data = htmlspecialchars($data);
-	
-		   return $data;
-	
+	if ($result->num_rows > 0) {
+		$row = $result->fetch_assoc();
+		if(empty($row)){
+			echo "0 results";
 		}
-	
-		$email = validate($_POST['email']);
-	
-		$pass = validate($_POST['password']);
-	
-		if (empty($email)) {
-			$err['email_err'] = "enter email";
-	
-		}else if(empty($pass)){
-			$err['password_err'] = "enter password";
-	
+	}
+	if(isset($row['cookie_hash'])){
+		if($_COOKIE['cookie_hash'] == $row['cookie_hash']){
+			$_SESSION['email'] = $row['email'];
+			$_SESSION['id'] = $row['id'];
+			$_SESSION['logged_in'] = true;
+			header("Location: index.php");
+			exit();
 		}else{
-			$sql = "SELECT * FROM users WHERE email='$email'";
-			
-			$result = mysqli_query($conn, $sql);
+			echo "cookie hash failed";
+		}
+	}
 	
-			if (mysqli_num_rows($result) === 1) {
+}else{
+	if(isset($_POST)){
+		if (isset($_POST['email']) && isset($_POST['password'])) {
 	
-				$row = mysqli_fetch_assoc($result);
-				if ($row['email'] === $email && password_verify($pass, $row['password'])) {
-					$_SESSION['email'] = $row['email'];
-	
-					$_SESSION['id'] = $row['id'];
-					header("Location: index.php");
-					exit();
-	
+			function validate($data){
+		
+			   $data = trim($data);
+		
+			   $data = stripslashes($data);
+		
+			   $data = htmlspecialchars($data);
+		
+			   return $data;
+		
+			}
+		
+			$email = validate($_POST['email']);
+		
+			$pass = validate($_POST['password']);
+		
+			if (empty($email)) {
+				$err['email_err'] = "enter email";
+		
+			}else if(empty($pass)){
+				$err['password_err'] = "enter password";
+		
+			}else{
+				$sql = "SELECT * FROM users WHERE email='$email'";
+				
+				$result = mysqli_query($conn, $sql);
+		
+				if (mysqli_num_rows($result) === 1) {
+					$row = mysqli_fetch_assoc($result);
+					if ($row['email'] === $email && password_verify($pass, $row['password'])) {
+						if(isset($_POST['remember'])){
+							$cookie_hash = password_hash(rand(0,1000000), PASSWORD_DEFAULT);
+							mysqli_query($conn, "update users set cookie_hash = '$cookie_hash' where email = '$email'");
+							setCookie('cookie_hash', $cookie_hash, time()+60*60*7);
+						}
+						$_SESSION['email'] = $email;
+						$_SESSION['id'] = $row['id'];
+						header("Location: index.php");
+						exit();
+		
+					}else{
+						$err['other_err'] = "Incorect email or password";
+					}
+		
 				}else{
 					$err['other_err'] = "Incorect email or password";
 				}
-	
-			}else{
-				$err['other_err'] = "Incorect email or password";
+		
 			}
-	
 		}
 	}
-//}
+}
+
 
 
 ?>
@@ -98,6 +128,11 @@ $err = array(
 								<div>
 									<span class="error">  <?php echo $err["other_err"];?> </span>
 >>>>>>> 523164f618f8699217190f9ca1157e77d4dd996b
+								</div>
+								<div>
+									<tr><td colspan="2" allign="center">
+									<input type="checkbox" name="remember" value="1">Remember me
+									</td></td>
 								</div>
 								<button type="submit" class="button">
 									Login

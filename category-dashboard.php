@@ -65,13 +65,25 @@
 							</div>
 						</div>
 					</div>
-					<ul class="jobs-listing">
 
-					<?php 
-						$request_category = $conn->query("SELECT * FROM categories ORDER BY title ASC");
+					<?php
+					$limit = 5;
 
-						while($row = mysqli_fetch_array($request_category, MYSQLI_BOTH)){
-					?>
+					if (!isset ($_GET['page']) ) {  
+						$page = 1;  
+					} else {  
+						$page = $_GET['page'];  
+					}
+
+					$atributes = ['search', 'drop_down_menu'];
+					$request_category = "SELECT * FROM categories ORDER BY title ASC";
+					$page_first_result = ($page-1) * $limit;
+					$num_rows = mysqli_num_rows ($conn->query($request_category));
+					$page_total = ceil($num_rows / $limit);
+					$request_info = $conn->query($request_category." LIMIT $page_first_result, $limit");
+
+					?> <ul class="jobs-listing"> <?php
+					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
 						<li class="job-card">
 							<div class="job-primary">
 								<h2 class="job-title"><?php echo $row["title"]?></h2>
@@ -82,18 +94,10 @@
 								</div>
 							</div>
 						</li>
-					<?php } ?>
-						
-					</ul>					
-					<div class="jobs-pagination-wrapper">
-						<div class="nav-links"> 
-							<a class="page-numbers current">1</a> 
-							<a class="page-numbers">2</a> 
-							<a class="page-numbers">3</a> 
-							<a class="page-numbers">4</a> 
-							<a class="page-numbers">5</a> 
-						</div>
-					</div>
+				<?php  }
+				pagination($page, $page_total, $atributes);
+					?>
+					</ul>
 				</div>
 			</section>
 		</main>
