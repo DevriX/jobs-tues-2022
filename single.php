@@ -12,9 +12,9 @@ if ($job_id != null){
 			WHERE jobs.id = " . $_GET['job_id'] . " ";
 	$result = mysqli_query($conn, $sql);
 	$row = $result->fetch_assoc();
-	$foo = True;
+	$job_exist = True;
 	if(empty($row)){
-		$foo = False;
+		$job_exist = False;
 	}
 
 	$statement_related_jobs = 
@@ -35,7 +35,7 @@ if ($job_id != null){
 
 <body>
 	<div class="site-wrapper">
-		<?php if($foo == True){ ?>
+		<?php if($job_exist == True){ ?>
 			<main class="site-main">
 				<section class="section-fullwidth">
 					<div class="row">
