@@ -23,6 +23,22 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 		}
 	}
 
+	if(!empty($_GET['delete'])){
+		$delete_job_request =
+					"DELETE FROM jobs 
+					 WHERE id=" . $_GET['job_id'] . " ";
+		$delete_categories_request = 
+					"DELETE FROM jobs_categories
+					 WHERE job_id=" . $_GET['job_id'] . " ";
+		
+		if ($conn->query($delete_categories_request) === FALSE) {
+			echo "Error: " . $delete_categories_request . "<br>" . $conn->error;
+		}
+		if ($conn->query($delete_job_request) === FALSE) {
+			echo "Error: " . $delete_request . "<br>" . $conn->error;
+		}
+	}
+
 	$order = 'date_posted DESC';
 	if(isset($_GET['drop_down_menu']) && $_GET["drop_down_menu"] == 2){
 		$order = 'title ASC';
@@ -114,6 +130,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 										<?php } else { ?>
 											<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id']; ?>&status=r">Reject</a>
 										<?php } ?>
+										<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id']; ?>&delete=true">Delete</a>
 									</form>
 								</div>
 								<div class="job-edit">

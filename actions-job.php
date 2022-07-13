@@ -148,10 +148,12 @@ if(!empty($_GET['edit_job'])){
 								<button name="create_done" type="submit" class="button" value="create_done">
 										Create
 									<?php } else { ?>
-								<button name="edit_done" type="submit" class="button" value="edit_done">
-										Submit
+								<div style="display: inline-flex;">
+									<button name="edit_done" type="submit" class="button" value="edit_done" style="margin-right: 100px;">
+											Submit
+									</button>
+								</div>
 									<?php } ?>
-								</button>
 							</form>
 						</div>
 					</div>
