@@ -5,6 +5,8 @@ if (!isset ($_GET['page']) ) {
     $page = $_GET['page'];  
 }
 
+$page_first_result = ($page-1) * RES_LIMIT;
+
 function time_diff_mesage($diff){
     switch($diff){
         case 0:

@@ -28,12 +28,12 @@
 
 						while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){ 
 						$style = "";
-						if($_GET['filter'] == $row['id']){
+						if($_GET['filter'] == $row['id'] && isset($_GET['filter'])){
 							$style = 'style="background-color: #a1a9b5"';
 						} ?>
 
 							<li class="list-item">
-								<a <?php echo $style;?> href="<?php echo change_url_parameter(url_path_http().$url."?", "filter", $row['id'])?>" name="filter" class="list-item-link"><?php echo $row['title'];?></a>
+								<a <?php echo $style;?> href="<?php echo change_url_parameter(url_path_http().$url."?", "filter", $row['id'])?>" name='filter' class="list-item-link"><?php echo $row['title'];?></a>
 							</li>
 						<?php } ?>
 						</ul>
@@ -110,10 +110,10 @@
 							//$sql_request = filter();
 						}
 														
-							$page_first_result = ($page-1) * LIMIT;
+							$page_first_result = ($page-1) * RES_LIMIT;
 							$num_rows = mysqli_num_rows ($conn->query($sql_request));
-							$page_total = ceil($num_rows / LIMIT);
-							$request_info = $conn->query($sql_request." LIMIT " . $page_first_result . ','. LIMIT);
+							$page_total = ceil($num_rows / RES_LIMIT);
+							$request_info = $conn->query($sql_request." LIMIT " . $page_first_result . ','. RES_LIMIT);
 
 							?> <ul class="jobs-listing"> <?php
 							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
