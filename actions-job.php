@@ -150,7 +150,7 @@ if(!empty($_GET['edit_job'])){
 										Create
 									<?php } else { ?>
 								<div style="display: inline-flex;">
-									<button name="edit_done" type="submit" class="button" value="edit_done" style="margin-right: 100px;">
+									<button name="edit_done" type="submit" class="button" value="edit_done">
 											Submit
 									</button>
 								</div>

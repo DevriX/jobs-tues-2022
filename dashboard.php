@@ -150,13 +150,14 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 							</div>
 							<div class="job-secondary">
 								<div class="job-actions">
-									<form method="post">
-										<a <?php if($row['status'] == 1){ ?> style="display:none" <?php } ?> id="approve" data-id="<?php echo $row['job_id'];?>" class="approve-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>"> Approve </a>
+									<a <?php if($row['status'] == 1){ ?> style="display:none" <?php } ?> data-id="<?php echo $row['job_id'];?>" class="approve-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>"> 
+									Approve </a>
 
-										<a <?php if($row['status'] == 0){ ?> style="display:none" <?php } ?> id="reject" data-id="<?php echo $row['job_id'];?>" class="reject-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>">Reject</a>
+									<a <?php if($row['status'] == 0){ ?> style="display:none" <?php } ?> data-id="<?php echo $row['job_id'];?>" class="reject-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>">
+									Reject</a>
 
-										<a id="delete" data-id="<?php echo $row['job_id'];?>" class="delete-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>" class="delete-button"> Delete </a>
-									</form>
+									<a data-id="<?php echo $row['job_id'];?>" class="delete-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>" class="delete-button"> 
+									Delete </a>
 								</div>
 								<div class="job-edit">
 									<a href="submissions.php?job_id=<?php echo $row['job_id']; ?>">View Submissions</a>
