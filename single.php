@@ -24,7 +24,8 @@ if ($job_id != null){
 			LEFT JOIN users ON jobs.user_id=users.id
 			WHERE  job_id != $job_id AND category_id 
 			IN (SELECT subquery.category_id FROM jobs_categories subquery WHERE job_id = $job_id )
-			ORDER BY rand() ";
+			ORDER BY rand() 
+			LIMIT 0, 3";
 
 	$results_related_jobs = mysqli_query($conn, $statement_related_jobs);
 
