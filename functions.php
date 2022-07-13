@@ -11,6 +11,13 @@ function time_diff_mesage($diff){
     }
 }
 
+function validate($data){
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+
+}
 
 function pagination($page, $page_total, $atributes){
     $db = new Requests;

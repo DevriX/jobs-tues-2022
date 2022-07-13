@@ -3,9 +3,8 @@
 
 <body>
 <?php include 'header.php'; include 'classes/users.php';
-	$sql = "SELECT * FROM users WHERE $user_id = users.id";
+	$sql    = "SELECT * FROM users WHERE $user_id = users.id";
 	$result = mysqli_query($conn, $sql);
-
 	if ($result->num_rows > 0) {
 		$row = $result->fetch_assoc();
 		if(empty($row)){
@@ -13,17 +12,15 @@
 		}
 	}
 	$change = false;
-
 	$err = array(
 		'first_name_err' => "",
-		'last_name_err' => "",
-		'password_err' => "",
-		'email_err' => "",
-		'repeat_err' => "",
-		'phone_err' => "",
-		'site_err' => ""
+		'last_name_err'  => "",
+		'password_err'   => "",
+		'email_err' 	 => "",
+		'repeat_err'	 => "",
+		'phone_err'	 	 => "",
+		'site_err'		 => ""
 	);
-
 	$user_data = array(
 		'id'			=> $row["id"],
 		'first_name' 	=> $row["first_name"],
@@ -40,14 +37,14 @@
 	);
 
 	$changes = array(
-		'first_name_change'   =>	array('first_name', false),
-		'last_name_change'    =>	array('last_name', false),
-		'email_change'	      =>	array('email', false),
-		'phone_number_change' =>	array('phone_number', false),
-		'company_name_change' =>	array('company_name', false),
-		'company_site_change' =>	array('company_site', false),
+		'first_name_change'   		 =>	array('first_name', false),
+		'last_name_change'    		 =>	array('last_name', false),
+		'email_change'	     		 =>	array('email', false),
+		'phone_number_change'		 =>	array('phone_number', false),
+		'company_name_change'		 =>	array('company_name', false),
+		'company_site_change' 		 =>	array('company_site', false),
 		'company_description_change' =>	array('company_description', false),
-		'company_image_change' =>	array('company_image', false)
+		'company_image_change' 		 =>	array('company_image', false)
 	);
 
 
@@ -164,16 +161,12 @@
 				if(isset($c[0]) && isset($_POST[$c[0]])){
 					mysqli_query($conn, "Update users set $c[0] = '{$_POST[$c[0]]}' where id = $user_id");
 				}
-				
-				
 			}
 		}
 		if($changed){
 			header("Location: profile.php");
 		}
-		
 	}
-	
 	if(!empty($_POST["password"]) && isset($row["password"])){
 		if(!empty($_POST["repeat"])){
 			if(password_verify($_POST["password"], $row["password"])){	
@@ -186,8 +179,6 @@
 			$err["repeat_err"] = "enter new password!";
 		}
 	}
-
-
 ?>
 	<div class="site-wrapper">
 		
@@ -251,7 +242,6 @@
 				</div>
 			</section>	
 		</main>
-
 	</div>
 	<?php include 'footer.php';?>
 </body>

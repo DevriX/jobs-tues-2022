@@ -7,25 +7,19 @@
 		$user_id = $_SESSION['id'];
 		$sql = "SELECT * FROM users WHERE $user_id = users.id";
 		$result = mysqli_query($conn, $sql);
-
 		if ($result->num_rows > 0) {
 			$row = $result->fetch_assoc();
 			if(empty($row)){
 				echo "0 results";
 			}
 		}
-
-		function validate($data){
-		
+		/*function validate($data){
 			$data = trim($data);
-	 
 			$data = stripslashes($data);
-	 
 			$data = htmlspecialchars($data);
-	 
 			return $data;
 	 
-		 }
+		}*/
 		
 		if(!empty($_POST)){
 			$job_id = validate($_POST['job_id']);

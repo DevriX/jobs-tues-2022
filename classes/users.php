@@ -27,13 +27,11 @@ class User {
     }
 
     function update_password($conn, $password){
-
         $error = "";
         $clear = true;
         $uppercase = preg_match('@[A-Z]@', $password);
         $lowercase = preg_match('@[a-z]@', $password);
         $specialChars = preg_match('@[^\w]@', $password);
-
         if(!$uppercase || !$lowercase ||  !$specialChars || strlen($password) < 8) {
             $error = 'Password should be at least 8 characters in length and should include at least one upper case letter, one lower case letter, and one special character.';
             $clear = false;
@@ -50,30 +48,26 @@ class User {
     function clear_data($work_data, $conn){
         $err = array(
             'first_name_err' => "",
-            'last_name_err' => "",
-            'password_err' => "",
-            'email_err' => "",
-            'repeat_err' => "",
-            'phone_err' => "",
-            'site_err' => ""
+            'last_name_err'  => "",
+            'password_err'   => "",
+            'email_err'      => "",
+            'repeat_err'     => "",
+            'phone_err'      => "",
+            'site_err'       => ""
         );
         $clear = true;
         if(empty($work_data["first_name"])){
             $err["first_name_err"] = "First name is reqired!";
             $clear = false;
         };
-        
         if(empty($work_data["last_name"])){
             $err["last_name_err"] = "Last name is reqired!";
             $clear = false;
         };
-        
         if(empty($work_data["email"])){
             $err["email_err"] = "Email is reqired!";
             $clear = false;
         };
-        
-        
         if(empty($work_data["password"])){
             $err["password_err"] = "Password is reqired!";
             $clear = false;
@@ -83,15 +77,10 @@ class User {
                 $clear = true;
             }
         }
-        
-        
         if(empty($work_data["repeat"])){
             $err["repeat_err"] = "You have to repeat the password!";
             $clear = false;
         };
-        
-        
-        
         $user_data = array(
             'id'            => "",
             'first_name' 	=> "",
@@ -105,11 +94,9 @@ class User {
             'company_image' => "",
             'is_admin'		=> false
         );
-        
         if(isset($work_data["id"])){
             $user_data["id"] = $work_data["id"];
         }
-
         if(isset($work_data["first_name"])){
             $user_data["first_name"] = $work_data["first_name"];
         }
@@ -144,7 +131,6 @@ class User {
         if(isset($work_data["company_image"])){
             $user_data["company_image"] = $work_data["company_image"];
         }
-        
         if(isset($work_data["password"])){
             $uppercase = preg_match('@[A-Z]@', $work_data["password"]);
             $lowercase = preg_match('@[a-z]@', $work_data["password"]);
@@ -155,9 +141,6 @@ class User {
                 $clear = false;
             }
         }
-        
-        
-        
         if(filter_var($user_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($work_data["email"])){
             $err["email_err"] = "email is not valid!";
             $clear = false;
@@ -174,39 +157,32 @@ class User {
                 $clear = false;
             }
         }
-        
         if(!filter_var($user_data["company_site"], FILTER_VALIDATE_URL) && !empty($user_data["company_site"])){
             $err["site_err"] = "site url is not valid!";
             $clear = false;
         }
-        
         if(!preg_match('/^[0-9]{10}+$/', $user_data["phone"])){
             $err['phone_err'] = "phone number is not valid!";
             $clear = false;
         }
-
-        $this->err      = $err;
+        $this->err         = $err;
         $this->work_data   = $user_data;
         $this->is_clear    = $clear;
-        
     }
-
-
-
 
     function __construct($input, $conn)
     {
         $this->clear_data($input, $conn);
         $data = $this->work_data;
         $data = $this->sanitize($data);
-        $this->id           = $data["id"];
-        $this->email        = $data["email"];
-        $this->first_name   = $data["first_name"];
-        $this->last_name    = $data["last_name"];
-        $this->password     = $data["password"];
-        $this->phone_number = $data["phone"];
-        $this->company_name = $data["company_name"];
-        $this->company_site = $data["company_site"];
+        $this->id                  = $data["id"];
+        $this->email               = $data["email"];
+        $this->first_name          = $data["first_name"];
+        $this->last_name           = $data["last_name"];
+        $this->password            = $data["password"];
+        $this->phone_number        = $data["phone"];
+        $this->company_name        = $data["company_name"];
+        $this->company_site        = $data["company_site"];
         $this->company_description = $data["description"];
         $this->company_image = $data["company_image"];
         if(strpos($data["email"], "@devrix.com") !== false){
@@ -218,98 +194,37 @@ class User {
 
 
     function insert($conn){
-        mysqli_query($conn,"
-        INSERT INTO 
-        users(email, 
-            first_name, 
-            last_name, 
-            password, 
-            phone_number, 
-            company_name, 
-            company_site, 
-            company_description, 
-            company_image, 
-            is_admin)
-        values(
-            '".$this->email."', 
-            '".$this->first_name."', 
-            '".$this->last_name."', 
-            '".$this->password."', 
-            '".$this->phone_number."', 
-            '".$this->company_name."', 
-            '".$this->company_site."', 
-            '".$this->company_description."', 
-            '".$this->company_image."', 
-            '".$this->is_admin."')
-        ");
-        header("Location: index.php");
-    }
-
-    function getid(){
-        return $this->id;
-    }
-    function getemail(){
-        return $this->email;
-    }
-    function getfirst_name(){
-        return $this->first_name;
-    }
-    function getlast_name(){
-        return $this->last_name;
-    }
-    function getpassword(){
-        return $this->password;
-    }
-    function getphone_number(){
-        return $this->phone_number;
-    }
-    function getcompany_name(){
-        return $this->company_name;
-    }
-    function getcompany_site(){
-        return $this->company_site;
-    }
-    function getcompany_description(){
-        return $this->company_description;
-    }
-    function getcompany_image(){
-        return $this->company_image;
-    }
-    function getis_admin(){
-        return $this->is_admin;
-    }
-    function setid($id){
-        $this->id = $id;
-    }
-    function setemail($email){
-        $this->email = $email;
-    }
-    function setfirst_name($first_name){
-        $this->first_name = $first_name;
-    }
-    function setlast_name($last_name){
-        $this->last_name = $last_name;
-    }
-    function setpassword($password){
-        $this->password = $password;
-    }
-    function setphone_number($phone_number){
-        $this->phone_number = $phone_number;
-    }
-    function setcompany_name($company_name){
-        $this->company_name = $company_name;
-    }
-    function setcompany_site($company_site){
-        $this->company_site = $company_site;
-    }
-    function setcompany_description($company_description){
-        $this->company_description = $company_description;
-    }
-    function setcompany_image($company_image){
-        $this->company_image = $company_image;
-    }
-    function setis_admin($is_admin){
-        $this->is_admin = $is_admin;
+        try {
+            $stmt = $conn->prepare(
+                 "INSERT INTO users(
+                                 email,
+                                 first_name,
+                                 last_name,
+                                 password,
+                                 phone_number,
+                                 company_name,
+                                 company_site,
+                                 company_description,
+                                 company_image,
+                                 is_admin)
+                                 values(?,?,?,?,?,?,?,?,?,?)");
+                 $stmt->bind_param("ssssssssss", 
+                                 $this->email, 
+                                 $this->first_name, 
+                                 $this->last_name, 
+                                 $this->password, 
+                                 $this->phone_number, 
+                                 $this->company_name, 
+                                 $this->company_site, 
+                                 $this->company_description, 
+                                 $this->company_image, 
+                                 $this->is_admin);
+                 if($stmt->execute()){
+                    header("Location: index.php");
+                 };
+        } catch (e) {
+            var_dump(e);
+        }
     }
 }
 
