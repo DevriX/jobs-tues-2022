@@ -2,30 +2,20 @@
 <html lang="en">
 
 <?php include 'header.php';
-require_once 'classes/Db-connection.php';
 
-$db = new Requests;
-    
-$conn = $db->connectDB();
-
-//var_dump($_GET);
 $job_id = $_GET['job_id'];
 
-//var_dump($job_id);
-
-if($job_id != null){
+if ($job_id != null){
 	$sql = "SELECT * 
 			FROM jobs 
 			LEFT JOIN users ON jobs.user_id=users.id 
 			WHERE jobs.id = " . $_GET['job_id'] . " ";
 	$result = mysqli_query($conn, $sql);
-	if ($result->num_rows > 0) {
-		$row = $result->fetch_assoc();
-		if(empty($row)){
-			echo "0 results";
-		}
+	$row = $result->fetch_assoc();
+	$foo = True;
+	if(empty($row)){
+		$foo = False;
 	}
-	//var_dump($row);
 
 	$statement_related_jobs = 
 			"SELECT *
@@ -45,7 +35,7 @@ if($job_id != null){
 
 <body>
 	<div class="site-wrapper">
-		<?php if($job_id != null){ ?>
+		<?php if($foo == True){ ?>
 			<main class="site-main">
 				<section class="section-fullwidth">
 					<div class="row">
@@ -114,6 +104,7 @@ if($job_id != null){
 					</div>
 				</section>
 			<?php } ?>
+			<h2 class="section-heading">No Jobs Found</h2>
 	</div>
 	<?php include 'footer.php';?>
 </body>
