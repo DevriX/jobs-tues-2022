@@ -1,7 +1,6 @@
 <?php 
-
-
 require_once 'classes/Db-connection.php';
+include 'functions.php';
 
 $db = new Requests;
 $_SESSION['logged_in'] = false;
@@ -22,8 +21,6 @@ if(!empty($_SESSION['id'])){
     $user_id = $_SESSION['id'];
     $_SESSION['logged_in'] = true;
 }
-
-include 'functions.php';
 ?>
 
 <head>
@@ -34,6 +31,8 @@ include 'functions.php';
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="css/master.css">
     <link rel="stylesheet" href="css/master.css.map">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 

@@ -6,6 +6,7 @@
 
 <?php
 $data = array();
+$categories = array();
 $err = array();
 
 function print_error($error){
@@ -13,7 +14,7 @@ function print_error($error){
 }
 
 if(!empty($_POST["create_done"])){
-	if(empty($_POST["job_title"])){
+	if(empty($_POST["title"])){
 		$err["job_title_err"] = "Job title is required.";
 	} else {
 		$data["job_title"] = $_POST["title"];
@@ -36,13 +37,27 @@ if(!empty($_POST["create_done"])){
 		$data["description"] = $_POST["description"];
 	}
 
-	if(empty($err)){
-		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(1, '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
+	if(!empty($_POST['categories'])){
+		foreach($_POST['categories'] as $selected) {
+			array_push($categories, $selected);
+		}
+	}
 
-		if ($conn->query($sql_request) === TRUE) {
-			echo "Your job was added successfully.";
-		} else {
+	if(empty($err)){
+		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES('1', '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
+
+		if ($conn->query($sql_request) === FALSE) {
 			echo "Error: " . $sql_request . "<br>" . $conn->error;
+		} else {
+			$last_id = mysqli_insert_id($conn);
+		}
+
+		foreach($categories as $c) {
+			$categories_request = "INSERT INTO jobs_categories(job_id, category_id) VALUES($last_id, $c)";
+
+			if ($conn->query($categories_request) === FALSE) {
+				echo "Error: " . $categories_request . "<br>" . $conn->error;
+			}
 		}
 	}
 } 
@@ -114,16 +129,32 @@ if(!empty($_GET['edit_job'])){
 										<textarea name="description" placeholder="Description*"><?php if(!empty($_GET['edit_job'])){ echo $row['description']; } ?></textarea>
 										<span class="error">  <?php if(!empty($err["description_err"]))
 											(print_error($err["description_err"]))?> </span>
-									</div>	
+									</div>
+									<div class="filter-wrapper">
+										<div class="select--multiple" placeholder="Categories">
+											<select class="select" id="multi-select" name="categories[]" multiple>
+												<option disabled>--Please choose a category--</option>
+												<?php 
+												$edit_request = $conn->query("SELECT * FROM categories");
+												while($row = mysqli_fetch_array($edit_request, MYSQLI_BOTH)){
+												?>
+													<option value="<?php echo $row['id']; ?>"><?php echo $row['title']; ?></option>
+												<?php } ?>
+											</select>
+											<span class="focus"></span>
+										</div>
+									</div>
 								</div>
 								<?php if(empty($_GET['edit_job'])){ ?>
 								<button name="create_done" type="submit" class="button" value="create_done">
 										Create
 									<?php } else { ?>
-								<button name="edit_done" type="submit" class="button" value="edit_done">
-										Submit
+								<div style="display: inline-flex;">
+									<button name="edit_done" type="submit" class="button" value="edit_done">
+											Submit
+									</button>
+								</div>
 									<?php } ?>
-								</button>
 							</form>
 						</div>
 					</div>

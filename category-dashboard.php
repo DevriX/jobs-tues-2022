@@ -77,20 +77,11 @@
 					</div>
 
 					<?php
-					$limit = 5;
-
-					if (!isset ($_GET['page']) ) {  
-						$page = 1;  
-					} else {  
-						$page = $_GET['page'];  
-					}
-
-					$atributes = ['search', 'drop_down_menu'];
 					$request_category = "SELECT * FROM categories ORDER BY title ASC";
-					$page_first_result = ($page-1) * $limit;
+					$page_first_result = ($page-1) * LIMIT;
 					$num_rows = mysqli_num_rows ($conn->query($request_category));
-					$page_total = ceil($num_rows / $limit);
-					$request_info = $conn->query($request_category." LIMIT $page_first_result, $limit");
+					$page_total = ceil($num_rows / LIMIT);
+					$request_info = $conn->query($request_category." LIMIT " . $page_first_result . ','. LIMIT);
 
 					?> <ul class="jobs-listing"> <?php
 					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
@@ -104,11 +95,20 @@
 									<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
 									<?php }; ?>
 								</div>
+								<div class="job-secondary centered-content">
+									<div class="job-actions">
+										<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
+									</div>
+								</div>
+							</li>
+						<?php
+						}
+						?>
+						<div class="jobs-pagination-wrapper">
+							<div class="nav-links">
+								<?php pagination($page, $page_total); ?>
 							</div>
-						</li>
-				<?php  }
-				pagination($page, $page_total, $atributes);
-					?>
+						</div>
 					</ul>
 				</div>
 			</section>

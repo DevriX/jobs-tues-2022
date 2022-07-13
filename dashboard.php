@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<body>
+<script type="text/javascript" src="engine1/jquery.js"></script> 
+
 <?php 
 include 'header.php';
 
 if($_SERVER["REQUEST_METHOD"] == "GET"){
+	/*
 	if(!empty($_GET["status"])){
 		if($_GET['status'] == "a"){
 			$approve_request = "UPDATE jobs SET status = 1 WHERE id = " . $_GET['job_id'] . "";
@@ -21,7 +23,33 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 				echo "Error: " . $delete_request . "<br>" . $conn->error;
 			}
 		}
-	}
+	}*/
+
+	// if(!empty($_GET['delete'])){
+	// 	// $delete_job_request =
+	// 	// 			"DELETE jobs, jobs_categories, applications
+	// 	// 			 FROM jobs
+	// 	// 			 LEFT JOIN jobs_categories ON jobs.id = jobs_categories.job_id
+	// 	// 			 LEFT JOIN applications ON jobs.id = applications.job_id
+	// 	// 			 WHERE jobs.id=" . $_GET['job_id'] . " ";
+		
+ 	// 	$delete_categories_request = 
+	// 				"DELETE FROM jobs_categories
+	// 				 WHERE job_id=" . $_GET['job_id'] . " ";
+	// 	if ($conn->query($delete_categories_request) === FALSE) {
+	// 		echo "Error: " . $delete_categories_request . "<br>" . $conn->error;
+	// 	}
+
+	// 	$delete_appliciants_request = "DELETE FROM applications WHERE job_id = " . $_GET['job_id'] . " ";
+	// 	if ($conn->query($delete_appliciants_request) === FALSE) {
+	// 		echo "Error: " . $delete_appliciants_request . "<br>" . $conn->error;
+	// 	}
+
+	// 	$delete_job_request = "DELETE FROM jobs WHERE jobs.id=" . $_GET['job_id'] . " ";
+	// 	if ($conn->query($delete_job_request) === FALSE) {
+	// 		echo "Error: " . $delete_request . "<br>" . $conn->error;
+	// 	}
+	// }
 
 	$order = 'date_posted DESC';
 	if(isset($_GET['drop_down_menu']) && $_GET["drop_down_menu"] == 2){
@@ -47,6 +75,8 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 }
 
 ?>
+
+<body>
 	<div class="site-wrapper">
 
 		<main class="site-main">
@@ -88,54 +118,62 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 							</div>
 						</div>
 					</div>
-						<?php 
-							$limit = 5;
+					<?php 
+					$limit = 5;
 
-							if (!isset ($_GET['page']) ) {  
-								$page = 1;  
-							} else {  
-								$page = $_GET['page'];  
-							}
-	
-							$atributes = ['search', 'drop_down_menu'];
-							$page_first_result = ($page-1) * $limit;
-							$num_rows = mysqli_num_rows ($conn->query($request));
-							$page_total = ceil($num_rows / $limit);
-							$request_info = $conn->query($request." LIMIT $page_first_result, $limit");
-							?> <ul class="jobs-listing"> <?php
-							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
-								<li class="job-card">
-									<div class="job-primary">
-										<h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['job_id']; ?>"><?php echo $row["title"]; ?></a></h2>
-										<div class="job-meta">
-											<a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
-											<span class="meta-date">Posted <?php echo $row["date"]; ?> days ago</span>
-										</div>
-										<div class="job-details">
-											<span class="job-location"><?php echo $row["location"]; ?></span>
-											<span class="job-type">Contract staff</span>
-										</div>
-									</div>
-									<div class="job-secondary">
-										<div class="job-actions">
-											<form method="post">
-												<?php if($row['status'] == 0){ ?>
-													<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>&status=a"> Approve </a>
-												<?php } else { ?>
-													<a href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>&status=r">Reject</a>
-												<?php } ?>
-											</form>
-										</div>
-										<div class="job-edit">
-											<a href="submissions.php?job_id=<?php echo $row['job_id']; ?>">View Submissions</a>
-											<a href="actions-job.php?edit_job=<?php echo $row['job_id']?>">Edit</a>
-										</div>
-									</div>
-								</li>
-							<?php  } 
-								pagination($page, $page_total, $atributes);
-							?>
-							</ul>		
+					if (!isset ($_GET['page']) ) {  
+						$page = 1;  
+					} else {  
+						$page = $_GET['page'];  
+					}
+
+					$atributes = ['search', 'drop_down_menu'];
+					$page_first_result = ($page-1) * $limit;
+					$num_rows = mysqli_num_rows ($conn->query($request));
+					$page_total = ceil($num_rows / $limit);
+					$request_info = $conn->query($request." LIMIT $page_first_result, $limit");
+					?> 
+					<ul class="jobs-listing"> 
+					<?php
+					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
+						<li id="card" class="job-card">
+							<div class="job-primary">
+								<h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['job_id']; ?>"><?php echo $row["title"]; ?></a></h2>
+								<div class="job-meta">
+									<a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
+									<span class="meta-date">Posted <?php echo $row["date"]; ?> days ago</span>
+								</div>
+								<div class="job-details">
+									<span class="job-location"><?php echo $row["location"]; ?></span>
+									<span class="job-type">Contract staff</span>
+								</div>
+							</div>
+							<div class="job-secondary">
+								<div class="job-actions">
+									<a <?php if($row['status'] == 1){ ?> style="display:none" <?php } ?> data-id="<?php echo $row['job_id'];?>" class="approve-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>"> 
+									Approve </a>
+
+									<a <?php if($row['status'] == 0){ ?> style="display:none" <?php } ?> data-id="<?php echo $row['job_id'];?>" class="reject-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>">
+									Reject</a>
+
+									<a data-id="<?php echo $row['job_id'];?>" class="delete-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>" class="delete-button"> 
+									Delete </a>
+								</div>
+								<div class="job-edit">
+									<a href="submissions.php?job_id=<?php echo $row['job_id']; ?>">View Submissions</a>
+									<a href="actions-job.php?edit_job=<?php echo $row['job_id']?>">Edit</a>
+								</div>
+							</div>
+						</li>
+						<?php  
+						}
+						?>
+						<div class="jobs-pagination-wrapper">
+							<div class="nav-links">
+								<?php pagination($page, $page_total); ?>
+							</div>
+						</div>
+						</ul>		
 				</div>
 			</section>
 		</main>
