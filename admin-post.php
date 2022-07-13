@@ -10,6 +10,7 @@ if ($_POST['action'] == 'approve') {
         echo "Error: " . $approve_request . "<br>" . $conn->error;
     }
 }
+
 if($_POST['action'] == 'reject'){
     $reject_request = 
         "UPDATE jobs SET status = 0 WHERE id = " . $_POST['job'] . "";
@@ -18,6 +19,7 @@ if($_POST['action'] == 'reject'){
         echo "Error: " . $reject_request . "<br>" . $conn->error;
     }
 }
+
 if($_POST['action'] == 'delete'){
     $delete_categories_request = 
         "DELETE FROM jobs_categories

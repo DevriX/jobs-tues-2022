@@ -131,8 +131,8 @@ if(!empty($_GET['edit_job'])){
 											(print_error($err["description_err"]))?> </span>
 									</div>
 									<div class="filter-wrapper">
-										<div class="select select--multiple" placeholder="Categories">
-											<select id="multi-select" name="categories[]" multiple>
+										<div class="select--multiple" placeholder="Categories">
+											<select class="select" id="multi-select" name="categories[]" multiple>
 												<option disabled>--Please choose a category--</option>
 												<?php 
 												$edit_request = $conn->query("SELECT * FROM categories");
