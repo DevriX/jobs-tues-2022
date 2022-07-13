@@ -36,23 +36,8 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 }else{
 	if(isset($_POST)){
 		if (isset($_POST['email']) && isset($_POST['password'])) {
-	
-			function validate($data){
-		
-			   $data = trim($data);
-		
-			   $data = stripslashes($data);
-		
-			   $data = htmlspecialchars($data);
-		
-			   return $data;
-		
-			}
-		
 			$email = validate($_POST['email']);
-		
 			$pass = validate($_POST['password']);
-		
 			if (empty($email)) {
 				$err['email_err'] = "enter email";
 		
@@ -61,9 +46,7 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 		
 			}else{
 				$sql = "SELECT * FROM users WHERE email='$email'";
-				
 				$result = mysqli_query($conn, $sql);
-		
 				if (mysqli_num_rows($result) === 1) {
 					$row = mysqli_fetch_assoc($result);
 					if ($row['email'] === $email && password_verify($pass, $row['password'])) {
@@ -76,25 +59,17 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 						$_SESSION['id'] = $row['id'];
 						header("Location: index.php");
 						exit();
-		
 					}else{
 						$err['other_err'] = "Incorect email or password";
 					}
-		
 				}else{
 					$err['other_err'] = "Incorect email or password";
 				}
-		
 			}
 		}
 	}
 }
-
-
-
 ?>
-
-
 	<div class="site-wrapper">
 
 		<main class="site-main">
