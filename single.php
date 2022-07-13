@@ -46,7 +46,7 @@ if ($job_id != null){
 										<header class="job-header"> 
 													<h2 class="job-title"><?php echo $row['title'] ?></h2>
 													<div class="job-meta">
-														<a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
+														<?php echo $row["company_name"]; ?>
 														<span class="meta-date">Posted on: <?php echo $row['date_posted'] ?></span>
 													</div>
 													<div class="job-details">
@@ -69,7 +69,7 @@ if ($job_id != null){
 								</div>
 								<a href="apply-submission.php?job_id=<?php echo($_GET['job_id']) ?>" class="button button">Apply now</a>
 								<a href="#" class="button button">Edit now</a>
-								<a href="https://www.CompanyAwesomeLtd..com/">Link to the company</a>
+								<a href="<?php echo $row['company_site']?>"> <?php echo $row['company_name']?></a>
 							</aside>
 						</div>
 					</div>
@@ -84,7 +84,7 @@ if ($job_id != null){
 											<div class="job-primary">
 												<h2 class="job-title"><a href="single.php?job_id=<?php echo $jobs['id']; ?>"><?php echo $jobs['title']?></a></h2>
 												<div class="job-meta">
-													<a class="meta-company" href="#"><?php echo $jobs["company_name"]; ?></a>
+													<?php echo $jobs["company_name"]; ?></a>
 													<span class="meta-date">Posted on: <?php echo $jobs['date_posted'] ?></span>
 												</div>
 												<div class="job-details">
@@ -104,7 +104,9 @@ if ($job_id != null){
 					</div>
 				</section>
 			<?php } ?>
+			<?php if($job_exist == False){ ?>
 			<h2 class="section-heading">No Jobs Found</h2>
+			<?php } ?>
 	</div>
 	<?php include 'footer.php';?>
 </body>
