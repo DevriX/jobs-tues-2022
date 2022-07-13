@@ -3,39 +3,40 @@
 
 <body>
 <?php include 'header.php'; include "classes/Users.php";
+
+	$err = array(
+		'first_name_err'    => "",
+		'last_name_err'     => "",
+		'password_err'      => "",
+		'email_err' 	    => "",
+		'repeat_err'	    => "",
+		'phone_err' 	    => "",
+		'site_err' 		    => "",
+		'company_image_err' => ""
+	);
 	if(!empty($_POST)){
 		$user = new User($_POST, $conn);
-		$err = array(
-			'first_name_err' => "",
-			'last_name_err' => "",
-			'password_err' => "",
-			'email_err' => "",
-			'repeat_err' => "",
-			'phone_err' => "",
-			'site_err' => ""
-		);
 		if(isset($user->err)){
 			$err = $user->err;
 		}
 		$is_clear = $user->is_clear;
+		/*
 		$image = '';
 		if(isset($_FILES["company_image"])){
 			$image = $_FILES["company_image"];
 		}
+		*/
 		if($is_clear){
-			$user->insert($conn, $image['name']);
+			
+			if(!empty($_FILES["company_image"]["name"])){
+				$user->insert($conn, $_FILES);
+			}else{
+				$user->insert($conn, "");
+			}
 		}
-	}else{
-		$err = array(
-			'first_name_err' => "",
-			'last_name_err' => "",
-			'password_err' => "",
-			'email_err' => "",
-			'repeat_err' => "",
-			'phone_err' => "",
-			'site_err' => ""
-		);
-	}	
+		
+		
+	}
 ?>
 	<div class="site-wrapper">
 
@@ -90,7 +91,7 @@
 										</div>
 										<div class="form-field-wrapper width-large">
 											<input type="file" name="company_image" id="company_image" placeholder="Image"/>
-										<span class="error" >  <?php //echo $err["file_err"];?> </span> 
+										<span class="error" >  <?php echo $err["company_image_err"];?> </span> 
 									</div>
 									</div>		
 								</div>

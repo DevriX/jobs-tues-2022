@@ -192,39 +192,93 @@ class User {
         }
     }
 
-
-    function insert($conn){
-        try {
-            $stmt = $conn->prepare(
-                 "INSERT INTO users(
-                                 email,
-                                 first_name,
-                                 last_name,
-                                 password,
-                                 phone_number,
-                                 company_name,
-                                 company_site,
-                                 company_description,
-                                 company_image,
-                                 is_admin)
-                                 values(?,?,?,?,?,?,?,?,?,?)");
-                 $stmt->bind_param("ssssssssss", 
-                                 $this->email, 
-                                 $this->first_name, 
-                                 $this->last_name, 
-                                 $this->password, 
-                                 $this->phone_number, 
-                                 $this->company_name, 
-                                 $this->company_site, 
-                                 $this->company_description, 
-                                 $this->company_image, 
-                                 $this->is_admin);
-                 if($stmt->execute()){
-                    header("Location: index.php");
-                 };
-        } catch (e) {
-            var_dump(e);
+    function insert_image($conn, $image){
+        if(!empty($image["company_image"])){
+            $pname = $image["company_image"]["name"]; 
+            $tname=$image["company_image"]["tmp_name"];
+            
+            $name = pathinfo($image['company_image']['name'], PATHINFO_FILENAME);
+            $extension = pathinfo($image['company_image']['name'], PATHINFO_EXTENSION);
+            
+            $increment = 0; 
+            $pname = $name . '.' . $extension;
+        }else{
+            echo "image empty";
         }
+        
+        while(is_file('uploads/images'.'/'.$pname)) {
+            $increment++;
+            $pname = $name . $increment . '.' . $extension;
+        }
+
+
+
+        $target_file = 'uploads/images'.'/'.$pname;
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" && $imageFileType != "jiff") {
+            $this->err["company_image_err"] = "Wrong file format!";
+            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+        
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+    
+        } else {
+            if (move_uploaded_file($tname, $target_file) && empty($this->err["company_image_err"])) {
+            $company_image = basename( $pname);
+            $stmt = $conn->prepare("UPDATE users SET company_image = ? WHERE email = ?");
+            $stmt->bind_param("ss", $company_image, $this->email);
+            try{
+                $stmt->execute();
+            }catch(e){
+                var_dump(e);
+            }
+            header("Location: index.php");
+            } else {
+                $this->err["company_image_err"] = "Wrong file format!";
+                echo "Sorry, there was an error uploading your file.";
+            }
+        }
+
+        
+    }
+
+    function insert($conn, $image){
+    $stmt = $conn->prepare(
+            "INSERT INTO users(
+                            email,
+                            first_name,
+                            last_name,
+                            password,
+                            phone_number,
+                            company_name,
+                            company_site,
+                            company_description,
+                            company_image,
+                            is_admin)
+                            values(?,?,?,?,?,?,?,?,?,?)");
+            $stmt->bind_param("ssssssssss", 
+                            $this->email, 
+                            $this->first_name, 
+                            $this->last_name, 
+                            $this->password, 
+                            $this->phone_number, 
+                            $this->company_name, 
+                            $this->company_site, 
+                            $this->company_description, 
+                            $this->company_image, 
+                            $this->is_admin);
+            if($stmt->execute()){
+                if(!empty($image)){
+                    $this->insert_image($conn, $image);
+                }else{
+                    header("Location: index.php");
+                }
+            }
     }
 }
 
