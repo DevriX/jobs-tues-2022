@@ -6,6 +6,14 @@
 		$user_id = $_SESSION['id'];
 		$sql = "SELECT * FROM users WHERE $user_id = users.id";
 		$result = mysqli_query($conn, $sql);
+		$sql1 = "SELECT company_name from users left join jobs on jobs.user_id = users.id where jobs.id = ".$_GET['job_id']."";
+		$result1 = mysqli_query($conn, $sql1);
+		if ($result1->num_rows > 0) {
+			$row1 = $result1->fetch_assoc();
+			if(empty($row1)){
+				echo "0 results";
+			}
+		}
 		if ($result->num_rows > 0) {
 			$row = $result->fetch_assoc();
 			if(empty($row)){
@@ -71,7 +79,7 @@
 						<div class="form-box box-shadow">
 							<div class="section-heading">
 								<h2 class="heading-title">Submit application to
-									Company Name</h2>
+									<?php echo($row1['company_name']); ?></h2>
 							</div>
 							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" enctype="multipart/form-data">
 								<div class="flex-container justified-horizontally flex-wrap">									
