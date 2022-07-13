@@ -64,7 +64,7 @@ if ($job_id != null){
 							<aside class="job-secondary">
 								<div class="job-logo">
 									<div class="job-logo-box">
-										<img src="https://i.imgur.com/ZbILm3F.png" alt="">
+										<img src="<?php echo $row['company_image'] ?>" alt="">
 									</div>
 								</div>
 								<a href="apply-submission.php?job_id=<?php echo($_GET['job_id']) ?>" class="button button">Apply now</a>
@@ -95,7 +95,7 @@ if ($job_id != null){
 											</div>
 											<div class="job-logo">
 												<div class="job-logo-box">
-													<img src="https://i.imgur.com/ZbILm3F.png" alt="">
+													<img src="<?php echo $row['company_image'] ?>" alt="">
 												</div>
 											</div>
 										</li>
