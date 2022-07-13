@@ -165,9 +165,14 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								</div>
 							</div>
 						</li>
-						<?php  } 
-						pagination($page, $page_total, $atributes);
+						<?php  
+						}
 						?>
+						<div class="jobs-pagination-wrapper">
+							<div class="nav-links">
+								<?php pagination($page, $page_total); ?>
+							</div>
+						</div>
 						</ul>		
 				</div>
 			</section>

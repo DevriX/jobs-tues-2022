@@ -1,7 +1,6 @@
 <?php 
-
-
 require_once 'classes/Db-connection.php';
+include 'functions.php';
 
 $db = new Requests;
 $_SESSION['logged_in'] = false;
@@ -22,8 +21,6 @@ if(!empty($_SESSION['id'])){
     $user_id = $_SESSION['id'];
     $_SESSION['logged_in'] = true;
 }
-
-include 'functions.php';
 ?>
 
 <head>
