@@ -23,39 +23,10 @@ if(!empty($_POST["create_done"])){
 		$data["location"] = $_POST["location"];
 	}
 
-<<<<<<< HEAD
-		if(!empty($_POST["location"])){
-			$data["location"] = $_POST["location"];
-		}
-
-		if(!empty($_POST["salary"])){
-			$data["salary"] = intval($_POST["salary"]);
-			if(!is_int($data["salary"])){
-				$err["salary_err"] = "Salary needs to be numeric.";
-			}
-		}
-
-		if(empty($_POST["description"])){
-			$err["description_err"] = "Job description is required.";
-		} else {
-			$data["description"] = $_POST["description"];
-		}
-
-		if(empty($err)){
-			
-			$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(1, '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
-
-			if ($conn->query($sql_request) === TRUE) {
-				echo "Your job was added successfully.";
-			} else {
-				echo "Error: " . $sql_request . "<br>" . $conn->error;
-			}
-=======
 	if(!empty($_POST["salary"])){
 		$data["salary"] = intval($_POST["salary"]);
 		if(!is_int($data["salary"])){
 			$err["salary_err"] = "Salary needs to be numeric.";
->>>>>>> 23e065cb6bfaa2d438bd67f206e7ce75016ad341
 		}
 	}
 

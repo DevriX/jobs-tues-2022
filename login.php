@@ -105,17 +105,6 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 							<div class="section-heading">
 								<h2 class="heading-title">Login</h2>
 							</div>
-<<<<<<< HEAD
-							<form method = "post">
-								<div class="form-field-wrapper">
-									<input type="text" name = "email" placeholder="Email"/>
-									<span class="error">  <?php echo $erorrs["email"];?> </span>
-									
-								</div>
-								<div class="form-field-wrapper">
-									<input type="text" name = "password" placeholder="Password"/>
-									<span class="error">  <?php echo $erorrs["password"];?> </span>
-=======
 							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
 								<div class="form-field-wrapper">
 									<input type="text" name="email" id="email" placeholder="Email"/>
@@ -127,7 +116,6 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 								</div>
 								<div>
 									<span class="error">  <?php echo $err["other_err"];?> </span>
->>>>>>> 523164f618f8699217190f9ca1157e77d4dd996b
 								</div>
 								<div>
 									<tr><td colspan="2" allign="center">

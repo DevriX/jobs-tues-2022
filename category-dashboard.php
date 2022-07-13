@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<<<<<<< HEAD
-<body>
-=======
->>>>>>> aad0f54539248d9381ce332926ef431402c3c230
 <?php include 'header.php';?>
 
 <?php
