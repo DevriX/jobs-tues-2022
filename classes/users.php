@@ -243,8 +243,6 @@ class User {
                 echo "Sorry, there was an error uploading your file.";
             }
         }
-
-        
     }
 
     function insert($conn, $image){

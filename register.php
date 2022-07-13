@@ -20,12 +20,6 @@
 			$err = $user->err;
 		}
 		$is_clear = $user->is_clear;
-		/*
-		$image = '';
-		if(isset($_FILES["company_image"])){
-			$image = $_FILES["company_image"];
-		}
-		*/
 		if($is_clear){
 			
 			if(!empty($_FILES["company_image"]["name"])){
@@ -92,7 +86,7 @@
 										<div class="form-field-wrapper width-large">
 											<input type="file" name="company_image" id="company_image" placeholder="Image"/>
 										<span class="error" >  <?php echo $err["company_image_err"];?> </span> 
-									</div>
+										</div>
 									</div>		
 								</div>
 								<button class="button">

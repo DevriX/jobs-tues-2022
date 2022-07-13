@@ -11,15 +11,18 @@
 			echo "0 results";
 		}
 	}
+	//var_dump($row);
+	//die();
 	$change = false;
 	$err = array(
-		'first_name_err' => "",
-		'last_name_err'  => "",
-		'password_err'   => "",
-		'email_err' 	 => "",
-		'repeat_err'	 => "",
-		'phone_err'	 	 => "",
-		'site_err'		 => ""
+		'first_name_err' 	=> "",
+		'last_name_err'  	=> "",
+		'password_err'   	=> "",
+		'email_err' 	 	=> "",
+		'repeat_err'	 	=> "",
+		'phone_err'	   	    => "",
+		'site_err'		 	=> "",
+		'company_image_err' => ""
 	);
 	$user_data = array(
 		'id'			=> $row["id"],
@@ -35,7 +38,6 @@
 		'company_image' => "",
 		'is_admin'		=> false
 	);
-
 	$changes = array(
 		'first_name_change'   		 =>	array('first_name', false),
 		'last_name_change'    		 =>	array('last_name', false),
@@ -46,9 +48,6 @@
 		'company_description_change' =>	array('company_description', false),
 		'company_image_change' 		 =>	array('company_image', false)
 	);
-
-
-
 	if(isset($row["phone_number"]) && isset($_POST["phone_number"])){
 		$user_data["phone"] = $row["phone_number"];
 		if($user_data["phone"] != $_POST["phone_number"]){
@@ -77,7 +76,6 @@
 			$changes['company_description_change'][1] = true;
 		}
 	}
-
 	if(isset($_POST['password'])){
 		if(isset($_POST["repeat"])){
 			$change = true;
@@ -86,7 +84,6 @@
 			$err['repeat_err'] = 'enter new password!';
 		}
 	}
-
 	if(isset($user_data["first_name"]) && isset($_POST["first_name"])){
 		if(strcmp($user_data["first_name"], $_POST["first_name"]) !== 0){
 			$user_data["first_name"] = $_POST["first_name"];
@@ -106,7 +103,14 @@
 			$changes['email_change'][1] = true;
 		}
 	}
-	
+
+	if(isset($row["company_image"]) && isset($_FILES["company_image"]["name"])){
+		$user_data['company_image'] = $row["company_image"];
+		if(strcmp($user_data["company_image"], $_FILES["company_image"]["name"]) != 0){
+			$change = true;
+			$changes['company_image_change'][1] = true;
+		}
+	}
 	if($change == true){
 		$changed = true;
 		foreach($changes as $c){
@@ -154,6 +158,57 @@
 							continue;
 						}
 					}
+					if($c[0] == 'company_image'){
+						if(!empty($_FILES["company_image"])){
+							$pname = $_FILES["company_image"]["name"]; 
+							$tname = $_FILES["company_image"]["tmp_name"];
+							
+							$name = pathinfo($_FILES['company_image']['name'], PATHINFO_FILENAME);
+							$extension = pathinfo($_FILES['company_image']['name'], PATHINFO_EXTENSION);
+							
+							$increment = 0; 
+							$pname = $name . '.' . $extension;
+						}else{
+							echo "image empty";
+						}
+						while(is_file('uploads/images'.'/'.$pname)) {
+							$increment++;
+							$pname = $name . $increment . '.' . $extension;
+						}
+				
+				
+				
+						$target_file = 'uploads/images'.'/'.$pname;
+						$uploadOk = 1;
+						$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+						
+						if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+						&& $imageFileType != "gif" && $imageFileType != "jiff") {
+							$err["company_image_err"] = "Wrong file format!";
+							echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+							$uploadOk = 0;
+						}
+						
+						if ($uploadOk == 0) {
+							echo "Sorry, your file was not uploaded.";
+					
+						} else {
+							if (move_uploaded_file($tname, $target_file) && empty($err["company_image_err"])) {
+								$company_image = basename( $pname);
+								$stmt = $conn->prepare("UPDATE users SET company_image = ? WHERE id = ?");
+								$stmt->bind_param("ss", $company_image, $user_id);
+								try{
+									$stmt->execute();
+								}catch(e){
+									var_dump(e);
+								}
+								header("Location: profile.php");
+							}else {
+								$err["company_image_err"] = "Wrong file format!";
+								echo "Sorry, there was an error uploading your file.";
+							}
+						}
+					}
 					if($c[0] == 'password'){
 						continue;
 					}
@@ -179,6 +234,7 @@
 			$err["repeat_err"] = "enter new password!";
 		}
 	}
+	
 ?>
 	<div class="site-wrapper">
 		
@@ -190,7 +246,7 @@
 							<div class="section-heading">
 								<h2 class="heading-title">My Profile</h2>
 							</div>
-							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" enctype="multipart/form-data">
 								<div class="flex-container justified-horizontally">
 									<div class="primary-container">
 										<h4 class="form-title">About me</h4>
@@ -231,6 +287,10 @@
 										<div class="form-field-wrapper">
 											<textarea id="company_description" name="company_description" placeholder="Description"><?php echo htmlspecialchars($row["company_description"]);?></textarea>
 										</div>
+										<div class="form-field-wrapper width-large">
+											<input type="file" name="company_image" id="company_image" placeholder="Image"/>
+											<span class="error" >  <?php echo $err["company_image_err"];?> </span> 
+										</div>
 									</div>		
 								</div>					
 								<button class="button">
@@ -242,6 +302,7 @@
 				</div>
 			</section>	
 		</main>
+
 	</div>
 	<?php include 'footer.php';?>
 </body>
