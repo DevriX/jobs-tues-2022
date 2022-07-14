@@ -58,9 +58,9 @@ if(!empty($_SESSION['id'])){
                 <li class="menu-item">
                 <?php
                 if(!$_SESSION['logged_in']){?>
-                    <a href="/login.php">Login</a>
+                    <a href="/login.php">Log In</a>
                 <?php } else { ?>
-                    <a href="/logout.php">Logout</a>
+                    <a href="/logout.php">Sign Out</a>
                 <?php } ?>				
                 </li>
             </ul>

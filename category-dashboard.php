@@ -78,10 +78,10 @@
 
 					<?php
 					$request_category = "SELECT * FROM categories ORDER BY title ASC";
-					$page_first_result = ($page-1) * LIMIT;
+					$page_first_result = ($page-1) * RES_LIMIT;
 					$num_rows = mysqli_num_rows ($conn->query($request_category));
-					$page_total = ceil($num_rows / LIMIT);
-					$request_info = $conn->query($request_category." LIMIT " . $page_first_result . ','. LIMIT);
+					$page_total = ceil($num_rows / RES_LIMIT);
+					$request_info = $conn->query($request_category." LIMIT " . $page_first_result . ','. RES_LIMIT);
 
 					?> <ul class="jobs-listing"> <?php
 					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
@@ -94,11 +94,6 @@
 									<?php if(isset($is_admin) && $is_admin){?>
 									<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
 									<?php }; ?>
-								</div>
-								<div class="job-secondary centered-content">
-									<div class="job-actions">
-										<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
-									</div>
 								</div>
 							</li>
 						<?php

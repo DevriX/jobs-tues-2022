@@ -232,11 +232,7 @@ class User {
             $company_image = basename( $pname);
             $stmt = $conn->prepare("UPDATE users SET company_image = ? WHERE email = ?");
             $stmt->bind_param("ss", $company_image, $this->email);
-            try{
-                $stmt->execute();
-            }catch(e){
-                var_dump(e);
-            }
+            $stmt->execute();
             header("Location: index.php");
             } else {
                 $this->err["company_image_err"] = "Wrong file format!";

@@ -48,7 +48,8 @@ if ($job_id != null){
 
 <body>
 	<div class="site-wrapper">
-		<?php if($job_exist == True){ ?>
+		<?php if($job_exist == True){ 
+			$company_image_path = "/uploads/images/".$row["company_image"];?>
 			<main class="site-main">
 				<section class="section-fullwidth">
 					<div class="row">
@@ -85,10 +86,12 @@ if ($job_id != null){
 							<aside class="job-secondary">
 								<div class="job-logo">
 									<div class="job-logo-box">
-										<img src="<?php echo $row['company_image'] ?>" alt="">
+										<img src="<?php echo $company_image_path ?>" alt="">
 									</div>
 								</div>
-								<a href="apply-submission.php?job_id=<?php echo($_GET['job_id']) ?>" class="button button">Apply now</a>
+								<div>
+									<a href="apply-submission.php?job_id=<?php echo($_GET['job_id']) ?>" class="button button">Apply now</a>
+								</div>
 								<div>
 									<a href="<?php echo $row['company_site']?>"> <?php echo $row['company_name']?></a>
 								</div>
