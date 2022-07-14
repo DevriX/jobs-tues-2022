@@ -4,67 +4,33 @@
 <body>
 <?php include 'header.php'; include "classes/Users.php";
 
-	/*if(!empty($_POST)){
-		$user = new User($_POST);
-		$work_data = $user->clear_data($_POST, $conn);
-		$err = $work_data['errors'];
-		$is_clear = $work_data["is_clear"];
-		$img_name = "";
-		if(!empty($_FILES["company_image"])){
-			$img = $_FILES["company_image"];
-			$img_name = $img['name'];
-		}
-		$is_clear = $work_data["is_clear"];
-		if($is_clear){
-		$user->insert($conn);
-	}
-	}else{
-		$err = array(
-            'first_name_err' => "",
-            'last_name_err' => "",
-            'password_err' => "",
-            'email_err' => "",
-            'repeat_err' => "",
-            'phone_err' => "",
-            'site_err' => ""
-        );
-	}
-	*/
+	$err = array(
+		'first_name_err'    => "",
+		'last_name_err'     => "",
+		'password_err'      => "",
+		'email_err' 	    => "",
+		'repeat_err'	    => "",
+		'phone_err' 	    => "",
+		'site_err' 		    => "",
+		'company_image_err' => ""
+	);
 	if(!empty($_POST)){
 		$user = new User($_POST, $conn);
-		$err = array(
-			'first_name_err' => "",
-			'last_name_err' => "",
-			'password_err' => "",
-			'email_err' => "",
-			'repeat_err' => "",
-			'phone_err' => "",
-			'site_err' => ""
-		);
 		if(isset($user->err)){
 			$err = $user->err;
 		}
 		$is_clear = $user->is_clear;
-		$image = '';
-		if(isset($_FILES["company_image"])){
-			$image = $_FILES["company_image"];
-		}
 		if($is_clear){
-			$user->insert($conn, $image['name']);
+			
+			if(!empty($_FILES["company_image"]["name"])){
+				$user->insert($conn, $_FILES);
+			}else{
+				$user->insert($conn, "");
+			}
 		}
-	}else{
-		$err = array(
-			'first_name_err' => "",
-			'last_name_err' => "",
-			'password_err' => "",
-			'email_err' => "",
-			'repeat_err' => "",
-			'phone_err' => "",
-			'site_err' => ""
-		);
-	}
-	
 		
+		
+	}
 ?>
 	<div class="site-wrapper">
 
@@ -119,8 +85,8 @@
 										</div>
 										<div class="form-field-wrapper width-large">
 											<input type="file" name="company_image" id="company_image" placeholder="Image"/>
-										<span class="error" >  <?php //echo $err["file_err"];?> </span> 
-									</div>
+										<span class="error" >  <?php echo $err["company_image_err"];?> </span> 
+										</div>
 									</div>		
 								</div>
 								<button class="button">
@@ -132,7 +98,6 @@
 				</div>
 			</section>	
 		</main>
-
 	</div>
 	<?php include 'footer.php';?>
 </body>
