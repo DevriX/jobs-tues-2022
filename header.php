@@ -1,13 +1,26 @@
-
 <?php 
-session_start();
-
 require_once 'classes/Db-connection.php';
+include 'functions.php';
 
 $db = new Requests;
-
+$_SESSION['logged_in'] = false;
 $conn = $db->connectDB();
-
+if(!empty($_COOKIE['cookie_hash']) && $_SESSION['logged_in'] == false){
+   $cookie_hash = $_COOKIE['cookie_hash'];
+    $result = mysqli_query($conn, "select id from users where cookie_hash = '$cookie_hash'");
+    if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+        if(empty($row)){
+            echo "0 results";
+        }
+    }
+    $_SESSION['id'] = $row['id'];
+    $_SESSION['logged_in'] = true;
+}
+if(!empty($_SESSION['id'])){
+    $user_id = $_SESSION['id'];
+    $_SESSION['logged_in'] = true;
+}
 ?>
 
 <head>
@@ -18,6 +31,8 @@ $conn = $db->connectDB();
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="css/master.css">
     <link rel="stylesheet" href="css/master.css.map">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
@@ -32,10 +47,21 @@ $conn = $db->connectDB();
                     <a href="/index.php">Home</a>					
                 </li>
                 <li class="menu-item">
+                <?php
+                if(!$_SESSION['logged_in']){?>
                     <a href="/register.php">Register</a>
-                </li>
+                <?php } else { ?>
+                    <a href="/dashboard.php">Dashboard</a>
+                    <a href="/actions-job.php">Create Job</a>
+                    <a href="/profile.php">My Profile</a>
+                <?php } ?></li>
                 <li class="menu-item">
-                    <a href="/login.php">Login</a>					
+                <?php
+                if(!$_SESSION['logged_in']){?>
+                    <a href="/login.php">Log In</a>
+                <?php } else { ?>
+                    <a href="/logout.php">Sign Out</a>
+                <?php } ?>				
                 </li>
             </ul>
         </nav>

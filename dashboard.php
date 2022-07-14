@@ -1,8 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<script type="text/javascript" src="engine1/jquery.js"></script> 
+
+<?php 
+include 'header.php';
+
+if($_SERVER["REQUEST_METHOD"] == "GET"){
+	$order = 'date_posted DESC';
+	if(isset($_GET['drop_down_menu']) && $_GET["drop_down_menu"] == 2){
+		$order = 'title ASC';
+	}
+
+	$search = '';
+	if(!empty($_GET['search'])){
+		$search = $_GET['search'];
+	}
+
+	if (!empty($_GET['drop_down_menu'])) {
+		$menu_value = $_GET['drop_down_menu'];
+	} else {
+		$menu_value = 1;
+	}
+
+	$request = "SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
+		FROM jobs 
+		LEFT JOIN users ON jobs.user_id = users.id
+		WHERE jobs.user_id = " . $_SESSION['id'] . "
+		HAVING title LIKE '%" . $search . "%'
+		ORDER BY " . $order . "";
+}
+
+?>
+
 <body>
-<?php include 'header.php';?>
 	<div class="site-wrapper">
 
 		<main class="site-main">
@@ -12,147 +43,85 @@
 						<div class="primary-container">							
 							<ul class="tabs-menu">
 								<li class="menu-item current-menu-item">
-									<a href="#">Jobs</a>					
+									<a href="dashboard.php">Jobs</a>					
 								</li>
 								<li class="menu-item">
-									<a href="#">Categories</a>
+									<a href="category-dashboard.php">Categories</a>
 								</li>
 							</ul>
 						</div>
-						<div class="secondary-container">
+						<div  style="display:inline-flex;" class="secondary-container">
 							<div class="flex-container centered-vertically">
-								<div class="search-form-wrapper">
-									<div class="search-form-field"> 
-										<input class="search-form-input" type="text" value="" placeholder="Search…" name="search" > 
-									</div> 
-								</div>
-								<div class="filter-wrapper">
-									<div class="filter-field-wrapper">
-										<select>
-											<option value="1">Date</option>
-											<option value="2">Date</option>
-											<option value="3">Date</option>
-											<option value="4">Type</option>
-										</select>
+								<form>
+									<div style="display:inline-flex;" class="search-form-wrapper">
+										<div class="search-form-field"> 
+											<input class="search-form-input" type="text" value="<?php if (isset($_GET['search'])) echo $_GET['search'];?>" placeholder="Search…" name="search" > 
+										</div> 
 									</div>
-								</div>
+									<div style="display:inline-flex;" class="filter-wrapper">
+										<div class="filter-field-wrapper">
+											<select name="drop_down_menu">
+												<option value="1" <?php if ($menu_value == 1) echo 'selected="selected"'; ?>>Date</option>
+												<option value="2" <?php if ($menu_value == 2) echo 'selected="selected"'; ?>>Alphabetically</option>
+											</select>
+										</div>
+									</div>
+									<div style="display: inline-flex; margin-left: -10px;" class="button-wrapper">
+										<form method="post">
+											<button class="button" type="submit">Submit</button>
+										</form>
+									</div>
+								</form>
 							</div>
 						</div>
 					</div>
-					<ul class="jobs-listing">
-						<li class="job-card">
+					<?php 
+					
+					$num_rows = mysqli_num_rows ($conn->query($request));
+					$page_total = ceil($num_rows / RES_LIMIT);
+					$request_info = $conn->query($request." LIMIT " . $page_first_result . ','. RES_LIMIT);
+					?> 
+					<ul class="jobs-listing"> 
+					<?php
+					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
+						<li id="card" class="job-card">
 							<div class="job-primary">
-								<h2 class="job-title"><a href="#">Front End Developer</a></h2>
+								<h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['job_id']; ?>"><?php echo $row["title"]; ?></a></h2>
 								<div class="job-meta">
-									<a class="meta-company" href="#">Company Awesome Ltd.</a>
-									<span class="meta-date">Posted 14 days ago</span>
+									<a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
+									<span class="meta-date">Posted <?php echo $row["date"]; ?> days ago</span>
 								</div>
 								<div class="job-details">
-									<span class="job-location">The Hague (The Netherlands)</span>
+									<span class="job-location"><?php echo $row["location"]; ?></span>
 									<span class="job-type">Contract staff</span>
 								</div>
 							</div>
 							<div class="job-secondary">
 								<div class="job-actions">
-									<a href="#">Approve</a>
-									<a href="#">Reject</a>
+									<a <?php if($row['status'] == 1){ ?> style="display:none" <?php } ?> data-id="<?php echo $row['job_id'];?>" class="approve-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>"> 
+									Approve </a>
+
+									<a <?php if($row['status'] == 0){ ?> style="display:none" <?php } ?> data-id="<?php echo $row['job_id'];?>" class="reject-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>">
+									Reject</a>
+
+									<a data-id="<?php echo $row['job_id'];?>" class="delete-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>" class="delete-button"> 
+									Delete </a>
 								</div>
 								<div class="job-edit">
-									<a href="#">View Submissions</a>
-									<a href="#">Edit</a>
+									<a href="submissions.php?job_id=<?php echo $row['job_id']; ?>">View Submissions</a>
+									<a href="actions-job.php?edit_job=<?php echo $row['job_id']?>">Edit</a>
 								</div>
 							</div>
 						</li>
-						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title"><a href="#">Front End Developer</a></h2>
-								<div class="job-meta">
-									<a class="meta-company" href="#">Company Awesome Ltd.</a>
-									<span class="meta-date">Posted 14 days ago</span>
-								</div>
-								<div class="job-details">
-									<span class="job-location">The Hague (The Netherlands)</span>
-									<span class="job-type">Contract staff</span>
-								</div>
+						<?php  
+						}
+						?>
+						<div class="jobs-pagination-wrapper">
+							<div class="nav-links">
+								<?php pagination($page, $page_total); ?>
 							</div>
-							<div class="job-secondary">
-								<div class="job-actions">
-									<a href="#">Approve</a>
-									<a href="#">Reject</a>
-								</div>
-								<div class="job-edit">
-									<a href="#">View Submissions</a>
-									<a href="#">Edit</a>
-								</div>
-							</div>
-						</li>
-						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title"><a href="#">Front End Developer</a></h2>
-								<div class="job-meta">
-									<a class="meta-company" href="#">Company Awesome Ltd.</a>
-									<span class="meta-date">Posted 14 days ago</span>
-								</div>
-								<div class="job-details">
-									<span class="job-location">The Hague (The Netherlands)</span>
-									<span class="job-type">Contract staff</span>
-								</div>
-							</div>
-							<div class="job-secondary">
-								<div class="job-edit">
-									<a href="#">View Submissions</a>
-									<a href="#">Edit</a>
-								</div>
-							</div>
-						</li>
-						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title"><a href="#">Front End Developer</a></h2>
-								<div class="job-meta">
-									<a class="meta-company" href="#">Company Awesome Ltd.</a>
-									<span class="meta-date">Posted 14 days ago</span>
-								</div>
-								<div class="job-details">
-									<span class="job-location">The Hague (The Netherlands)</span>
-									<span class="job-type">Contract staff</span>
-								</div>
-							</div>
-							<div class="job-secondary">
-								<div class="job-edit">
-									<a href="#">View Submissions</a>
-									<a href="#">Edit</a>
-								</div>
-							</div>
-						</li>
-						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title"><a href="#">Front End Developer</a></h2>
-								<div class="job-meta">
-									<a class="meta-company" href="#">Company Awesome Ltd.</a>
-									<span class="meta-date">Posted 14 days ago</span>
-								</div>
-								<div class="job-details">
-									<span class="job-location">The Hague (The Netherlands)</span>
-									<span class="job-type">Contract staff</span>
-								</div>
-							</div>
-							<div class="job-secondary">
-								<div class="job-edit">
-									<a href="#">View Submissions</a>
-									<a href="#">Edit</a>
-								</div>
-							</div>
-						</li>
-					</ul>
-					<div class="jobs-pagination-wrapper">
-						<div class="nav-links"> 
-							<a class="page-numbers current">1</a> 
-							<a class="page-numbers">2</a> 
-							<a class="page-numbers">3</a> 
-							<a class="page-numbers">4</a> 
-							<a class="page-numbers">5</a> 
 						</div>
-					</div>
+						</ul>		
 				</div>
 			</section>
 		</main>
