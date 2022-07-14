@@ -89,7 +89,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								<h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['job_id']; ?>"><?php echo $row["title"]; ?></a></h2>
 								<div class="job-meta">
 									<a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
-									<span class="meta-date">Posted <?php echo $row["date"]; ?> days ago</span>
+									<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]); ?></span>
 								</div>
 								<div class="job-details">
 									<span class="job-location"><?php echo $row["location"]; ?></span>

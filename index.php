@@ -136,7 +136,7 @@
 							<?php
 
 							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
-								$company_image_path = "/uploads/images/".$row["company_image"];?>
+								$company_image_path = IMAGE_PATH.$row["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
 										<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['id']; ?>"><?php echo $row["title"];?></a></h2>
