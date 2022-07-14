@@ -6,7 +6,7 @@
 $job_id = $_GET['job_id'];
 
 if ($job_id != null){
-	$sql = "SELECT * 
+	$sql = "SELECT *
 			FROM jobs 
 			LEFT JOIN users ON jobs.user_id=users.id 
 			WHERE jobs.id = " . $_GET['job_id'] . " ";
@@ -16,6 +16,18 @@ if ($job_id != null){
 	if(empty($row)){
 		$job_exist = False;
 	}
+
+	$sql_category = "SELECT  categories.title
+				'category_title'
+			FROM jobs 
+			LEFT JOIN jobs_categories ON jobs_categories.job_id = jobs.id
+			LEFT JOIN categories ON categories.id = jobs_categories.category_id
+			WHERE jobs.id = " . $_GET['job_id'] . " ";
+
+	$result_category = mysqli_query($conn, $sql_category);
+
+	$row_category = mysqli_fetch_all($result_category,MYSQLI_ASSOC);
+
 
 	$statement_related_jobs = 
 			"SELECT *
@@ -50,6 +62,14 @@ if ($job_id != null){
 														<?php echo $row["company_name"]; ?>
 														<span class="meta-date">Posted on: <?php echo $row['date_posted'] ?></span>
 													</div>
+													<div>
+														Categories:
+														<?php 
+														foreach($row_category as $diff_categories){
+															echo $diff_categories["category_title"].", ";
+														}
+														?>
+													</div>
 													<div class="job-details">
 														<span class="job-location"><?php echo $row['location'] ?></span>
 														<span class="job-type">Contract staff</span>
@@ -69,8 +89,9 @@ if ($job_id != null){
 									</div>
 								</div>
 								<a href="apply-submission.php?job_id=<?php echo($_GET['job_id']) ?>" class="button button">Apply now</a>
-								<a href="#" class="button button">Edit now</a>
-								<a href="<?php echo $row['company_site']?>"> <?php echo $row['company_name']?></a>
+								<div>
+									<a href="<?php echo $row['company_site']?>"> <?php echo $row['company_name']?></a>
+								</div>
 							</aside>
 						</div>
 					</div>
