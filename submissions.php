@@ -18,7 +18,7 @@
 						</li>
 					</ul>
 					<?php
-					$request_application = "SELECT jobs.id, jobs.title, users.first_name, users.last_name, applications.user_id 
+					$request_application = "SELECT applications.id as application_id, jobs.id, jobs.title, users.first_name, users.last_name, applications.user_id 
 							FROM applications 
 							LEFT JOIN jobs ON applications.job_id=jobs.id 
 							LEFT JOIN users ON applications.user_id=users.id
@@ -34,7 +34,7 @@
 						<?php
 						$title_check = 0;
 						if(mysqli_num_rows($request_info) > 0){
-							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
+							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {?>
 								<div class="section-heading">
 									<?php if(!$title_check){?>
 										<h2 class="heading-title"><?php echo $row["title"];?> - Submissions - <?php echo mysqli_num_rows( $request_info); ?> Appliciants</h2>
@@ -46,7 +46,7 @@
 										</div>
 										<div class="job-secondary centered-content">
 											<div class="job-actions">
-												<a href="view-submission.php?user_id=<?php echo $row['user_id']; ?>" class="button button-inline">View</a>
+												<a href="view-submission.php?application_id=<?php echo $row['application_id']; ?>" class="button button-inline">View</a>
 											</div>
 										</div>
 									</li>

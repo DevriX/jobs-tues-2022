@@ -5,10 +5,14 @@
 		include 'header.php';	
 		if(!empty($_GET['job_id'])){
 			$user_id = $_SESSION['id'];
-			$sql = "SELECT * FROM users WHERE $user_id = users.id";
-			$result = mysqli_query($conn, $sql);
-			$sql1 = "SELECT company_name from users left join jobs on jobs.user_id = users.id where jobs.id = ".$_GET['job_id']."";
-			$result1 = mysqli_query($conn, $sql1);
+			$stmt = $conn->prepare("SELECT * FROM users WHERE ? = users.id");
+			$stmt->bind_param("s", $user_id);
+			$stmt->execute();
+			$result = $stmt->get_result();
+			$stmt1 = $conn->prepare("SELECT company_name from users left join jobs on jobs.user_id = users.id where jobs.id = ?");
+			$stmt1->bind_param("s", $_GET['job_id']);
+			$stmt1->execute();
+			$result1 = $stmt1->get_result();
 			if ($result1->num_rows > 0) {
 				$row1 = $result1->fetch_assoc();
 				if(empty($row1)){
@@ -27,8 +31,8 @@
 		
 		if(!empty($_POST)){
 			if(!empty($_FILES["cv"])){
-				$pname = $_FILES["cv"]["name"]; 
-				$tname=$_FILES["cv"]["tmp_name"];
+				$pname = validate($_FILES["cv"]["name"]); 
+				$tname = validate($_FILES["cv"]["tmp_name"]);
 				
 				$name = pathinfo($_FILES['cv']['name'], PATHINFO_FILENAME);
 				$extension = pathinfo($_FILES['cv']['name'], PATHINFO_EXTENSION);
@@ -69,10 +73,11 @@
 			$job_id = validate($_POST['job_id']);
 			$custom_message = validate($_POST['custom_message']);
 			if(isset($company_image)){
-				$sql = "INSERT into applications(user_id, job_id, custom_message, cv) values ('$user_id', '$job_id', '$custom_message', '$company_image')";
-				mysqli_query($conn, $sql);
+				$stmt = $conn->prepare("INSERT into applications(user_id, job_id, custom_message, cv) 
+										values (?, ?, ?, ?)");
+				$stmt->bind_param("ssss", $user_id, $job_id, $custom_message, $company_image);
+				$stmt->execute();
 			}
-			//echo($sql);
 		}
 	?>
 	<div class="site-wrapper">
