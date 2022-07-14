@@ -70,7 +70,7 @@ if ($job_id != null){
 														</ul>
 													<div class="job-details">
 														<span class="job-location"><?php echo $row['location'] ?></span>
-														<span class="job-type">Contract staff</span>
+														<span class="job-type"><b> <?php echo $row['phone_number']; ?></b></span>
 														<span class="job-price"><?php echo $row['salary'] ?> Lv.</span>
 													</div>
 										</header>
