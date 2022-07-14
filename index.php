@@ -10,76 +10,78 @@
 		<main class="site-main">
 			<section class="section-fullwidth section-jobs-preview">
 				<div class="row">
-				<form method = "get">
-					<?php
-					if(isset($_GET['filter[]'])){
-					?>
-						<input type="hidden" name='filter[]' value='<?php echo $_GET['filter[]'];?>'>
-					<?php
-					//var_dump($_GET['filter[]']);
-					}
-					?> 	
-						<ul class="tags-list">
-						<?php 
-						$request_category_homepage = $conn->query("SELECT title, id 
-																		FROM categories 
-																		ORDER BY title ASC");
-						
-						$url = $_SERVER['REQUEST_URI'];
-						if(!strpos($url, "?")){
-							$url = $url."?";
-						}
-
-						while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){ 
-						$style = "";
+					<form method = "get">
+						<?php
 						if(isset($_GET['filter'])){
+						
 							foreach($_GET['filter'] as $filter){
-								if($filter == $row['id']){
-									$style = 'style="background-color: #a1a9b5"';
-								}
-							}
-							 
-						}
-
 						?>
-							<li class="list-item">
-								<a <?php echo $style;?> href="<?php echo urldecode(change_url_parameter(url_path_http().$url, 'filter[]', $row['id']))?>"  class="list-item-link"><?php echo $row['title'];?></a>
-							</li>
-						<?php 
-						} 
-						?>
-						</ul>
-					
-						<div class="flex-container centered-vertically">
-							<div class="search-form-wrapper">
-								<div class="search-form-field" method = "get">
-									<input class="search-form-input" type="text" placeholder="Search..." value='<?php if (isset($_GET['search'])) echo $_GET['search'];?>' name="search">
-								</div> 
-							</div>
-							<?php
-							if (!empty($_GET['drop_down_menu'])) {
-								$drop_down_val = $_GET['drop_down_menu'];
-							} else {
-								$drop_down_val = 1;
-							}
-							?>
+								<input type="hidden" name='filter[]' value='<?php echo $filter;?>'>
 							
-							<div style="display: flex">
-								<div class="filter-wrapper">
-									<div class="filter-field-wrapper">
-										<select name='drop_down_menu'>
-											<option value="1" <?php if ($drop_down_val == 1) echo 'selected="selected"'; ?>>By Date</option>;
-											<option value="2" <?php if ($drop_down_val == 2) echo 'selected="selected"'; ?>>Alphabetically</option>;
-										</select>
+						<?php
+							}
+						//var_dump($_GET['filter[]']);
+						}
+						?> 	
+							<ul class="tags-list">
+							<?php 
+							$request_category_homepage = $conn->query("SELECT title, id 
+																			FROM categories 
+																			ORDER BY title ASC");
+							
+							$url = $_SERVER['REQUEST_URI'];
+							if(!strpos($url, "?")){
+								$url = $url."?";
+							}
+
+							while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){ 
+							$style = "";
+							if(isset($_GET['filter'])){
+								foreach($_GET['filter'] as $filter){
+									if($filter == $row['id']){
+										$style = 'style="background-color: #a1a9b5; pointer-events: none; cursor: default;"';
+									}
+								}
+								
+							}
+
+							?>
+								<li class="list-item">
+									<a <?php echo $style;?> href="<?php echo urldecode(change_url_parameter(url_path_http().$url, 'filter[]', $row['id']))?>"  class="list-item-link"><?php echo $row['title'];?></a>
+								</li>
+							<?php 
+							} 
+							?>
+							</ul>
+						
+							<div class="flex-container centered-vertically">
+								<div class="search-form-wrapper">
+									<div class="search-form-field" method = "get">
+										<input class="search-form-input" type="text" placeholder="Search..." value='<?php if (isset($_GET['search'])) echo $_GET['search'];?>' name="search">
+									</div> 
+								</div>
+								<?php
+								if (!empty($_GET['drop_down_menu'])) {
+									$drop_down_val = $_GET['drop_down_menu'];
+								} else {
+									$drop_down_val = 1;
+								}
+								?>
+								
+								<div style="display: flex">
+									<div class="filter-wrapper">
+										<div class="filter-field-wrapper">
+											<select name='drop_down_menu'>
+												<option value="1" <?php if ($drop_down_val == 1) echo 'selected="selected"'; ?>>By Date</option>;
+												<option value="2" <?php if ($drop_down_val == 2) echo 'selected="selected"'; ?>>Alphabetically</option>;
+											</select>
+										</div>
+									</div>
+									<div>
+									<button class="button" style="margin-top:3px;margin-left:10px;" type="submit" name="submit"> Submit </button>
 									</div>
 								</div>
-								<div>
-								<button class="button" style="margin-top:3px;margin-left:10px;" type="submit" name="submit"> Submit </button>
-								</div>
 							</div>
-							
-							
-						</div>
 					</form>
 					<ul class="jobs-listing">
 						<?php
