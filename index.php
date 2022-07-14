@@ -50,19 +50,10 @@
 								<li class="list-item">
 									<a <?php echo $style;?> href="<?php echo urldecode($url."&filter[]=".$row['id']);?>"  class="list-item-link"><?php echo $row['title'];?></a>
 								</li>
-<<<<<<< HEAD
-							<?php
-							} 
-							?>
-							<li class="list-item">
-								<a href="<?php echo  $_SERVER["PHP_SELF"];?>"  class="list-item-link"><b>Clear</b></a>
-							</li>
-=======
 							<?php 
 							} 
 							?>
 							
->>>>>>> 699641b01f23854c90dec2df88512b7ccda1acbc
 							</ul>
 						
 							<div class="flex-container centered-vertically">
@@ -93,7 +84,7 @@
 									</div>
 									<div>
 									<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
-									 class="button"><b>Clear</b></a>
+									 class="button" style="position: fixed; right: 20%; background-color: red;"><b>Clear All</b></a>
 									</div>
 								</div>
 							</div>
