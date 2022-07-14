@@ -86,7 +86,7 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 									<span class="error">  <?php echo $err["email_err"];?> </span>
 								</div>
 								<div class="form-field-wrapper">
-									<input type="text" name="password" id="password" placeholder="Password"/>
+									<input type="password" name="password" id="password" placeholder="Password"/>
 									<span class="error">  <?php echo $err["password_err"];?> </span>
 								</div>
 								<div>
