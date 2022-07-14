@@ -20,8 +20,6 @@
 							
 						<?php
 							}
-						//change_url_parameter(url_path_http().$url, 'filter[]', $row['id'])
-
 						}
 						?> 	
 							<ul class="tags-list">

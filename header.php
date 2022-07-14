@@ -7,7 +7,10 @@ $_SESSION['logged_in'] = false;
 $conn = $db->connectDB();
 if(!empty($_COOKIE['cookie_hash']) && $_SESSION['logged_in'] == false){
    $cookie_hash = $_COOKIE['cookie_hash'];
-    $result = mysqli_query($conn, "select id from users where cookie_hash = '$cookie_hash'");
+   $stmt = $conn->prepare("select id from users where cookie_hash = ?");
+   $stmt->bind_param("s", $cookie_hash);
+   $stmt->execute();
+    $result = $stmt->get_result();
     if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
         if(empty($row)){
