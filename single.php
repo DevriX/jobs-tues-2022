@@ -17,6 +17,18 @@ if ($job_id != null){
 		$job_exist = False;
 	}
 
+	$sql_category = "SELECT  categories.title
+				'category_title'
+			FROM jobs 
+			LEFT JOIN jobs_categories ON jobs_categories.job_id = jobs.id
+			LEFT JOIN categories ON categories.id = jobs_categories.category_id
+			WHERE jobs.id = " . $_GET['job_id'] . " ";
+
+	$result_category = mysqli_query($conn, $sql_category);
+
+	$row_category = mysqli_fetch_all($result_category,MYSQLI_ASSOC);
+
+
 	$statement_related_jobs = 
 			"SELECT *, DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
 			FROM jobs_categories 
@@ -24,7 +36,8 @@ if ($job_id != null){
 			LEFT JOIN users ON jobs.user_id=users.id
 			WHERE  job_id != $job_id AND category_id 
 			IN (SELECT subquery.category_id FROM jobs_categories subquery WHERE job_id = $job_id )
-			ORDER BY rand() ";
+			ORDER BY rand() 
+			LIMIT 0, 3";
 
 	$results_related_jobs = mysqli_query($conn, $statement_related_jobs);
 
@@ -49,6 +62,14 @@ if ($job_id != null){
 													<div class="job-meta">
 														<?php echo $row["company_name"]; ?>
 														<span class="meta-date">Posted <?php echo time_diff_mesage($row['date']); ?></span>
+													</div>
+													<div>
+														Categories:
+														<?php 
+														foreach($row_category as $diff_categories){
+															echo $diff_categories["category_title"].", ";
+														}
+														?>
 													</div>
 													<div class="job-details">
 														<span class="job-location"><?php echo $row['location'] ?></span>
