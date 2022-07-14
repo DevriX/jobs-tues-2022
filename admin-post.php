@@ -2,16 +2,26 @@
 
 include 'header.php';
 
-$status = 0;
 if ($_POST['action'] == 'approve') {
     $status = 1;
-}
 
-$approve_request = 
+    $approve_request = 
         "UPDATE jobs SET status = $status WHERE id = " . $_POST['job'] . "";
 
-if ($conn->query($approve_request) === FALSE) {
-    echo "Error: " . $approve_request . "<br>" . $conn->error;
+    if ($conn->query($approve_request) === FALSE) {
+        echo "Error: " . $approve_request . "<br>" . $conn->error;
+    }
+}
+
+if ($_POST['action'] == 'reject') {
+    $status = 0;
+
+    $approve_request = 
+        "UPDATE jobs SET status = $status WHERE id = " . $_POST['job'] . "";
+
+    if ($conn->query($approve_request) === FALSE) {
+        echo "Error: " . $approve_request . "<br>" . $conn->error;
+    }
 }
 
 if($_POST['action'] == 'delete'){
@@ -33,6 +43,17 @@ if($_POST['action'] == 'delete'){
         "DELETE FROM jobs 
          WHERE jobs.id=" . $_POST['job'] . " ";
     if ($conn->query($delete_job_request) === FALSE) {
-        echo "Error: " . $delete_request . "<br>" . $conn->error;
+        echo "Error: " . $delete_job_request . "<br>" . $conn->error;
+    }
+}
+
+if($_POST['action'] == 'delete-submission'){
+    var_dump($_POST);
+    $delete_submission_request = 
+        "DELETE FROM applications 
+         WHERE applications.id=" . $_POST['application'] . " ";
+         var_dump($delete_submission_request);
+    if ($conn->query($delete_submission_request) === FALSE) {
+        echo "Error: " . $delete_submission_request . "<br>" . $conn->error;
     }
 }
