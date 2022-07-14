@@ -119,19 +119,10 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 						</div>
 					</div>
 					<?php 
-					$limit = 5;
-
-					if (!isset ($_GET['page']) ) {  
-						$page = 1;  
-					} else {  
-						$page = $_GET['page'];  
-					}
-
-					$atributes = ['search', 'drop_down_menu'];
-					$page_first_result = ($page-1) * $limit;
+					
 					$num_rows = mysqli_num_rows ($conn->query($request));
-					$page_total = ceil($num_rows / $limit);
-					$request_info = $conn->query($request." LIMIT $page_first_result, $limit");
+					$page_total = ceil($num_rows / RES_LIMIT);
+					$request_info = $conn->query($request." LIMIT " . $page_first_result . ','. RES_LIMIT);
 					?> 
 					<ul class="jobs-listing"> 
 					<?php
