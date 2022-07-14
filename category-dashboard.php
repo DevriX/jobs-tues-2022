@@ -60,11 +60,11 @@
 						<div class="secondary-container">
 							<div class="form-box category-form">
 								<form method="post" action="" >
-									<div class="flex-container justified-vertically">									
+									<div class="flex-container justified-vertically">	
+										<?php if($row['is_admin'] == 1){?>								
 										<div class="form-field-wrapper">
 											<input type="text" name="new_category" placeholder="Enter Category Name..."/>
 										</div>
-										<?php if($row['is_admin'] == 1){?>
 											<button class="button" >Add New</button>
 										<?php }; ?>
 									</div>	

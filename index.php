@@ -33,29 +33,28 @@
 								$url = $url."?";
 							}
 
-							while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){ 
-							$style = "";
-							if(isset($_GET['filter'])){
-								foreach($_GET['filter'] as $filter){
-									if($filter == $row['id']){
+							while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){
+								$style = "";
+								if(isset($_GET['filter'])){
+									if(in_array($row['id'], $_GET['filter'])){
 										$style = 'style="background-color: #a1a9b5; pointer-events: none; cursor: default;"';
 									}
+									
 								}
 								
-							}
-							
 							?>
-								<li class="list-item">
-									<a <?php echo $style;?> href="<?php echo urldecode($url."&filter[]=".$row['id']);?>"  class="list-item-link"><?php echo $row['title'];?></a>
-								</li>
+									<li class="list-item">
+										<a <?php echo $style;?> href="<?php echo urldecode($url."&filter[]=".$row['id']);?>"  class="list-item-link"><?php echo $row['title'];?></a>
+									</li>
 							<?php 
 							} 
 							?>
 							
 							</ul>
 						
-							<div class="flex-container centered-vertically">
-								<div class="search-form-wrapper">
+							<div style="justify-content: space-between;" class="flex-container centered-vertically">
+							<div class="flex-container centered-vertically">	
+							<div class="search-form-wrapper">
 									<div class="search-form-field" method = "get">
 										<input class="search-form-input" type="text" placeholder="Search..." value='<?php if (isset($_GET['search'])) echo $_GET['search'];?>' name="search">
 									</div> 
@@ -68,7 +67,6 @@
 								}
 								?>
 								
-								<div style="display: flex">
 									<div class="filter-wrapper">
 										<div class="filter-field-wrapper">
 											<select name='drop_down_menu'>
@@ -77,15 +75,20 @@
 											</select>
 										</div>
 									</div>
-									<div>
-									<button class="button" style="margin-top:3px;margin-left:10px;" type="submit" name="submit"> Submit </button>
-									</div>
-									<div>
-									<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
-									 class="button" style="position: absolute; right: 20%; background-color: red;"><b>Clear All</b></a>
-									</div>
+									<button class="button" style="margin-left:10px;margin-bottom:15px;" type="submit" name="submit"> Search </button>
 								</div>
-							</div>
+								<div>
+									<?php
+										if(!empty($_GET['filter']) || !empty($_GET['search']) || !empty($_GET['drop_down_menu'])){
+									?>
+											<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
+											class="button" style="background-color: red; margin-bottom:10px;"><b>Clear All</b></a>
+									<?php
+										}
+									?>
+									
+								</div>
+								</div>
 					</form>
 					<ul class="jobs-listing">
 					<?php

@@ -6,7 +6,7 @@
 $job_id = $_GET['job_id'];
 
 if ($job_id != null){
-	$sql = "SELECT *
+	$sql = "SELECT *, DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
 			FROM jobs 
 			LEFT JOIN users ON jobs.user_id=users.id 
 			WHERE jobs.id = " . $_GET['job_id'] . " ";
@@ -30,7 +30,7 @@ if ($job_id != null){
 
 
 	$statement_related_jobs = 
-			"SELECT *
+			"SELECT *, DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
 			FROM jobs_categories 
 			LEFT JOIN jobs ON jobs.id = jobs_categories.job_id 
 			LEFT JOIN users ON jobs.user_id=users.id
@@ -49,7 +49,7 @@ if ($job_id != null){
 <body>
 	<div class="site-wrapper">
 		<?php if($job_exist == True){ 
-			$company_image_path = "/uploads/images/".$row["company_image"];?>
+			$company_image_path = IMAGE_PATH.$row["company_image"];?>
 			<main class="site-main">
 				<section class="section-fullwidth">
 					<div class="row">
@@ -61,7 +61,7 @@ if ($job_id != null){
 													<h2 class="job-title"><?php echo $row['title'] ?></h2>
 													<div class="job-meta">
 														<?php echo $row["company_name"]; ?>
-														<span class="meta-date">Posted on: <?php echo $row['date_posted'] ?></span>
+														<span class="meta-date">Posted <?php echo time_diff_mesage($row['date']); ?></span>
 													</div>
 													<div>
 														Categories:
@@ -89,9 +89,13 @@ if ($job_id != null){
 										<img src="<?php echo $company_image_path ?>" alt="">
 									</div>
 								</div>
+								<?php if($_SESSION['id'] != $row['user_id']) {?>
 								<div>
 									<a href="apply-submission.php?job_id=<?php echo($_GET['job_id']) ?>" class="button button">Apply now</a>
 								</div>
+								<?php } else { ?>
+									<a href="actions-job.php?edit_job=<?php echo($_GET['job_id']) ?>" class="button button">Edit now</a>
+								<?php } ?>
 								<div>
 									<a href="<?php echo $row['company_site']?>"> <?php echo $row['company_name']?></a>
 								</div>
@@ -103,14 +107,15 @@ if ($job_id != null){
 			<section class="section-fullwidth">
 					<div class="row">
 						<h2 class="section-heading">Other related jobs:</h2>
-							<?php foreach($related_jobs as $jobs){ ?>
+							<?php foreach($related_jobs as $jobs){ 
+								$others_image_path = IMAGE_PATH.$jobs["company_image"]; ?>
 									<ul class="jobs-listing">
 										<li class="job-card">
 											<div class="job-primary">
 												<h2 class="job-title"><a href="single.php?job_id=<?php echo $jobs['id']; ?>"><?php echo $jobs['title']?></a></h2>
 												<div class="job-meta">
 													<?php echo $jobs["company_name"]; ?></a>
-													<span class="meta-date">Posted on: <?php echo $jobs['date_posted'] ?></span>
+													<span class="meta-date">Posted <?php echo time_diff_mesage($jobs['date']); ?></span>
 												</div>
 												<div class="job-details">
 													<span class="job-location"><?php echo $jobs['location'] ?></span>
@@ -120,7 +125,7 @@ if ($job_id != null){
 											</div>
 											<div class="job-logo">
 												<div class="job-logo-box">
-													<img src="<?php echo $row['company_image'] ?>" alt="">
+													<img src="<?php echo $others_image_path ?>" alt="">
 												</div>
 											</div>
 										</li>

@@ -67,7 +67,10 @@ if(!empty($_POST["create_done"])){
 } 
 if(!empty($_POST["edit_done"])) {
 
-		$edit_data = array();
+		$edit_data           = array();
+		$escaped_title       = "";
+		$escaped_description = "";
+		$escaped_location    = "";
 
 		if(!empty($_POST['title'])) $edit_data['new_title']			    = validate($_POST['title']);
 		if(!empty($_POST['location'])) $edit_data['new_location']	    = validate($_POST['location']);
