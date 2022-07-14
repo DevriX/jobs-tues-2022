@@ -5,6 +5,8 @@ if (!isset ($_GET['page']) ) {
     $page = $_GET['page'];  
 }
 
+$page_first_result = ($page-1) * RES_LIMIT;
+
 function time_diff_mesage($diff){
     switch($diff){
         case 0:
@@ -15,6 +17,7 @@ function time_diff_mesage($diff){
             echo $diff." days ago.";
     }
 }
+
 
 function validate($data){
     $data = trim($data);
@@ -34,7 +37,7 @@ function pagination($page, $page_total){
             }
     ?>
             <a class='page-numbers <?php echo $current ?>'
-            href="<?php echo $_SERVER["PHP_SELF"]."?".http_build_query($_GET);?>">
+            href="<?php echo urldecode($_SERVER["PHP_SELF"]."?".http_build_query($_GET));?>">
             <?php echo $i; ?></a>
     <?php
         }

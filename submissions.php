@@ -24,10 +24,11 @@
 							LEFT JOIN users ON applications.user_id=users.id
 							WHERE jobs.id=" . $_GET['job_id'] ."";
 
-					$page_first_result = ($page-1) * LIMIT;
+					$page_first_result = ($page-1) * RES_LIMIT;
 					$num_rows = mysqli_num_rows ($conn->query($request_application));
-					$page_total = ceil($num_rows / LIMIT);
-					$request_info = $conn->query($request_application." LIMIT " . $page_first_result . ','. LIMIT);
+					$page_total = ceil($num_rows / RES_LIMIT);
+					$request_info = $conn->query($request_application." LIMIT " . $page_first_result . ','. RES_LIMIT);
+
 					?>
 					<ul class="jobs-listing">
 						<?php
