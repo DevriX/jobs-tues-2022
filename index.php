@@ -20,7 +20,8 @@
 							
 						<?php
 							}
-						
+						//change_url_parameter(url_path_http().$url, 'filter[]', $row['id'])
+
 						}
 						?> 	
 							<ul class="tags-list">
@@ -52,6 +53,7 @@
 							<?php 
 							} 
 							?>
+							
 							</ul>
 						
 							<div class="flex-container centered-vertically">
@@ -110,14 +112,15 @@
 							);
 						}
 
-						$sql_request = "SELECT  j.id, j.title, j.location, 
+						$sql_request = "SELECT  j.id, j.title, j.location, j.status,
 												DATEDIFF(CURDATE(), j.date_posted) AS 'date', 
 												u.company_name, u.company_image
 										FROM jobs as j
 										".$filter_request['join']." 
 										JOIN users as u 
 										on u.id = j.user_id
-										WHERE 1 = 1 ".$search_key_word."
+										WHERE 1 = 1 AND j.status = 1
+										".$search_key_word."
 										".$filter_request['where']." 
 										ORDER BY $order_list";
 							
@@ -128,7 +131,7 @@
 
 							?> <ul class="jobs-listing"> <?php
 							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
-								$company_image_path = "/uploads/company_images/".$row["company_image"];?>
+								$company_image_path = "/uploads/images/".$row["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
 										<h2 class="job-title"><a href="#"><?php echo $row["title"];?></a></h2>
