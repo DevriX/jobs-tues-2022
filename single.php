@@ -86,13 +86,14 @@ if ($job_id != null){
 										<img src="<?php echo $company_image_path ?>" alt="">
 									</div>
 								</div>
-								<?php if($_SESSION['id'] != $row['user_id']) {?>
+								<?php if(!empty($_SESSION['id'])){
+										if($_SESSION['id'] != $row['user_id']) {?>
 								<div>
 									<a href="apply-submission.php?job_id=<?php echo($_GET['job_id']) ?>" class="button button">Apply now</a>
 								</div>
 								<?php } else { ?>
 									<a href="actions-job.php?edit_job=<?php echo($_GET['job_id']) ?>" class="button button">Edit now</a>
-								<?php } ?>
+								<?php } }?>
 								<div>
 									<a href="<?php echo $row['company_site']?>"> <?php echo $row['company_name']?></a>
 								</div>
