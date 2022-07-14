@@ -20,7 +20,7 @@
 							
 						<?php
 							}
-						//var_dump($_GET['filter[]']);
+						
 						}
 						?> 	
 							<ul class="tags-list">
