@@ -7,4 +7,3 @@ define("DB_NAME", "");
 define("RES_LIMIT", 5);
 
 
-

@@ -64,12 +64,13 @@ if(!empty($_POST["create_done"])){
 if(!empty($_POST["edit_done"])) {
 
 		$edit_data = array();
-		$edit_categories = array();
 
 		if(!empty($_POST['title'])) $edit_data['new_title'] = $_POST['title'];
 		if(!empty($_POST['location'])) $edit_data['new_location'] = $_POST['location'];
 		if(!empty($_POST['salary'])) $edit_data['new_salary'] = $_POST['salary'];
 		if(!empty($_POST['description'])) $edit_data['new_description'] = $_POST['description'];
+
+
 
 		$submit_edit_request = 
 				"UPDATE jobs SET  title = '" . $edit_data['new_title'] . "',
