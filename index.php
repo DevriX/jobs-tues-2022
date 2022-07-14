@@ -52,8 +52,9 @@
 							
 							</ul>
 						
-							<div class="flex-container centered-vertically">
-								<div class="search-form-wrapper">
+							<div style="justify-content: space-between;" class="flex-container centered-vertically">
+							<div class="flex-container centered-vertically">	
+							<div class="search-form-wrapper">
 									<div class="search-form-field" method = "get">
 										<input class="search-form-input" type="text" placeholder="Search..." value='<?php if (isset($_GET['search'])) echo $_GET['search'];?>' name="search">
 									</div> 
@@ -66,7 +67,6 @@
 								}
 								?>
 								
-								<div style="display: flex">
 									<div class="filter-wrapper">
 										<div class="filter-field-wrapper">
 											<select name='drop_down_menu'>
@@ -75,15 +75,20 @@
 											</select>
 										</div>
 									</div>
-									<div>
-									<button class="button" style="margin-top:3px;margin-left:10px;" type="submit" name="submit"> Submit </button>
-									</div>
-									<div>
-									<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
-									 class="button" style="position: absolute; right: 21%; background-color: red;"><b>Clear All</b></a>
-									</div>
+									<button class="button" style="margin-left:10px;margin-bottom:15px;" type="submit" name="submit"> Search </button>
 								</div>
-							</div>
+								<div>
+									<?php
+										if(!empty($_GET['filter']) || !empty($_GET['search']) || !empty($_GET['drop_down_menu'])){
+									?>
+											<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
+											class="button" style="background-color: red; margin-bottom:10px;"><b>Clear All</b></a>
+									<?php
+										}
+									?>
+									
+								</div>
+								</div>
 					</form>
 					<ul class="jobs-listing">
 							<?php
@@ -111,7 +116,7 @@
 
 							$sql_request = "SELECT DISTINCT j.id, j.title, j.location, j.status,
 													DATEDIFF(CURDATE(), j.date_posted) AS 'date', 
-													u.company_name, u.company_image
+													u.company_name, u.company_image, u.phone_number
 											FROM jobs as j
 											".$filter_request['join']." 
 											JOIN users as u 
@@ -141,7 +146,7 @@
 										</div>
 										<div class="job-details">
 											<span class="job-location"><?php echo $row["location"];?></span>
-											<span class="job-type">Contract staff</span>
+											<span class="job-type"><b><?php echo $row["phone_number"];?></b></span>
 										</div>
 									</div>
 									<div class="job-logo">
