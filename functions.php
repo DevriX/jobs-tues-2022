@@ -52,7 +52,7 @@ function pagination($page, $page_total){
             }
     ?>
             <a class='page-numbers <?php echo $current ?>'
-            href="<?php echo $_SERVER["PHP_SELF"]."?".http_build_query($_GET);?>">
+            href="<?php echo urldecode($_SERVER["PHP_SELF"]."?".http_build_query($_GET));?>">
             <?php echo $i; ?></a>
     <?php
         }

@@ -11,11 +11,12 @@
 			<section class="section-fullwidth section-jobs-preview">
 				<div class="row">
 				<form method = "get">
-					<?php 
-					if(isset($_GET['filter'])){
-					?>
-						<input type="hidden" name="filter" value='<?php echo $_GET['filter'];?>'>
 					<?php
+					if(isset($_GET['filter[]'])){
+					?>
+						<input type="hidden" name='filter[]' value='<?php echo $_GET['filter[]'];?>'>
+					<?php
+					//var_dump($_GET['filter[]']);
 					}
 					?> 	
 						<ul class="tags-list">
@@ -23,19 +24,30 @@
 						$request_category_homepage = $conn->query("SELECT title, id 
 																		FROM categories 
 																		ORDER BY title ASC");
+						
 						$url = $_SERVER['REQUEST_URI'];
-						var_dump($_GET);
+						if(!strpos($url, "?")){
+							$url = $url."?";
+						}
 
 						while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){ 
 						$style = "";
-						if($_GET['filter'] == $row['id'] && isset($_GET['filter'])){
-							$style = 'style="background-color: #a1a9b5"';
-						} ?>
+						if(isset($_GET['filter'])){
+							foreach($_GET['filter'] as $filter){
+								if($filter == $row['id']){
+									$style = 'style="background-color: #a1a9b5"';
+								}
+							}
+							 
+						}
 
+						?>
 							<li class="list-item">
-								<a <?php echo $style;?> href="<?php echo change_url_parameter(url_path_http().$url."?", "filter", $row['id'])?>" name='filter' class="list-item-link"><?php echo $row['title'];?></a>
+								<a <?php echo $style;?> href="<?php echo urldecode(change_url_parameter(url_path_http().$url, 'filter[]', $row['id']))?>"  class="list-item-link"><?php echo $row['title'];?></a>
 							</li>
-						<?php } ?>
+						<?php 
+						} 
+						?>
 						</ul>
 					
 						<div class="flex-container centered-vertically">
@@ -96,7 +108,7 @@
 							);
 						}
 
-						echo $sql_request = "SELECT j.title, j.location, 
+						$sql_request = "SELECT  j.id, j.title, j.location, 
 												DATEDIFF(CURDATE(), j.date_posted) AS 'date', 
 												u.company_name, u.company_image
 										FROM jobs as j
@@ -106,10 +118,7 @@
 										WHERE 1 = 1 ".$search_key_word."
 										".$filter_request['where']." 
 										ORDER BY $order_list";
-						if(isset($_GET['filter'])){
-							//$sql_request = filter();
-						}
-														
+							
 							$page_first_result = ($page-1) * RES_LIMIT;
 							$num_rows = mysqli_num_rows ($conn->query($sql_request));
 							$page_total = ceil($num_rows / RES_LIMIT);
