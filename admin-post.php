@@ -48,11 +48,9 @@ if($_POST['action'] == 'delete'){
 }
 
 if($_POST['action'] == 'delete-submission'){
-    var_dump($_POST);
     $delete_submission_request = 
         "DELETE FROM applications 
          WHERE applications.id=" . $_POST['application'] . " ";
-         var_dump($delete_submission_request);
     if ($conn->query($delete_submission_request) === FALSE) {
         echo "Error: " . $delete_submission_request . "<br>" . $conn->error;
     }
