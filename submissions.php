@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include 'header.php';?>
+<?php include 'header.php';
+
+if($_SERVER["REQUEST_METHOD"] == "GET"){
+	if(isset($_GET['user_id']) && isset($_GET['job_id'])){
+		$delete_submission = "DELETE FROM applications 
+							  WHERE user_id=" . $_GET['user_id'] . " 
+							  AND job_id=" . $_GET['job_id'] . "";
+
+		if ($conn->query($delete_submission) === FALSE) {
+			echo "Error: " . $delete_submission . "<br>" . $conn->error;
+		}
+	}
+}
+
+?>
 
 <body>
 	<div class="site-wrapper">
@@ -47,6 +61,7 @@
 										<div class="job-secondary centered-content">
 											<div class="job-actions">
 												<a href="view-submission.php?user_id=<?php echo $row['user_id']; ?>" class="button button-inline">View</a>
+												<a href="submissions.php?job_id=<?php echo $row['id']; ?>&user_id=<?php echo $row['user_id']; ?>" class="button button-inline" name="del_sub">Delete</a>
 											</div>
 										</div>
 									</li>
