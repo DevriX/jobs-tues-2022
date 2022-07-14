@@ -44,10 +44,10 @@
 								}
 								
 							}
-
+							
 							?>
 								<li class="list-item">
-									<a <?php echo $style;?> href="<?php echo urldecode(change_url_parameter(url_path_http().$url, 'filter[]', $row['id']))?>"  class="list-item-link"><?php echo $row['title'];?></a>
+									<a <?php echo $style;?> href="<?php echo urldecode($url."&filter[]=".$row['id']);?>"  class="list-item-link"><?php echo $row['title'];?></a>
 								</li>
 							<?php 
 							} 
