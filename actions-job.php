@@ -17,15 +17,15 @@ if(!empty($_POST["create_done"])){
 	if(empty($_POST["title"])){
 		$err["job_title_err"] = "Job title is required.";
 	} else {
-		$data["job_title"] = $_POST["title"];
+		$data["job_title"] = validate($_POST["title"]);
 	}
 
 	if(!empty($_POST["location"])){
-		$data["location"] = $_POST["location"];
+		$data["location"] = validate($_POST["location"]);
 	}
 
 	if(!empty($_POST["salary"])){
-		$data["salary"] = intval($_POST["salary"]);
+		$data["salary"] = intval(validate($_POST["salary"]));
 		if(!is_int($data["salary"])){
 			$err["salary_err"] = "Salary needs to be numeric.";
 		}
@@ -34,7 +34,7 @@ if(!empty($_POST["create_done"])){
 	if(empty($_POST["description"])){
 		$err["description_err"] = "Job description is required.";
 	} else {
-		$data["description"] = $_POST["description"];
+		$data["description"] = validate($_POST["description"]);
 	}
 
 	if(!empty($_POST['categories'])){
@@ -44,24 +44,23 @@ if(!empty($_POST["create_done"])){
 	}
 
 	if(empty($err)){
-		$escaped_description = mysqli_escape_string($conn, $data['description']);
-		$escaped_title = mysqli_escape_string($conn, $data['job_title']);
-		$escaped_location = mysqli_escape_string($conn, $data['location']);
-		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) 
-						VALUES(" . $_SESSION['id'] . ", '" . $escaped_title . "' , 0, '" . $escaped_description . "' ,
-						 " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $escaped_location . "') ";
-		
-		if ($conn->query($sql_request) === FALSE) {
-			echo "Error: " . $sql_request . "<br>" . $conn->error;
+		$stmt = $conn->prepare("INSERT INTO 
+		jobs(user_id, title, status, description, salary, date_posted, location) 
+		VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), ?)");
+		$status = 0;
+		$stmt->bind_param("ssssss", $_SESSION['id'], $data['job_title'], $status, $data['description'], $data['salary'], $data["location"]);
+
+		if ($stmt->execute() === FALSE) {
+			echo "Error: " . $stmt->error;
 		} else {
 			$last_id = mysqli_insert_id($conn);
 		}
 
 		foreach($categories as $c) {
-			$categories_request = "INSERT INTO jobs_categories(job_id, category_id) VALUES($last_id, $c)";
-
-			if ($conn->query($categories_request) === FALSE) {
-				echo "Error: " . $categories_request . "<br>" . $conn->error;
+			$stmt = $conn->prepare("INSERT INTO jobs_categories(job_id, category_id) VALUES(?, ?)");
+			$stmt->bind_param("ss", $last_id, $c);
+			if ($stmt->execute() === FALSE) {
+				echo "Error: " . $stmt->error;
 			}
 		}
 	}
@@ -73,37 +72,33 @@ if(!empty($_POST["edit_done"])) {
 		$escaped_description = "";
 		$escaped_location    = "";
 
-		if(!empty($_POST['title'])){
-			$edit_data['new_title'] = $_POST['title'];
-			$escaped_title = mysqli_escape_string($conn, $edit_data['new_title']);
-		}
-		if(!empty($_POST['location'])){ 
-			$edit_data['new_location'] = $_POST['location'];
-			$escaped_location = mysqli_escape_string($conn, $edit_data['new_location']);
-		}
-		if(!empty($_POST['salary'])) $edit_data['new_salary'] = $_POST['salary'];
-		if(!empty($_POST['description'])) {
-			$edit_data['new_description'] = $_POST['description'];
-			$escaped_description = mysqli_escape_string($conn, $edit_data['new_description']);
-		}
+		if(!empty($_POST['title'])) $edit_data['new_title']			    = validate($_POST['title']);
+		if(!empty($_POST['location'])) $edit_data['new_location']	    = validate($_POST['location']);
+		if(!empty($_POST['salary'])) $edit_data['new_salary'] 			= validate($_POST['salary']);
+		if(!empty($_POST['description'])) $edit_data['new_description'] = validate($_POST['description']);
 
-
-
-		$submit_edit_request = 
-				"UPDATE jobs SET  title = '" . $escaped_title . "',
-				location = '" . $escaped_location . "', 
-				salary = " . $edit_data['new_salary'] . ", 
-				description = '" . $escaped_description . "',
-				status = 0 
-				WHERE id=" . $_GET["edit_job"] . "" ;
-
-		if ($conn->query($submit_edit_request) === FALSE) {
-			echo "Error: " . $submit_edit_request . "<br>" . $conn->error;
+		$stmt = $conn->prepare("UPDATE jobs SET title	    = ?,
+												location 	= ?, 
+												salary 		= ?, 
+												description = ?,
+												status 		= 0 
+											WHERE id		= ?");
+							$stmt->bind_param("sssss",  $edit_data['new_title'],
+														$edit_data['new_location'],
+														$edit_data['new_salary'],
+														$edit_data['new_description'],
+														$_GET["edit_job"]);
+		if ($stmt->execute() === FALSE) {
+			echo "Error: " . $stmt->error;
 		}
 }
 if(!empty($_GET['edit_job'])){
-	$edit_request = $conn->query("SELECT * FROM jobs WHERE id=" . $_GET["edit_job"] . " ");
-	$row = mysqli_fetch_array($edit_request, MYSQLI_BOTH);
+
+	$stmt = $conn->prepare("SELECT * FROM jobs Where id = ?");
+							$stmt->bind_param("s", $_GET['edit_job']);
+							$stmt->execute();
+							$select = $stmt->get_result();
+							$row = $select->fetch_assoc();
 }
 ?>
 

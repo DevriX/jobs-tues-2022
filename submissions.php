@@ -49,7 +49,7 @@
 						<?php
 						$title_check = 0;
 						if(mysqli_num_rows($request_info) > 0){
-							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
+							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {?>
 								<div class="section-heading">
 									<?php if(!$title_check){?>
 										<h2 class="heading-title"><?php echo $row["title"];?> - Submissions - <?php echo mysqli_num_rows( $request_info); ?>Appliciants</h2>

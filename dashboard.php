@@ -14,11 +14,11 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
 	$search = '';
 	if(!empty($_GET['search'])){
-		$search = $_GET['search'];
+		$search = validate($_GET['search']);
 	}
 
 	if (!empty($_GET['drop_down_menu'])) {
-		$menu_value = $_GET['drop_down_menu'];
+		$menu_value = validate($_GET['drop_down_menu']);
 	} else {
 		$menu_value = 1;
 	}
