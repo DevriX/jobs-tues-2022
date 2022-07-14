@@ -20,8 +20,6 @@
 							
 						<?php
 							}
-						//change_url_parameter(url_path_http().$url, 'filter[]', $row['id'])
-
 						}
 						?> 	
 							<ul class="tags-list">
@@ -35,21 +33,21 @@
 								$url = $url."?";
 							}
 
-							while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){ 
-							$style = "";
-							if(isset($_GET['filter'])){
-								foreach($_GET['filter'] as $filter){
-									if($filter == $row['id']){
-										$style = 'style="background-color: #a1a9b5; pointer-events: none; cursor: default;"';
+							while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){
+								$style = "";
+								if(isset($_GET['filter'])){
+									foreach($_GET['filter'] as $filter){
+										if($filter == $row['id']){
+											$style = 'style="background-color: #a1a9b5; pointer-events: none; cursor: default;"';
+										}
 									}
+									
 								}
 								
-							}
-							
 							?>
-								<li class="list-item">
-									<a <?php echo $style;?> href="<?php echo urldecode($url."&filter[]=".$row['id']);?>"  class="list-item-link"><?php echo $row['title'];?></a>
-								</li>
+									<li class="list-item">
+										<a <?php echo $style;?> href="<?php echo urldecode($url."&filter[]=".$row['id']);?>"  class="list-item-link"><?php echo $row['title'];?></a>
+									</li>
 							<?php 
 							} 
 							?>
@@ -84,56 +82,59 @@
 									</div>
 									<div>
 									<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
-									 class="button" style="position: absolute; right: 20%; background-color: red;"><b>Clear All</b></a>
+									 class="button" style="position: absolute; right: 21%; background-color: red;"><b>Clear All</b></a>
 									</div>
 								</div>
 							</div>
 					</form>
 					<ul class="jobs-listing">
-						<?php
-						
-						if(isset($_GET['drop_down_menu']) && $_GET['drop_down_menu'] == 2){
-							$order_list = "title ASC";
-						} else{
-							$order_list = "date_posted DESC";
-						}
-
-						$search_key_word = "";
-						if(strpos($url, "search")){				
-							if(isset($_GET['search'])){
-								$search_key_word = "AND j.title LIKE '%".$_GET['search']."%'";
+							<?php
+							
+							if(isset($_GET['drop_down_menu']) && $_GET['drop_down_menu'] == 2){
+								$order_list = "title ASC";
+							} else{
+								$order_list = "date_posted DESC";
 							}
-						}
 
-						$filter_request = array(
-							'join' => "",
-							'where' => ""
-						);
-						if(isset($_GET['filter'])){
+							$search_key_word = "";
+							if(strpos($url, "search")){				
+								if(isset($_GET['search'])){
+									$search_key_word = "AND j.title LIKE '%".$_GET['search']."%'";
+								}
+							}
+
 							$filter_request = array(
-								'join' => "JOIN jobs_categories AS jc ON j.id=jc.job_id",
-								'where' => "AND jc.category_id IN (".implode(',', $_GET['filter']). ")"
+								'join' => "",
+								'where' => ""
 							);
-						}
+							if(isset($_GET['filter'])){
+								$filter_request = array(
+									'join' => "JOIN jobs_categories AS jc ON j.id=jc.job_id",
+									'where' => "AND jc.category_id IN (".implode(',', $_GET['filter']). ")"
+								);
+							}
 
-						$sql_request = "SELECT  j.id, j.title, j.location, j.status,
-												DATEDIFF(CURDATE(), j.date_posted) AS 'date', 
-												u.company_name, u.company_image
-										FROM jobs as j
-										".$filter_request['join']." 
-										JOIN users as u 
-										on u.id = j.user_id
-										WHERE 1 = 1 AND j.status = 1
-										".$search_key_word."
-										".$filter_request['where']." 
-										ORDER BY $order_list";
+							$sql_request = "SELECT DISTINCT j.id, j.title, j.location, j.status,
+													DATEDIFF(CURDATE(), j.date_posted) AS 'date', 
+													u.company_name, u.company_image
+											FROM jobs as j
+											".$filter_request['join']." 
+											JOIN users as u 
+											on u.id = j.user_id
+											WHERE 1 = 1 AND j.status = 1
+											".$search_key_word."
+											".$filter_request['where']." 
+											ORDER BY $order_list";
 							
 							$page_first_result = ($page-1) * RES_LIMIT;
 							$num_rows = mysqli_num_rows ($conn->query($sql_request));
 							$page_total = ceil($num_rows / RES_LIMIT);
 							$request_info = $conn->query($sql_request." LIMIT " . $page_first_result . ','. RES_LIMIT);
 
-							?> <ul class="jobs-listing"> <?php
+							?>
+							<ul class="jobs-listing">
+							<?php
+
 							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
 								$company_image_path = "/uploads/images/".$row["company_image"];?>
 								<li class="job-card">
@@ -154,14 +155,14 @@
 										</div>
 									</div>
 								</li>
-						<?php  
-						}
-						?>
-						<div class="jobs-pagination-wrapper">
-							<div class="nav-links">
-								<?php pagination($page, $page_total); ?>
+							<?php  
+							}
+							?>
+							<div class="jobs-pagination-wrapper">
+								<div class="nav-links">
+									<?php pagination($page, $page_total); ?>
+								</div>
 							</div>
-						</div>
 					</ul>
 				</div>
 			</section>	
