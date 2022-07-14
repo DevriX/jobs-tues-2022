@@ -44,8 +44,13 @@ if(!empty($_POST["create_done"])){
 	}
 
 	if(empty($err)){
-		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(" . $_SESSION['id'] . ", '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
-
+		$escaped_description = mysqli_escape_string($conn, $data['description']);
+		$escaped_title = mysqli_escape_string($conn, $data['job_title']);
+		$escaped_location = mysqli_escape_string($conn, $data['location']);
+		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) 
+						VALUES(" . $_SESSION['id'] . ", '" . $escaped_title . "' , 0, '" . $escaped_description . "' ,
+						 " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $escaped_location . "') ";
+		
 		if ($conn->query($sql_request) === FALSE) {
 			echo "Error: " . $sql_request . "<br>" . $conn->error;
 		} else {
@@ -63,20 +68,32 @@ if(!empty($_POST["create_done"])){
 } 
 if(!empty($_POST["edit_done"])) {
 
-		$edit_data = array();
+		$edit_data           = array();
+		$escaped_title       = "";
+		$escaped_description = "";
+		$escaped_location    = "";
 
-		if(!empty($_POST['title'])) $edit_data['new_title'] = $_POST['title'];
-		if(!empty($_POST['location'])) $edit_data['new_location'] = $_POST['location'];
+		if(!empty($_POST['title'])){
+			$edit_data['new_title'] = $_POST['title'];
+			$escaped_title = mysqli_escape_string($conn, $edit_data['new_title']);
+		}
+		if(!empty($_POST['location'])){ 
+			$edit_data['new_location'] = $_POST['location'];
+			$escaped_location = mysqli_escape_string($conn, $edit_data['new_location']);
+		}
 		if(!empty($_POST['salary'])) $edit_data['new_salary'] = $_POST['salary'];
-		if(!empty($_POST['description'])) $edit_data['new_description'] = $_POST['description'];
+		if(!empty($_POST['description'])) {
+			$edit_data['new_description'] = $_POST['description'];
+			$escaped_description = mysqli_escape_string($conn, $edit_data['new_description']);
+		}
 
 
 
 		$submit_edit_request = 
-				"UPDATE jobs SET  title = '" . $edit_data['new_title'] . "',
-				location = '" . $edit_data['new_location'] . "', 
+				"UPDATE jobs SET  title = '" . $escaped_title . "',
+				location = '" . $escaped_location . "', 
 				salary = " . $edit_data['new_salary'] . ", 
-				description = '" . $edit_data['new_description'] . "',
+				description = '" . $escaped_description . "',
 				status = 0 
 				WHERE id=" . $_GET["edit_job"] . "" ;
 

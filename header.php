@@ -7,7 +7,7 @@ $_SESSION['logged_in'] = false;
 $conn = $db->connectDB();
 if(!empty($_COOKIE['cookie_hash']) && $_SESSION['logged_in'] == false){
    $cookie_hash = $_COOKIE['cookie_hash'];
-    $result = mysqli_query($conn, "select id from users where cookie_hash = '$cookie_hash'");
+    $result = mysqli_query($conn, "SELECT id, company_name FROM users WHERE cookie_hash = '$cookie_hash'");
     if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
         if(empty($row)){
@@ -20,6 +20,12 @@ if(!empty($_COOKIE['cookie_hash']) && $_SESSION['logged_in'] == false){
 if(!empty($_SESSION['id'])){
     $user_id = $_SESSION['id'];
     $_SESSION['logged_in'] = true;
+    $_SESSION['is_company'] = false;
+    $result = mysqli_query($conn, "SELECT company_name FROM users WHERE id= " . $user_id . " ");
+    if ($result->num_rows > 0) $row = $result->fetch_assoc();
+    if($row['company_name'] != ""){
+        $_SESSION['is_company'] = true;
+    }
 }
 ?>
 
@@ -50,9 +56,12 @@ if(!empty($_SESSION['id'])){
                 <?php
                 if(!$_SESSION['logged_in']){?>
                     <a href="/register.php">Register</a>
-                <?php } else { ?>
+                <?php } else { 
+                    if($_SESSION['is_company'] == true){
+                    ?>
                     <a href="/dashboard.php">Dashboard</a>
                     <a href="/actions-job.php">Create Job</a>
+                    <?php } ?>
                     <a href="/profile.php">My Profile</a>
                 <?php } ?></li>
                 <li class="menu-item">

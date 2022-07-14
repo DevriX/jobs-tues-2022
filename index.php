@@ -84,7 +84,7 @@
 									</div>
 									<div>
 									<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
-									 class="button" style="position: absolute; right: 20%; background-color: red;"><b>Clear All</b></a>
+									 class="button" style="position: absolute; right: 21%; background-color: red;"><b>Clear All</b></a>
 									</div>
 								</div>
 							</div>
@@ -135,7 +135,7 @@
 
 							?> <ul class="jobs-listing"> <?php
 							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
-								$company_image_path = "/uploads/images/".$row["company_image"];?>
+								$company_image_path = IMAGE_PATH.$row["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
 										<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['id']; ?>"><?php echo $row["title"];?></a></h2>
