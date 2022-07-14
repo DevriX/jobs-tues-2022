@@ -36,10 +36,8 @@
 							while($row = mysqli_fetch_array($request_category_homepage, MYSQLI_BOTH)){
 								$style = "";
 								if(isset($_GET['filter'])){
-									foreach($_GET['filter'] as $filter){
-										if($filter == $row['id']){
-											$style = 'style="background-color: #a1a9b5; pointer-events: none; cursor: default;"';
-										}
+									if(in_array($row['id'], $_GET['filter'])){
+										$style = 'style="background-color: #a1a9b5; pointer-events: none; cursor: default;"';
 									}
 									
 								}
@@ -90,17 +88,14 @@
 					<ul class="jobs-listing">
 							<?php
 							
+							$order_list = "date_posted DESC";
 							if(isset($_GET['drop_down_menu']) && $_GET['drop_down_menu'] == 2){
 								$order_list = "title ASC";
-							} else{
-								$order_list = "date_posted DESC";
 							}
 
-							$search_key_word = "";
-							if(strpos($url, "search")){				
-								if(isset($_GET['search'])){
-									$search_key_word = "AND j.title LIKE '%".$_GET['search']."%'";
-								}
+							$search_key_word = "";			
+							if(!empty($_GET['search'])){
+								$search_key_word = "AND j.title LIKE '%".$_GET['search']."%'";
 							}
 
 							$filter_request = array(
