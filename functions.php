@@ -19,7 +19,6 @@ function time_diff_mesage($diff){
 }
 
 
-
 function validate($data){
     $data = trim($data);
     $data = stripslashes($data);

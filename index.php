@@ -82,6 +82,10 @@
 									<div>
 									<button class="button" style="margin-top:3px;margin-left:10px;" type="submit" name="submit"> Submit </button>
 									</div>
+									<div>
+									<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
+									 class="button" style="position: fixed; right: 20%; background-color: red;"><b>Clear All</b></a>
+									</div>
 								</div>
 							</div>
 					</form>
