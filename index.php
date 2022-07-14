@@ -134,7 +134,7 @@
 								$company_image_path = "/uploads/images/".$row["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
-										<h2 class="job-title"><a href="#"><?php echo $row["title"];?></a></h2>
+										<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['id']; ?>"><?php echo $row["title"];?></a></h2>
 										<div class="job-meta">
 											<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
 											<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>

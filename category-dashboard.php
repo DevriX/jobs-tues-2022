@@ -95,11 +95,6 @@
 									<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
 									<?php }; ?>
 								</div>
-								<div class="job-secondary centered-content">
-									<div class="job-actions">
-										<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
-									</div>
-								</div>
 							</li>
 						<?php
 						}
