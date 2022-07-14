@@ -50,10 +50,12 @@
 								<li class="list-item">
 									<a <?php echo $style;?> href="<?php echo urldecode($url."&filter[]=".$row['id']);?>"  class="list-item-link"><?php echo $row['title'];?></a>
 								</li>
-							<?php 
+							<?php
 							} 
 							?>
-							
+							<li class="list-item">
+								<a href="<?php echo  $_SERVER["PHP_SELF"];?>"  class="list-item-link"><b>Clear</b></a>
+							</li>
 							</ul>
 						
 							<div class="flex-container centered-vertically">
@@ -81,6 +83,10 @@
 									</div>
 									<div>
 									<button class="button" style="margin-top:3px;margin-left:10px;" type="submit" name="submit"> Submit </button>
+									</div>
+									<div>
+									<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
+									 class="button"><b>Clear</b></a>
 									</div>
 								</div>
 							</div>
@@ -124,7 +130,6 @@
 										".$filter_request['where']." 
 										ORDER BY $order_list";
 							
-							$page_first_result = ($page-1) * RES_LIMIT;
 							$num_rows = mysqli_num_rows ($conn->query($sql_request));
 							$page_total = ceil($num_rows / RES_LIMIT);
 							$request_info = $conn->query($sql_request." LIMIT " . $page_first_result . ','. RES_LIMIT);
