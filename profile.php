@@ -197,11 +197,7 @@
 								$company_image = basename( $pname);
 								$stmt = $conn->prepare("UPDATE users SET company_image = ? WHERE id = ?");
 								$stmt->bind_param("ss", $company_image, $user_id);
-								try{
-									$stmt->execute();
-								}catch(e){
-									var_dump(e);
-								}
+								$stmt->execute();
 								header("Location: profile.php");
 							}else {
 								$err["company_image_err"] = "Wrong file format!";
