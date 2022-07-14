@@ -86,7 +86,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
 						<li id="card" class="job-card">
 							<div class="job-primary">
-								<h2 class="job-title"><a href="submissions.php?job_id=<?php echo $row['job_id']; ?>"><?php echo $row["title"]; ?></a></h2>
+								<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['job_id']; ?>"><?php echo $row["title"]; ?></a></h2>
 								<div class="job-meta">
 									<a class="meta-company" href="#"><?php echo $row["company_name"]; ?></a>
 									<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]); ?></span>

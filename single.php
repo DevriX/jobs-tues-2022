@@ -60,22 +60,20 @@ if ($job_id != null){
 														<?php echo $row["company_name"]; ?>
 														<span class="meta-date">Posted <?php echo time_diff_mesage($row['date']); ?></span>
 													</div>
-													<div>
-														Categories:
+													<ul style="margin-top:15px;"class="tags-list">
 														<?php 
-														foreach($row_category as $diff_categories){
-															echo $diff_categories["category_title"].", ";
-														}
-														?>
-													</div>
+														foreach($row_category as $diff_categories){ ?>
+															<a style="margin-right:10px;" class="list-item-link"><?php echo $diff_categories['category_title']; ?></a>
+														<?php } ?>
+														</ul>
 													<div class="job-details">
 														<span class="job-location"><?php echo $row['location'] ?></span>
-														<span class="job-type">Contract staff</span>
+														<span class="job-type"><b> <?php echo $row['phone_number']; ?></b></span>
 														<span class="job-price"><?php echo $row['salary'] ?> Lv.</span>
 													</div>
 										</header>
 												<div class="job-body">
-													<P><?php echo $row['description']?> </P>
+													<P><?php echo nl2br($row['description']);?> </P>
 												</div>
 									</div>
 								</div>
@@ -86,13 +84,14 @@ if ($job_id != null){
 										<img src="<?php echo $company_image_path ?>" alt="">
 									</div>
 								</div>
-								<?php if($_SESSION['id'] != $row['user_id']) {?>
+								<?php if(!empty($_SESSION['id'])){
+										if($_SESSION['id'] != $row['user_id']) {?>
 								<div>
 									<a href="apply-submission.php?job_id=<?php echo($_GET['job_id']) ?>" class="button button">Apply now</a>
 								</div>
 								<?php } else { ?>
 									<a href="actions-job.php?edit_job=<?php echo($_GET['job_id']) ?>" class="button button">Edit now</a>
-								<?php } ?>
+								<?php } }?>
 								<div>
 									<a href="<?php echo $row['company_site']?>"> <?php echo $row['company_name']?></a>
 								</div>
