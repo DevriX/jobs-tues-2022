@@ -50,12 +50,19 @@
 								<li class="list-item">
 									<a <?php echo $style;?> href="<?php echo urldecode($url."&filter[]=".$row['id']);?>"  class="list-item-link"><?php echo $row['title'];?></a>
 								</li>
+<<<<<<< HEAD
 							<?php
 							} 
 							?>
 							<li class="list-item">
 								<a href="<?php echo  $_SERVER["PHP_SELF"];?>"  class="list-item-link"><b>Clear</b></a>
 							</li>
+=======
+							<?php 
+							} 
+							?>
+							
+>>>>>>> 699641b01f23854c90dec2df88512b7ccda1acbc
 							</ul>
 						
 							<div class="flex-container centered-vertically">
@@ -130,6 +137,7 @@
 										".$filter_request['where']." 
 										ORDER BY $order_list";
 							
+							$page_first_result = ($page-1) * RES_LIMIT;
 							$num_rows = mysqli_num_rows ($conn->query($sql_request));
 							$page_total = ceil($num_rows / RES_LIMIT);
 							$request_info = $conn->query($sql_request." LIMIT " . $page_first_result . ','. RES_LIMIT);
@@ -139,7 +147,7 @@
 								$company_image_path = "/uploads/images/".$row["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
-										<h2 class="job-title"><a href="#"><?php echo $row["title"];?></a></h2>
+										<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['id']; ?>"><?php echo $row["title"];?></a></h2>
 										<div class="job-meta">
 											<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
 											<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>

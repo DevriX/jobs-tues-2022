@@ -44,7 +44,7 @@ if(!empty($_POST["create_done"])){
 	}
 
 	if(empty($err)){
-		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES('1', '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
+		$sql_request = "INSERT INTO jobs(user_id, title, status, description, salary, date_posted, location) VALUES(" . $_SESSION['id'] . ", '" . $data['job_title'] . "' , 0, '" . $data['description'] . "' , " . $data['salary'] . " , CURRENT_TIMESTAMP(), '" . $data["location"] . "') ";
 
 		if ($conn->query($sql_request) === FALSE) {
 			echo "Error: " . $sql_request . "<br>" . $conn->error;
@@ -78,12 +78,11 @@ if(!empty($_POST["edit_done"])) {
 				salary = " . $edit_data['new_salary'] . ", 
 				description = '" . $edit_data['new_description'] . "',
 				status = 0 
-				WHERE id=" . $_GET["edit_job"] . " ";
+				WHERE id=" . $_GET["edit_job"] . "" ;
 
 		if ($conn->query($submit_edit_request) === FALSE) {
 			echo "Error: " . $submit_edit_request . "<br>" . $conn->error;
 		}
-
 }
 if(!empty($_GET['edit_job'])){
 	$edit_request = $conn->query("SELECT * FROM jobs WHERE id=" . $_GET["edit_job"] . " ");
@@ -130,20 +129,20 @@ if(!empty($_GET['edit_job'])){
 										<span class="error">  <?php if(!empty($err["description_err"]))
 											(print_error($err["description_err"]))?> </span>
 									</div>
-									<div class="filter-wrapper">
-										<div class="select--multiple" placeholder="Categories">
-											<select class="select" id="multi-select" name="categories[]" multiple>
-												<option disabled>--Please choose a category--</option>
-												<?php 
-												$edit_request = $conn->query("SELECT * FROM categories");
-												while($row = mysqli_fetch_array($edit_request, MYSQLI_BOTH)){
-												?>
-													<option value="<?php echo $row['id']; ?>"><?php echo $row['title']; ?></option>
-												<?php } ?>
-											</select>
-											<span class="focus"></span>
-										</div>
-									</div>
+									<?php if(empty($_GET['edit_job'])){ ?>
+									<select multiple="multiple" class="form-field-wrapper width-large select" name="categories[]" multiple id="categories">
+										<option style="text-align:center" disabled>
+											Please choose one or more categories:
+										</option>
+											<?php 
+											$cat_request = $conn->query("SELECT * FROM categories ORDER BY title ASC");
+											if(mysqli_num_rows($cat_request) > 0) {
+												while($row = mysqli_fetch_array($cat_request, MYSQLI_BOTH)){
+											?>
+												<option value="<?php echo $row['id']; ?>"><?php echo $row['title']; ?></option>
+											<?php }} ?>
+									</select>
+									<?php } ?>
 								</div>
 								<?php if(empty($_GET['edit_job'])){ ?>
 								<button name="create_done" type="submit" class="button" value="create_done">

@@ -7,50 +7,6 @@
 include 'header.php';
 
 if($_SERVER["REQUEST_METHOD"] == "GET"){
-	/*
-	if(!empty($_GET["status"])){
-		if($_GET['status'] == "a"){
-			$approve_request = "UPDATE jobs SET status = 1 WHERE id = " . $_GET['job_id'] . "";
-
-			if ($conn->query($approve_request) === FALSE) {
-				echo "Error: " . $approve_request . "<br>" . $conn->error;
-			}
-		} else {
-			$reject_request = "UPDATE jobs SET status = 0 WHERE id = " . $_GET['job_id'] . "";
-		
-				
-			if ($conn->query($reject_request) === FALSE) {
-				echo "Error: " . $delete_request . "<br>" . $conn->error;
-			}
-		}
-	}*/
-
-	// if(!empty($_GET['delete'])){
-	// 	// $delete_job_request =
-	// 	// 			"DELETE jobs, jobs_categories, applications
-	// 	// 			 FROM jobs
-	// 	// 			 LEFT JOIN jobs_categories ON jobs.id = jobs_categories.job_id
-	// 	// 			 LEFT JOIN applications ON jobs.id = applications.job_id
-	// 	// 			 WHERE jobs.id=" . $_GET['job_id'] . " ";
-		
- 	// 	$delete_categories_request = 
-	// 				"DELETE FROM jobs_categories
-	// 				 WHERE job_id=" . $_GET['job_id'] . " ";
-	// 	if ($conn->query($delete_categories_request) === FALSE) {
-	// 		echo "Error: " . $delete_categories_request . "<br>" . $conn->error;
-	// 	}
-
-	// 	$delete_appliciants_request = "DELETE FROM applications WHERE job_id = " . $_GET['job_id'] . " ";
-	// 	if ($conn->query($delete_appliciants_request) === FALSE) {
-	// 		echo "Error: " . $delete_appliciants_request . "<br>" . $conn->error;
-	// 	}
-
-	// 	$delete_job_request = "DELETE FROM jobs WHERE jobs.id=" . $_GET['job_id'] . " ";
-	// 	if ($conn->query($delete_job_request) === FALSE) {
-	// 		echo "Error: " . $delete_request . "<br>" . $conn->error;
-	// 	}
-	// }
-
 	$order = 'date_posted DESC';
 	if(isset($_GET['drop_down_menu']) && $_GET["drop_down_menu"] == 2){
 		$order = 'title ASC';
@@ -70,6 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 	$request = "SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
 		FROM jobs 
 		LEFT JOIN users ON jobs.user_id = users.id
+		WHERE jobs.user_id = " . $_SESSION['id'] . "
 		HAVING title LIKE '%" . $search . "%'
 		ORDER BY " . $order . "";
 }
