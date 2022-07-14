@@ -84,7 +84,7 @@
 									</div>
 									<div>
 									<a href="<?php echo  $_SERVER["PHP_SELF"];?>" 
-									 class="button" style="position: fixed; right: 20%; background-color: red;"><b>Clear All</b></a>
+									 class="button" style="position: absolute; right: 20%; background-color: red;"><b>Clear All</b></a>
 									</div>
 								</div>
 							</div>
