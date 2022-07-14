@@ -40,6 +40,15 @@ function change_url_parameter($url,$parameterName,$parameterValue) {
         $url["host"],
         $url["path"],
         http_build_query($parameters));
+
+}
+
+function validate($data){
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+
 }
 
 function pagination($page, $page_total){
@@ -57,13 +66,4 @@ function pagination($page, $page_total){
     <?php
         }
     }
-}
-
-function filter(){
-    return "SELECT j.title, j.location, DATEDIFF(CURDATE(), j.date_posted) AS 'date', u.company_name, u.company_image 
-            FROM jobs as j 
-            JOIN jobs_categories AS jc ON j.id=jc.job_id 
-            JOIN users as u on u.id = j.user_id 
-            WHERE j.title LIKE '%teacher%' AND jc.category_id = 5 
-            ORDER BY date_posted DESC";
 }
