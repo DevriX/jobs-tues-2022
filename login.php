@@ -45,14 +45,18 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 				$err['password_err'] = "enter password";
 		
 			}else{
-				$sql = "SELECT * FROM users WHERE email='$email'";
-				$result = mysqli_query($conn, $sql);
+				$stmt = $conn->prepare("SELECT * FROM users WHERE email=?");
+				$stmt->bind_param("s", $email);
+				$stmt->execute();
+				$result = $stmt->get_result();
 				if (mysqli_num_rows($result) === 1) {
 					$row = mysqli_fetch_assoc($result);
 					if ($row['email'] === $email && password_verify($pass, $row['password'])) {
 						if(isset($_POST['remember'])){
 							$cookie_hash = password_hash(rand(0,1000000), PASSWORD_DEFAULT);
-							mysqli_query($conn, "update users set cookie_hash = '$cookie_hash' where email = '$email'");
+							$stmt = $conn->prepare("update users set cookie_hash = ? where email = ?");
+							$stmt->bind_param("ss", $cookie_hash, $email);
+							$stmt->execute();
 							setCookie('cookie_hash', $cookie_hash, time()+60*60*7);
 						}
 						$_SESSION['email'] = $email;
@@ -86,7 +90,7 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 									<span class="error">  <?php echo $err["email_err"];?> </span>
 								</div>
 								<div class="form-field-wrapper">
-									<input type="text" name="password" id="password" placeholder="Password"/>
+									<input type="password" name="password" id="password" placeholder="Password"/>
 									<span class="error">  <?php echo $err["password_err"];?> </span>
 								</div>
 								<div>
