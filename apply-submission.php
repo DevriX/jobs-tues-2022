@@ -3,23 +3,28 @@
 <body>
 	<?php 
 		include 'header.php';	
-		$user_id = $_SESSION['id'];
-		$sql = "SELECT * FROM users WHERE $user_id = users.id";
-		$result = mysqli_query($conn, $sql);
-		$sql1 = "SELECT company_name from users left join jobs on jobs.user_id = users.id where jobs.id = ".$_GET['job_id']."";
-		$result1 = mysqli_query($conn, $sql1);
-		if ($result1->num_rows > 0) {
-			$row1 = $result1->fetch_assoc();
-			if(empty($row1)){
-				echo "0 results";
+		if(!empty($_GET['job_id'])){
+			$user_id = $_SESSION['id'];
+			$sql = "SELECT * FROM users WHERE $user_id = users.id";
+			$result = mysqli_query($conn, $sql);
+			$sql1 = "SELECT company_name from users left join jobs on jobs.user_id = users.id where jobs.id = ".$_GET['job_id']."";
+			$result1 = mysqli_query($conn, $sql1);
+			if ($result1->num_rows > 0) {
+				$row1 = $result1->fetch_assoc();
+				if(empty($row1)){
+					echo "0 results";
+				}
 			}
-		}
-		if ($result->num_rows > 0) {
-			$row = $result->fetch_assoc();
-			if(empty($row)){
-				echo "0 results";
+			if ($result->num_rows > 0) {
+				$row = $result->fetch_assoc();
+				if(empty($row)){
+					echo "0 results";
+				}
 			}
+		}else{
+			header("Location: index.php");
 		}
+		
 		if(!empty($_POST)){
 			if(!empty($_FILES["cv"])){
 				$pname = $_FILES["cv"]["name"]; 
