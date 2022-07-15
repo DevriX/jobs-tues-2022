@@ -156,7 +156,7 @@
 					$request_info = $stmp->get_result();
 					?> <ul class="jobs-listing"> <?php
 					if(mysqli_num_rows($request_info)){ ?>
-						<p style="text-align:right; font-size:18px; margin-top:-1px;"><?php echo $num_rows; ?> results found.</p>
+						<p style="text-align:right; font-size:18px; margin-top:-1px;"><?php echo $num_rows; ?> jobs found.</p>
 						<?php while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
 						$company_image_path = IMAGE_PATH.$row["company_image"];?>
 						<li class="job-card">
@@ -180,7 +180,7 @@
 					<?php  
 					}} else{ 
 						?>  
-						<p style="text-align:center; font-size:25px;">No results found.</p>
+						<p style="text-align:center; font-size:25px;">No jobs found.</p>
 						<?php
 					}
 					?>
