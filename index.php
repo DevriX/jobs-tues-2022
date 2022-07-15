@@ -12,6 +12,11 @@
 				<div class="row">
 					<form method = "get">
 						<?php
+						if(isset($_GET['page'])){
+							if($_GET['page'] > 1 && isset($_GET['filter'])){
+								header("Location: ".urldecode("?".remove_page_param_from_url()));
+							}
+						}
 						if(isset($_GET['filter'])){
 						
 							foreach($_GET['filter'] as $filter){
@@ -39,7 +44,6 @@
 									if(in_array($row['id'], $_GET['filter'])){
 										$style = 'style="background-color: #a1a9b5; pointer-events: none; cursor: default;"';
 									}
-									
 								}
 								
 							?>
@@ -125,8 +129,7 @@
 											".$search_key_word."
 											".$filter_request['where']." 
 											ORDER BY $order_list";
-							
-							$page_first_result = ($page-1) * RES_LIMIT;
+
 							$num_rows = mysqli_num_rows ($conn->query($sql_request));
 							$page_total = ceil($num_rows / RES_LIMIT);
 							$request_info = $conn->query($sql_request." LIMIT " . $page_first_result . ','. RES_LIMIT);
@@ -139,7 +142,8 @@
 								$company_image_path = "/uploads/images/".$row["company_image"];?>
 								<li class="job-card">
 									<div class="job-primary">
-										<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['id']; ?>"><?php echo $row["title"];?></a></h2>
+										<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['id']; ?>">
+										<?php echo $row["title"];?></a></h2>
 										<div class="job-meta">
 											<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
 											<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>

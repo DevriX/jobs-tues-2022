@@ -43,3 +43,12 @@ function pagination($page, $page_total){
         }
     }
 }
+
+function remove_page_param_from_url(){
+    $parsed = parse_url($_SERVER['REQUEST_URI']);
+    $query = $parsed['query'];
+    parse_str($query, $params);
+    unset($params['page']);
+    $url = http_build_query($params);
+    return $url;
+}
