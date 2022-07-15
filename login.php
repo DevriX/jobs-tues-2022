@@ -39,10 +39,10 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 			$email = validate($_POST['email']);
 			$pass = validate($_POST['password']);
 			if (empty($email)) {
-				$err['email_err'] = "enter email";
+				$err['email_err'] = "You must enter an email!";
 		
 			}else if(empty($pass)){
-				$err['password_err'] = "enter password";
+				$err['password_err'] = "You must enter a password!";
 		
 			}else{
 				$stmt = $conn->prepare("SELECT * FROM users WHERE email=?");
@@ -87,18 +87,18 @@ if(!empty($_COOKIE['email']) && !empty($_COOKIE['cookie_hash'])){
 							<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
 								<div class="form-field-wrapper">
 									<input type="text" name="email" id="email" placeholder="Email"/>
-									<span class="error">  <?php echo $err["email_err"];?> </span>
+									<span style="color: red" class="error">  <?php echo $err["email_err"];?> </span>
 								</div>
 								<div class="form-field-wrapper">
 									<input type="password" name="password" id="password" placeholder="Password"/>
-									<span class="error">  <?php echo $err["password_err"];?> </span>
+									<span style="color: red" class="error">  <?php echo $err["password_err"];?> </span>
 								</div>
 								<div>
-									<span class="error">  <?php echo $err["other_err"];?> </span>
+									<span style="color: red" class="error">  <?php echo $err["other_err"];?> </span>
 								</div>
 								<div>
 									<tr><td colspan="2" allign="center">
-									<input type="checkbox" name="remember" value="1">Remember me
+									<input type="checkbox" name="remember" value="1">Remember me</input>
 									</td></td>
 								</div>
 								<button type="submit" class="button">

@@ -129,7 +129,7 @@
 					}
 					$sql_request = "SELECT DISTINCT  jobs.id, jobs.title, jobs.location, jobs.status,
 									DATEDIFF(CURDATE(), jobs.date_posted) AS 'date', 
-									users.company_name, users.company_image
+									users.company_name, users.company_image, users.phone_number
 									FROM jobs
 									JOIN users ON users.id = jobs.user_id"
 									. $filter_request['join'] 
@@ -156,7 +156,6 @@
 					$request_info = $stmp->get_result();
 					?> <ul class="jobs-listing"> <?php
 					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
-						//var_dump($request_info);
 						
 						$company_image_path = IMAGE_PATH.$row["company_image"];?>
 						<li class="job-card">
@@ -168,7 +167,7 @@
 								</div>
 								<div class="job-details">
 									<span class="job-location"><?php echo $row["location"];?></span>
-									<span class="job-type">Contract staff</span>
+									<span class="job-type"><b><?php echo $row["phone_number"];?></b></span>
 								</div>
 							</div>
 							<div class="job-logo">

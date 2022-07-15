@@ -124,7 +124,7 @@ class User {
         if(isset($work_data["repeat"])){
             $user_data["repeat"] = $work_data["repeat"];
             if($work_data["password"] != $work_data["repeat"] && !empty($work_data["password"]) && !empty($work_data["repeat"])){
-                $err["password_err"] = "passwords do not match!";
+                $err["password_err"] = "Passwords do not match!";
                 $clear = false;
             }
         }
@@ -142,7 +142,7 @@ class User {
             }
         }
         if(filter_var($user_data["email"], FILTER_VALIDATE_EMAIL) != true && !empty($work_data["email"])){
-            $err["email_err"] = "email is not valid!";
+            $err["email_err"] = "Email is not valid!";
             $clear = false;
         }else{
             $stmt = $conn->prepare("SELECT COUNT(*) as count FROM users Where ? = email");
@@ -153,16 +153,16 @@ class User {
             if($result['count'] == 0){
                 $user_data['email'] = $work_data['email'];
             }else{
-                $err['email_err'] = "email already exists!";
+                $err['email_err'] = "Email already exists!";
                 $clear = false;
             }
         }
         if(!filter_var($user_data["company_site"], FILTER_VALIDATE_URL) && !empty($user_data["company_site"])){
-            $err["site_err"] = "site url is not valid!";
+            $err["site_err"] = "Site url is not valid!";
             $clear = false;
         }
         if(!preg_match('/^[0-9]{10}+$/', $user_data["phone"])){
-            $err['phone_err'] = "phone number is not valid!";
+            $err['phone_err'] = "Phone number is not valid!";
             $clear = false;
         }
         $this->err         = $err;

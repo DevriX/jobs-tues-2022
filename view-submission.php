@@ -3,6 +3,7 @@
 
 <?php
 include 'header.php';
+
 if(!empty($_GET['application_id'])){
 	$stmt = $conn->prepare("SELECT * FROM applications LEFT JOIN users ON applications.user_id = users.id LEFT JOIN jobs on applications.job_id = jobs.id where applications.id = ?");
 	$stmt->bind_param("s", $_GET['application_id']);
