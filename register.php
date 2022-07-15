@@ -48,27 +48,27 @@
 										<h4 class="form-title">About me</h4>
 										<div class="form-field-wrapper">
 											<input type="text" name="first_name" id="first_name" placeholder="First Name*"/>
-											<span class="error">  <?php echo $err["first_name_err"];?> </span>
+											<span style="color: red" class="error">  <?php echo $err["first_name_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
 											<input type="text" name="last_name" id="Last_name" placeholder="Last Name*"/>
-											<span class="error">  <?php echo $err["last_name_err"];?> </span>
+											<span style="color: red" class="error">  <?php echo $err["last_name_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
 											<input type="text" name="email" id="email" placeholder="Email*"/>
-											<span class="error">  <?php echo $err["email_err"];?> </span>
+											<span style="color: red" class="error">  <?php echo $err["email_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
 											<input type="password" name="password" id="password" placeholder="Password*"/>
-											<span class="error">  <?php echo $err["password_err"];?> </span>
+											<span style="color: red" class="error">  <?php echo $err["password_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
 											<input type="password" name="repeat" id="repeat" placeholder="Repeat Password*"/>
-											<span class="error">  <?php echo $err["repeat_err"];?> </span>
+											<span style="color: red" class="error">  <?php echo $err["repeat_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
 											<input type="text" name="phone" id="phone" placeholder="Phone Number"/>
-											<span class="error">  <?php echo $err["phone_err"];?> </span>
+											<span style="color: red" class="error">  <?php echo $err["phone_err"];?> </span>
 										</div>
 									</div>
 									<div class="secondary-container">
@@ -78,7 +78,7 @@
 										</div>
 										<div class="form-field-wrapper">
 											<input type="text" name="companySite" id="companySite" placeholder="Company Site"/>
-											<span class="error">  <?php echo $err["site_err"];?> </span>
+											<span style="color: red" class="error">  <?php echo $err["site_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
 											<textarea name="description" id="description" placeholder="Description"></textarea>
