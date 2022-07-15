@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include 'header.php';?>
+<?php include 'header.php';
+	if(isset($_GET['page'])){
+		if($_GET['page'] > 1 && isset($_GET['filter'])){
+			header("Location: ".urldecode("?".remove_page_param_from_url()));
+		}
+	}
+?>
 
 <body>
 
