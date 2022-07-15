@@ -6,43 +6,41 @@
 $job_id = $_GET['job_id'];
 
 if ($job_id != null){
-	$sql = "SELECT *, DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
-			FROM jobs 
-			LEFT JOIN users ON jobs.user_id=users.id 
-			WHERE jobs.id = " . $_GET['job_id'] . " ";
-	$result = mysqli_query($conn, $sql);
+	$stmt = $conn->prepare("SELECT *, DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
+							FROM jobs 
+							LEFT JOIN users ON jobs.user_id=users.id 
+							WHERE jobs.id = ?");
+	$stmt->bind_param("s", $_GET['job_id']);
+	$stmt->execute();
+	$result = $stmt->get_result();
 	$row = $result->fetch_assoc();
 	$job_exist = True;
 	if(empty($row)){
 		$job_exist = False;
 	}
-
-	$sql_category = "SELECT  categories.title as 'category_title'
-					FROM jobs 
-					LEFT JOIN jobs_categories ON jobs_categories.job_id = jobs.id
-					LEFT JOIN categories ON categories.id = jobs_categories.category_id
-					WHERE jobs.id = " . $_GET['job_id'] . " ";
-
-	$result_category = mysqli_query($conn, $sql_category);
-
+	$stmt = $conn->prepare("SELECT  categories.title 'category_title'
+							FROM jobs 
+							LEFT JOIN jobs_categories ON jobs_categories.job_id = jobs.id
+							LEFT JOIN categories ON categories.id = jobs_categories.category_id
+							WHERE jobs.id = ?");
+	$stmt->bind_param("s", $_GET['job_id']);
+	$stmt->execute();
+	$result_category = $stmt->get_result();
 	$row_category = mysqli_fetch_all($result_category,MYSQLI_ASSOC);
 
-
-	$statement_related_jobs = 
-			"SELECT *, DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
-			FROM jobs_categories 
-			LEFT JOIN jobs ON jobs.id = jobs_categories.job_id 
-			LEFT JOIN users ON jobs.user_id=users.id
-			WHERE  job_id != $job_id AND category_id 
-			IN (SELECT subquery.category_id FROM jobs_categories subquery WHERE job_id = $job_id )
-			ORDER BY rand() 
-			LIMIT 0, 3";
-
-	$results_related_jobs = mysqli_query($conn, $statement_related_jobs);
-
+	$stmt = $conn->prepare("SELECT *, DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
+							FROM jobs_categories 
+							LEFT JOIN jobs ON jobs.id = jobs_categories.job_id 
+							LEFT JOIN users ON jobs.user_id=users.id
+							WHERE  job_id != ? AND category_id 
+							IN (SELECT subquery.category_id FROM jobs_categories subquery WHERE job_id = ? )
+							ORDER BY rand() 
+							LIMIT 0, 3");
+	$stmt->bind_param("ss", $job_id, $job_id);
+	$stmt->execute();
+	$results_related_jobs = $stmt->get_result();
 	$related_jobs = mysqli_fetch_all($results_related_jobs,MYSQLI_ASSOC);
 }
-
 ?>
 
 <body>

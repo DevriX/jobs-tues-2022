@@ -5,10 +5,10 @@
 include 'header.php';
 
 if(!empty($_GET['application_id'])){
-	$request_application = $conn->query("SELECT * FROM applications 
-										LEFT JOIN users ON applications.user_id = users.id 
-										LEFT JOIN jobs on applications.job_id = jobs.id 
-										WHERE applications.id = " . $_GET['application_id']);
+	$stmt = $conn->prepare("SELECT * FROM applications LEFT JOIN users ON applications.user_id = users.id LEFT JOIN jobs on applications.job_id = jobs.id where applications.id = ?");
+	$stmt->bind_param("s", $_GET['application_id']);
+	$stmt->execute();
+	$request_application = $stmt->get_result();
 	$row = mysqli_fetch_array($request_application, MYSQLI_BOTH);
 }else{
 	header("Location: dashboard.php");
