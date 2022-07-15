@@ -108,7 +108,7 @@ if ($job_id != null){
 									<ul class="jobs-listing">
 										<li class="job-card">
 											<div class="job-primary">
-												<h2 class="job-title"><a href="single.php?job_id=<?php echo $jobs['id']; ?>"><?php echo $jobs['title']?></a></h2>
+												<h2 class="job-title"><a href="single.php?job_id=<?php echo $jobs['job_id']; ?>"><?php echo $jobs['title']?></a></h2>
 												<div class="job-meta">
 													<?php echo $jobs["company_name"]; ?></a>
 													<span class="meta-date">Posted <?php echo time_diff_mesage($jobs['date']); ?></span>

@@ -233,7 +233,7 @@ class User {
             $stmt = $conn->prepare("UPDATE users SET company_image = ? WHERE email = ?");
             $stmt->bind_param("ss", $company_image, $this->email);
             $stmt->execute();
-            header("Location: index.php");
+            header("Location: login.php");
             } else {
                 $this->err["company_image_err"] = "Wrong file format!";
                 echo "Sorry, there was an error uploading your file.";
@@ -270,7 +270,7 @@ class User {
                 if(!empty($image)){
                     $this->insert_image($conn, $image);
                 }else{
-                    header("Location: index.php");
+                    header("Location: login.php");
                 }
             }
     }
