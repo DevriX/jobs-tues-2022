@@ -1,13 +1,10 @@
 <?php
 
-$db = new Requests;
-$conn = $db->connectDB();
+include 'header.php';
 
 if ($_POST['action'] == 'approve') {
-    $status = 1;
-
     $approve_request = 
-        "UPDATE jobs SET status = $status WHERE id = " . $_POST['job'] . "";
+        "UPDATE jobs SET status = 1 WHERE id = " . $_POST['job'] . "";
 
     if ($conn->query($approve_request) === FALSE) {
         echo "Error: " . $approve_request . "<br>" . $conn->error;
@@ -15,10 +12,8 @@ if ($_POST['action'] == 'approve') {
 }
 
 if ($_POST['action'] == 'reject') {
-    $status = 0;
-
     $approve_request = 
-        "UPDATE jobs SET status = $status WHERE id = " . $_POST['job'] . "";
+        "UPDATE jobs SET status = 0 WHERE id = " . $_POST['job'] . "";
 
     if ($conn->query($approve_request) === FALSE) {
         echo "Error: " . $approve_request . "<br>" . $conn->error;
