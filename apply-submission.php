@@ -31,8 +31,8 @@
 		
 		if(!empty($_POST)){
 			if(!empty($_FILES["cv"])){
-				$pname = validate($_FILES["cv"]["name"]); 
-				$tname = validate($_FILES["cv"]["tmp_name"]);
+				$pname = $_FILES["cv"]["name"]; 
+				$tname = $_FILES["cv"]["tmp_name"];
 				
 				$name = pathinfo($_FILES['cv']['name'], PATHINFO_FILENAME);
 				$extension = pathinfo($_FILES['cv']['name'], PATHINFO_EXTENSION);
@@ -55,13 +55,12 @@
 			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 			
 			if($imageFileType != "pdf" && $imageFileType != "docx") {
+				echo "wrong format";
 				$cv_err = "Wrong file format!";
 				$uploadOk = 0;
 			}
-			
 			if ($uploadOk == 0) {
 				echo "Sorry, your file was not uploaded.";
-		
 			}else {
 				if (move_uploaded_file($tname, $target_file) && empty($cv_err)) {
 				$company_image = basename( $pname);
