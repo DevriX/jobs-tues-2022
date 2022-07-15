@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include 'header.php';?>
+<?php include 'header.php';
+
+// if($_SERVER["REQUEST_METHOD"] == "GET"){
+// 	if(isset($_GET['user_id']) && isset($_GET['job_id'])){
+// 		$delete_submission = "DELETE FROM applications 
+// 							  WHERE user_id=" . $_GET['user_id'] . " 
+// 							  AND job_id=" . $_GET['job_id'] . "";
+
+// 		if ($conn->query($delete_submission) === FALSE) {
+// 			echo "Error: " . $delete_submission . "<br>" . $conn->error;
+// 		}
+// 	}
+// }
+
+?>
 
 <body>
 	<div class="site-wrapper">
@@ -18,11 +32,12 @@
 						</li>
 					</ul>
 					<?php
-					$request_application = "SELECT jobs.id, jobs.title, users.first_name, users.last_name, applications.user_id 
-							FROM applications 
-							LEFT JOIN jobs ON applications.job_id=jobs.id 
-							LEFT JOIN users ON applications.user_id=users.id
-							WHERE jobs.id=" . $_GET['job_id'] ."";
+					$request_application = "SELECT applications.id as 'app_id', jobs.id, jobs.title, 
+											users.first_name, users.last_name, applications.user_id 
+											FROM applications 
+											LEFT JOIN jobs ON applications.job_id=jobs.id 
+											LEFT JOIN users ON applications.user_id=users.id
+											WHERE jobs.id=" . $_GET['job_id'] ."";
 
 					$page_first_result = ($page-1) * RES_LIMIT;
 					$num_rows = mysqli_num_rows ($conn->query($request_application));
@@ -34,10 +49,10 @@
 						<?php
 						$title_check = 0;
 						if(mysqli_num_rows($request_info) > 0){
-							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
+							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {?>
 								<div class="section-heading">
 									<?php if(!$title_check){?>
-										<h2 class="heading-title"><?php echo $row["title"];?> - Submissions - <?php echo mysqli_num_rows( $request_info); ?> Appliciants</h2>
+										<h2 class="heading-title"><?php echo $row["title"];?> - Submissions - <?php echo mysqli_num_rows( $request_info); ?>Appliciants</h2>
 									<?php $title_check=1; }?>	
 								</div>
 									<li class="job-card">
@@ -47,6 +62,7 @@
 										<div class="job-secondary centered-content">
 											<div class="job-actions">
 												<a href="view-submission.php?user_id=<?php echo $row['user_id']; ?>" class="button button-inline">View</a>
+												<a href="submissions.php?job_id=<?php echo $row['id']; ?>" class="button button-inline delete-submission-button" data-id="<?php echo $row['app_id'];?>">Delete</a>
 											</div>
 										</div>
 									</li>

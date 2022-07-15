@@ -21,7 +21,7 @@
 						
 							foreach($_GET['filter'] as $filter){
 						?>
-								<input type="hidden" name='filter[]' value='<?php echo $filter;?>'>
+								<input type="hidden" name='filter[]' value='<?php echo($filter) ;?>'>
 							
 						<?php
 							}
@@ -44,6 +44,7 @@
 									if(in_array($row['id'], $_GET['filter'])){
 										$style = 'style="background-color: #a1a9b5; pointer-events: none; cursor: default;"';
 									}
+									
 								}
 								
 							?>
@@ -95,78 +96,94 @@
 								</div>
 					</form>
 					<ul class="jobs-listing">
-							<?php
-							
-							$order_list = "date_posted DESC";
-							if(isset($_GET['drop_down_menu']) && $_GET['drop_down_menu'] == 2){
-								$order_list = "title ASC";
+					<?php
+					$order_list = "date_posted DESC";
+					if ( isset( $_GET['drop_down_menu' ] ) && $_GET['drop_down_menu'] == 2 ) {
+						$order_list = "title ASC";
+					}
+
+					$search_key_word = "";
+					if ( ! empty( $_GET['search'] ) ) {
+						$search_key_word = "AND jobs.title LIKE concat('%', ?, '%')";
+						$request_data[] = $_GET['search'];
+					}
+
+					$filter_request = array(
+						'join' => "",
+						'where' => ""
+					);
+					if ( ! empty($_GET['filter'] ) ) {
+						$filter_request = array(
+							'join' => " JOIN jobs_categories ON jobs.id=jobs_categories.job_id ",
+							'where' => " AND jobs_categories.category_id IN ("
+						);
+						for($i = 0; $i < count($_GET['filter']); $i++){
+							$filter_request['where'] = $filter_request['where'] . "?";
+							if($i != count($_GET['filter']) - 1){
+								$filter_request['where'] .= ",";
 							}
-
-							$search_key_word = "";			
-							if(!empty($_GET['search'])){
-								$search_key_word = "AND j.title LIKE '%".$_GET['search']."%'";
-							}
-
-							$filter_request = array(
-								'join' => "",
-								'where' => ""
-							);
-							if(isset($_GET['filter'])){
-								$filter_request = array(
-									'join' => "JOIN jobs_categories AS jc ON j.id=jc.job_id",
-									'where' => "AND jc.category_id IN (".implode(',', $_GET['filter']). ")"
-								);
-							}
-
-							$sql_request = "SELECT DISTINCT j.id, j.title, j.location, j.status,
-													DATEDIFF(CURDATE(), j.date_posted) AS 'date', 
-													u.company_name, u.company_image, u.phone_number
-											FROM jobs as j
-											".$filter_request['join']." 
-											JOIN users as u 
-											on u.id = j.user_id
-											WHERE 1 = 1 AND j.status = 1
-											".$search_key_word."
-											".$filter_request['where']." 
-											ORDER BY $order_list";
-
-							$num_rows = mysqli_num_rows ($conn->query($sql_request));
-							$page_total = ceil($num_rows / RES_LIMIT);
-							$request_info = $conn->query($sql_request." LIMIT " . $page_first_result . ','. RES_LIMIT);
-
-							?>
-							<ul class="jobs-listing">
-							<?php
-
-							while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
-								$company_image_path = "/uploads/images/".$row["company_image"];?>
-								<li class="job-card">
-									<div class="job-primary">
-										<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['id']; ?>">
-										<?php echo $row["title"];?></a></h2>
-										<div class="job-meta">
-											<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
-											<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>
-										</div>
-										<div class="job-details">
-											<span class="job-location"><?php echo $row["location"];?></span>
-											<span class="job-type"><b><?php echo $row["phone_number"];?></b></span>
-										</div>
-									</div>
-									<div class="job-logo">
-										<div class="job-logo-box">
-											<img src=<?php echo $company_image_path;?> alt="">
-										</div>
-									</div>
-								</li>
-							<?php  
-							}
-							?>
-							<div class="jobs-pagination-wrapper">
-								<div class="nav-links">
-									<?php pagination($page, $page_total); ?>
+							$request_data[] = $_GET['filter'][$i];
+						}
+						$filter_request["where"] = $filter_request["where"] . ")";
+					}
+					$sql_request = "SELECT DISTINCT  jobs.id, jobs.title, jobs.location, jobs.status,
+									DATEDIFF(CURDATE(), jobs.date_posted) AS 'date', 
+									users.company_name, users.company_image
+									FROM jobs
+									JOIN users ON users.id = jobs.user_id"
+									. $filter_request['join'] 
+									. " WHERE jobs.status = 1 " 
+									. $search_key_word
+									. $filter_request['where']
+									. " ORDER BY " . $order_list;
+					$stmp = $conn->prepare($sql_request);
+					if ( isset( $request_data ) ) {
+						$stmp->bind_param(str_repeat('s', count($request_data)), ...$request_data); 
+					}
+					$stmp->execute();
+					$result = $stmp->get_result();
+					$page_first_result = ($page-1) * RES_LIMIT;
+					$num_rows = mysqli_num_rows ($result);
+					$page_total = ceil($num_rows / RES_LIMIT);
+					$request_data[] = $page_first_result;
+					$request_data[] = RES_LIMIT;
+					$stmp = $conn->prepare($sql_request . " LIMIT ? , ?");
+					if ( isset( $request_data ) ) {
+						$stmp->bind_param(str_repeat('s', count($request_data)), ...$request_data); 
+					}
+					$stmp->execute();
+					$request_info = $stmp->get_result();
+					?> <ul class="jobs-listing"> <?php
+					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) {
+						//var_dump($request_info);
+						
+						$company_image_path = IMAGE_PATH.$row["company_image"];?>
+						<li class="job-card">
+							<div class="job-primary">
+								<h2 class="job-title"><a href="single.php?job_id=<?php echo $row['id']; ?>"><?php echo $row["title"];?></a></h2>
+								<div class="job-meta">
+									<a class="meta-company" href="#"><?php echo $row["company_name"];?></a>
+									<span class="meta-date">Posted <?php echo time_diff_mesage($row["date"]);?></span>
+								</div>
+								<div class="job-details">
+									<span class="job-location"><?php echo $row["location"];?></span>
+									<span class="job-type">Contract staff</span>
 								</div>
 							</div>
+							<div class="job-logo">
+								<div class="job-logo-box">
+									<img src=<?php echo $company_image_path;?> alt="">
+								</div>
+							</div>
+						</li>
+					<?php  
+					}
+					?>
+					<div class="jobs-pagination-wrapper">
+						<div class="nav-links">
+							<?php pagination($page, $page_total); ?>
+						</div>
+					</div>
 					</ul>
 				</div>
 			</section>	

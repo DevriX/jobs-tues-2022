@@ -7,8 +7,10 @@
 	$category_name = "";
 	$category_err  = "";
 	$user_id 	   = $_SESSION['id'];
-	$sql 		   = "SELECT is_admin FROM users WHERE $user_id = users.id";
-	$result 	   = mysqli_query($conn, $sql);
+	$stmt 		   = $conn->prepare("SELECT is_admin FROM users WHERE ? = users.id");
+	$stmt->bind_param("s", $user_id);
+	$stmt->execute();
+	$result 	   = $stmt->get_result();
 
 	if ($result->num_rows > 0) {
 		$row = $result->fetch_assoc();
@@ -20,24 +22,19 @@
 	if($row['is_admin'] == 1){
 		if($_SERVER["REQUEST_METHOD"] == "POST"){
 			if(!empty($_POST["new_category"])){
-				$category_name = $_POST["new_category"];
-				$sql_request = "INSERT INTO categories(title) VALUES('" . $category_name . "') ";
-	
-				if ($conn->query($sql_request) === FALSE) {
-					echo "Error: " . $sql_request . "<br>" . $conn->error;
-				}
+				$category_name = validate($_POST["new_category"]);
+				$stmt = $conn->prepare("INSERT INTO categories(title) VALUES(?)");
+				$stmt->bind_param("s", $category_name);
+				$stmt->execute();
 			}
 		}
 	
 		if($_SERVER["REQUEST_METHOD"] == "GET"){
 			if(!empty($_GET['cat_id'])){
-				$delete_category_id = $_GET['cat_id'];
-				$delete_request = "DELETE FROM `categories` WHERE id= " . $delete_category_id . " ";
-			
-					
-				if ($conn->query($delete_request) === FALSE) {
-					echo "Error: " . $delete_request . "<br>" . $conn->error;
-				}
+				$delete_category_id = validate($_GET['cat_id']);
+				$stmt = $conn->prepare("DELETE FROM `categories` WHERE id = ?");
+				$stmt->bind_param("s", $delete_category_id);
+				$stmt->execute();
 			}
 		}
 	}
@@ -63,11 +60,11 @@
 						<div class="secondary-container">
 							<div class="form-box category-form">
 								<form method="post" action="" >
-									<div class="flex-container justified-vertically">									
+									<div class="flex-container justified-vertically">	
+										<?php if($row['is_admin'] == 1){?>								
 										<div class="form-field-wrapper">
 											<input type="text" name="new_category" placeholder="Enter Category Name..."/>
 										</div>
-										<?php if($row['is_admin'] == 1){?>
 											<button class="button" >Add New</button>
 										<?php }; ?>
 									</div>	

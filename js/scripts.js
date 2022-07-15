@@ -56,4 +56,22 @@ $(document).ready(function(){
 
         });
     })
+    $('.delete-submission-button').on('click', (e) => {
+        e.preventDefault();
+
+        $e = $(e.target);
+
+        $.ajax({
+            url: "admin-post.php",
+            type: 'POST',
+            data: {
+                'action': 'delete-submission',
+                'application': $e.data('id'),
+            },
+            success: function(){
+                $e.closest('.job-card').slideUp(600);
+            }
+
+        });
+    })
 });

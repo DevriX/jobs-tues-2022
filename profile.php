@@ -3,16 +3,16 @@
 
 <body>
 <?php include 'header.php'; include 'classes/users.php';
-	$sql    = "SELECT * FROM users WHERE $user_id = users.id";
-	$result = mysqli_query($conn, $sql);
+	$stmt = $conn->prepare("SELECT * FROM users WHERE ? = users.id");
+	$stmt->bind_param("s", $user_id);
+	$stmt->execute();
+	$result = $stmt->get_result();
 	if ($result->num_rows > 0) {
 		$row = $result->fetch_assoc();
 		if(empty($row)){
 			echo "0 results";
 		}
 	}
-	//var_dump($row);
-	//die();
 	$change = false;
 	$err = array(
 		'first_name_err' 	=> "",
@@ -210,7 +210,9 @@
 					}
 				}
 				if(isset($c[0]) && isset($_POST[$c[0]])){
-					mysqli_query($conn, "Update users set $c[0] = '{$_POST[$c[0]]}' where id = $user_id");
+					$stmt = $conn->prepare("Update users set $c[0] = ? where id = ?");
+					$stmt->bind_param("ss", $_POST[$c[0]], $user_id);
+					$stmt->execute();
 				}
 			}
 		}
@@ -259,11 +261,11 @@
 											<span class="error">  <?php echo $err["email_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
-											<input type="text" name='password' id='password'  placeholder="Current Password"/>
+											<input type="password" name='password' id='password'  placeholder="Current Password"/>
 											<span class="error">  <?php echo $err["password_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
-											<input type="text" name='repeat' id='repeat' placeholder="New Password"/>
+											<input type="password" name='repeat' id='repeat' placeholder="New Password"/>
 											<span class="error">  <?php echo $err["repeat_err"];?> </span>
 										</div>
 										<div class="form-field-wrapper">
