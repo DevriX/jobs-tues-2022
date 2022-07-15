@@ -48,7 +48,8 @@ if(!empty($_POST["create_done"])){
 		jobs(user_id, title, status, description, salary, date_posted, location) 
 		VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), ?)");
 		$status = 0;
-		$stmt->bind_param("ssssss", $_SESSION['id'], $data['job_title'], $status, $data['description'], $data['salary'], $data["location"]);
+		$stmt->bind_param("ssssss", $_SESSION['id'], $data['job_title'], 
+						  $status, $data['description'], $data['salary'], $data["location"]);
 
 		if ($stmt->execute() === FALSE) {
 			echo "Error: " . $stmt->error;

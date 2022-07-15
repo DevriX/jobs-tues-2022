@@ -23,12 +23,44 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 		$menu_value = 1;
 	}
 
-	$request = "SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
-		FROM jobs 
-		LEFT JOIN users ON jobs.user_id = users.id
-		WHERE jobs.user_id = " . $_SESSION['id'] . "
-		HAVING title LIKE '%" . $search . "%'
-		ORDER BY " . $order . "";
+	$stmt = $conn->prepare("SELECT is_admin FROM users WHERE users.id = ?");
+	$stmt->bind_param('s', $_SESSION['id']);
+	$stmt->execute();
+	$is_admin_request = $stmt->get_result();
+	$admin_row = mysqli_fetch_array($is_admin_request);
+	$request = "";
+
+	if(!$admin_row['is_admin']){
+		$request = "SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
+					FROM jobs 
+					LEFT JOIN users ON jobs.user_id = users.id
+					WHERE jobs.user_id = ?
+					HAVING jobs.title LIKE concat('%', ?, '%')
+					ORDER BY ". $order."";
+		$stmt = $conn->prepare($request);
+		$stmt->bind_param('ss', $_SESSION['id'], $search);
+	} else {
+		$request = "SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
+					FROM jobs 
+					LEFT JOIN users ON jobs.user_id = users.id
+					HAVING jobs.title LIKE concat('%', ?, '%')
+					ORDER BY ".$order."";
+		$stmt = $conn->prepare($request);
+		$stmt->bind_param('s', $search);
+	}
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$num_rows = mysqli_num_rows ($result);
+	$page_total = ceil($num_rows / RES_LIMIT);
+	$stmt->prepare($request." LIMIT ?, ?");
+	$limit = RES_LIMIT;
+	if(!$admin_row['is_admin']){
+		$stmt->bind_param('ssss',  $_SESSION['id'], $search, $page_first_result, $limit);
+	} else {
+		$stmt->bind_param('sss', $search, $page_first_result, $limit);
+	}
+	$stmt->execute();
+	$request_info = $stmt->get_result();
 }
 
 ?>
@@ -75,12 +107,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 							</div>
 						</div>
 					</div>
-					<?php 
-					
-					$num_rows = mysqli_num_rows ($conn->query($request));
-					$page_total = ceil($num_rows / RES_LIMIT);
-					$request_info = $conn->query($request." LIMIT " . $page_first_result . ','. RES_LIMIT);
-					?> 
 					<ul class="jobs-listing"> 
 					<?php
 					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
@@ -93,16 +119,18 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								</div>
 								<div class="job-details">
 									<span class="job-location"><?php echo $row["location"]; ?></span>
-									<span class="job-type">Contract staff</span>
+									<span class="job-type"><b><?php echo $row["phone_number"]; ?></b></span>
 								</div>
 							</div>
 							<div class="job-secondary">
 								<div class="job-actions">
+								<?php if($admin_row['is_admin'] == 1){?>
 									<a <?php if($row['status'] == 1){ ?> style="display:none" <?php } ?> data-id="<?php echo $row['job_id'];?>" class="approve-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>"> 
 									Approve </a>
 
 									<a <?php if($row['status'] == 0){ ?> style="display:none" <?php } ?> data-id="<?php echo $row['job_id'];?>" class="reject-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>">
 									Reject</a>
+								<?php } ?>
 
 									<a data-id="<?php echo $row['job_id'];?>" class="delete-button" href="<?php echo $_SERVER["PHP_SELF"]?>?search=<?php echo $search; ?>&drop_down_menu=<?php echo $menu_value; ?>&job_id=<?php echo $row['job_id'];?>" class="delete-button"> 
 									Delete </a>
