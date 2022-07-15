@@ -23,7 +23,10 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 		$menu_value = 1;
 	}
 
-	$is_admin_request = $conn->query("SELECT is_admin FROM users WHERE users.id = " . $_SESSION['id'] . "");
+	$stmt = $conn->prepare("SELECT is_admin FROM users WHERE users.id = ?");
+	$stmt->bind_param('s', $_SESSION['id']);
+	$stmt->execute();
+	$is_admin_request = $stmt->get_result();
 	$admin_row = mysqli_fetch_array($is_admin_request);
 	$request = "";
 
@@ -31,20 +34,33 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 		$request = "SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
 					FROM jobs 
 					LEFT JOIN users ON jobs.user_id = users.id
-					WHERE jobs.user_id = " . $_SESSION['id'] . "
-					HAVING title LIKE '%" . $search . "%'
-					ORDER BY " . $order . "";
+					WHERE jobs.user_id = ?
+					HAVING jobs.title LIKE concat('%', ?, '%')
+					ORDER BY ". $order."";
+		$stmt = $conn->prepare($request);
+		$stmt->bind_param('ss', $_SESSION['id'], $search);
 	} else {
 		$request = "SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
 					FROM jobs 
 					LEFT JOIN users ON jobs.user_id = users.id
-					HAVING title LIKE '%" . $search . "%'
-					ORDER BY " . $order . "";
+					HAVING jobs.title LIKE concat('%', ?, '%')
+					ORDER BY ".$order."";
+		$stmt = $conn->prepare($request);
+		$stmt->bind_param('s', $search);
 	}
-
-	$num_rows = mysqli_num_rows ($conn->query($request));
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$num_rows = mysqli_num_rows ($result);
 	$page_total = ceil($num_rows / RES_LIMIT);
-	$request_info = $conn->query($request." LIMIT " . $page_first_result . ','. RES_LIMIT);
+	$stmt->prepare($request." LIMIT ?, ?");
+	$limit = RES_LIMIT;
+	if(!$admin_row['is_admin']){
+		$stmt->bind_param('ssss',  $_SESSION['id'], $search, $page_first_result, $limit);
+	} else {
+		$stmt->bind_param('sss', $search, $page_first_result, $limit);
+	}
+	$stmt->execute();
+	$request_info = $stmt->get_result();
 }
 
 ?>
