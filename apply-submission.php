@@ -110,7 +110,7 @@
 									</div>			
 									<div class="form-field-wrapper width-large">
 									<span class="error" >  <?php //echo $err["message_err"];?> </span>  
-										<textarea placeholder="message*" name="custom_message"></textarea>
+										<textarea placeholder="Custom message*" name="custom_message"></textarea>
 									</div>
 									<div class="form-field-wrapper width-large">
 										<input type="file" name="cv"/>

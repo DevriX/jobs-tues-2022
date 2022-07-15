@@ -52,7 +52,7 @@ if(!empty($_SESSION['id'])){
         </div>
         <nav class="site-header-navigation">
             <ul class="menu">
-                <li class="menu-item current-menu-item">
+                <li class="menu-item">
                     <a href="/index.php">Home</a>					
                 </li>
                 <li class="menu-item">
