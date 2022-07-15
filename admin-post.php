@@ -1,6 +1,7 @@
 <?php
 
-include 'header.php';
+$db = new Requests;
+$conn = $db->connectDB();
 
 if ($_POST['action'] == 'approve') {
     $status = 1;

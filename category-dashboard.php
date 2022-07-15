@@ -83,19 +83,19 @@
 					?> <ul class="jobs-listing"> <?php
 					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
 						<li class="job-card">
-							<div class="job-primary">
-								<h2 class="job-title"><?php echo $row["title"]?></h2>
+						<div class="job-primary">
+							<h2 class="job-title"><?php echo $row["title"]?></h2>
+						</div>
+						<div class="job-secondary centered-content">
+							<div class="job-actions">
+								<?php if(isset($is_admin) && $is_admin){?>
+								<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
+								<?php }; ?>
 							</div>
-							<div class="job-secondary centered-content">
-								<div class="job-actions">
-									<?php if(isset($is_admin) && $is_admin){?>
-									<a href="<?php echo $_SERVER["PHP_SELF"]?>?cat_id=<?php echo $row['id']; ?>" class="button button-inline">Delete</a>
-									<?php }; ?>
-								</div>
-							</li>
-						<?php
-						}
-						?>
+						</li>
+					<?php
+					}
+					?>
 						<div class="jobs-pagination-wrapper">
 							<div class="nav-links">
 								<?php pagination($page, $page_total); ?>

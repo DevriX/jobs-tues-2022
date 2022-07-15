@@ -24,11 +24,15 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 	}
 
 	$request = "SELECT *, jobs.id AS 'job_id', DATEDIFF(CURDATE(), jobs.date_posted) AS 'date' 
-		FROM jobs 
-		LEFT JOIN users ON jobs.user_id = users.id
-		WHERE jobs.user_id = " . $_SESSION['id'] . "
-		HAVING title LIKE '%" . $search . "%'
-		ORDER BY " . $order . "";
+				FROM jobs 
+				LEFT JOIN users ON jobs.user_id = users.id
+				WHERE jobs.user_id = " . $_SESSION['id'] . "
+				HAVING title LIKE '%" . $search . "%'
+				ORDER BY " . $order . "";
+
+	$num_rows = mysqli_num_rows ($conn->query($request));
+	$page_total = ceil($num_rows / RES_LIMIT);
+	$request_info = $conn->query($request." LIMIT " . $page_first_result . ','. RES_LIMIT);
 }
 
 ?>
@@ -75,12 +79,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 							</div>
 						</div>
 					</div>
-					<?php 
-					
-					$num_rows = mysqli_num_rows ($conn->query($request));
-					$page_total = ceil($num_rows / RES_LIMIT);
-					$request_info = $conn->query($request." LIMIT " . $page_first_result . ','. RES_LIMIT);
-					?> 
 					<ul class="jobs-listing"> 
 					<?php
 					while($row = mysqli_fetch_array($request_info, MYSQLI_BOTH)) { ?>
@@ -93,7 +91,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 								</div>
 								<div class="job-details">
 									<span class="job-location"><?php echo $row["location"]; ?></span>
-									<span class="job-type">Contract staff</span>
+									<span class="job-type"><b><?php echo $row["phone_number"]; ?></b></span>
 								</div>
 							</div>
 							<div class="job-secondary">
