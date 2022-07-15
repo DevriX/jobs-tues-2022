@@ -62,6 +62,9 @@ if(!empty($_POST["create_done"])){
 			$stmt->bind_param("ss", $last_id, $c);
 			if ($stmt->execute() === FALSE) {
 				echo "Error: " . $stmt->error;
+			} else {
+				header("Location: dashboard.php");
+				die();
 			}
 		}
 	}
@@ -91,6 +94,9 @@ if(!empty($_POST["edit_done"])) {
 														$_GET["edit_job"]);
 		if ($stmt->execute() === FALSE) {
 			echo "Error: " . $stmt->error;
+		} else {
+			header("Location: single.php?job_id=".$_GET['edit_job']."");
+			die();
 		}
 }
 if(!empty($_GET['edit_job'])){
